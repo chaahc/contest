@@ -161,12 +161,13 @@ public class StrategyManager {
 	}
 	
 	public void executeBattle() {
-		BattleUnitGroup zealotGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleUnitGroupManager.FRONT_GROUP);
-		if (zealotGroup.getUnitCount() >= 12) {
+		int zealotCount = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleUnitGroupManager.FRONT_GROUP).getUnitCount();
+		int dragoonCount = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleUnitGroupManager.FRONT_GROUP).getUnitCount();
+		if (zealotCount >= 12 && dragoonCount <= 10) {
 			Chokepoint enemyFirstChokePoint = InformationManager.Instance().getFirstChokePoint(MyBotModule.Broodwar.enemy());
 			BattleManager.instance().totalAttack(enemyFirstChokePoint.getCenter());
 		}
-		if (BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleUnitGroupManager.FRONT_GROUP).getUnitCount() >= 20) {
+		if (dragoonCount > 10) {
 			BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
 			BattleManager.instance().totalAttack(enemyBaseLocation.getPosition());
 		}
