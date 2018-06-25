@@ -8,6 +8,7 @@ import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwta.BWTA;
+import bwta.BaseLocation;
 import bwta.Region;
 
 /// 건물 건설 Construction 명령 목록을 리스트로 관리하고, 건물 건설 명령이 잘 수행되도록 컨트롤하는 class
@@ -434,7 +435,7 @@ public class ConstructionManager {
 	        if (b.getBuildingUnit().isCompleted())
 	        {
 				//System.out.println("Construction " + b.getType() + " completed at " + b.getFinalPosition().getX() + "," + b.getFinalPosition().getY());
-				
+	        	
 				// if we are terran, give the worker back to worker manager
 	            if (MyBotModule.Broodwar.self().getRace() == Race.Terran)
 	            {

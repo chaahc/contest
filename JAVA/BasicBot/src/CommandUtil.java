@@ -59,7 +59,9 @@ public class CommandUtil {
 		}
 
 		// if nothing prevents it, attack the target
-		attacker.attack(targetPosition);
+		if (!attacker.isAttacking()) {
+			attacker.attack(targetPosition);
+		}
 	}
 
 	public void move(Unit attacker, final Position targetPosition)
@@ -303,22 +305,18 @@ public class CommandUtil {
 		return count;
 	}
 
-	// 전체 순차탐색을 하기 때문에 느리다
-	public Unit GetClosestUnitTypeToTarget(UnitType type, Position target)
+	public Unit GetClosestUnitTypeToTarget(Position selfUnitPosition)
 	{
 		Unit closestUnit = null;
 		double closestDist = 100000000;
 
-		for (Unit unit : MyBotModule.Broodwar.self().getUnits())
+		for (Unit unit : MyBotModule.Broodwar.enemy().getUnits())
 		{
-			if (unit.getType() == type)
+			double dist = unit.getDistance(selfUnitPosition);
+			if (closestUnit == null || dist < closestDist)
 			{
-				double dist = unit.getDistance(target);
-				if (closestUnit == null || dist < closestDist)
-				{
-					closestUnit = unit;
-					closestDist = dist;
-				}
+				closestUnit = unit;
+				closestDist = dist;
 			}
 		}
 

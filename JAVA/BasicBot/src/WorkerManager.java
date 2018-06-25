@@ -35,7 +35,7 @@ public class WorkerManager {
 		handleIdleWorkers();
 		handleMoveWorkers();
 		handleCombatWorkers();
-		handleRepairWorkers();
+//		handleRepairWorkers();
 	}
 	
 	public void updateWorkerStatus() 

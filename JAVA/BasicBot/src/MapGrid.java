@@ -31,6 +31,10 @@ public class MapGrid {
 		{
 			return center;
 		}
+		
+		public List<Unit> getEnemy() {
+			return this.oppUnits;
+		}
 	};
 	
 	private int cellSize;

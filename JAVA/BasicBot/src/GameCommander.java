@@ -2,6 +2,8 @@ import bwapi.Player;
 import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
+import bwapi.UnitType;
+import bwta.Chokepoint;
 
 /// 실제 봇프로그램의 본체가 되는 class<br>
 /// 스타크래프트 경기 도중 발생하는 이벤트들이 적절하게 처리되도록 해당 Manager 객체에게 이벤트를 전달하는 관리자 Controller 역할을 합니다
@@ -77,11 +79,84 @@ public class GameCommander {
 
 	/// 유닛(건물/지상유닛/공중유닛)이 Create 될 때 발생하는 이벤트를 처리합니다
 	public void onUnitCreate(Unit unit) { 
+		if (InformationManager.Instance().selfPlayer == unit.getPlayer()) {
+			UnitType unitType = unit.getType();
+			if (unitType == UnitType.Protoss_Nexus || unitType == UnitType.Protoss_Photon_Cannon ||
+					unitType == UnitType.Protoss_Gateway || unitType == UnitType.Protoss_Stargate) {
+				BuildingUnitManager.instance().addBuildingUnitIntoGroup(unitType, unit);
+			}else if (unitType == UnitType.Protoss_Assimilator || unitType == UnitType.Protoss_Cybernetics_Core ||
+					unitType == UnitType.Protoss_Citadel_of_Adun || unitType == UnitType.Protoss_Templar_Archives ||
+					unitType == UnitType.Protoss_Forge || unitType == UnitType.Protoss_Shield_Battery ||
+					unitType == UnitType.Protoss_Robotics_Facility || unitType == UnitType.Protoss_Observatory ||				
+					unitType == UnitType.Protoss_Robotics_Support_Bay || unitType == UnitType.Protoss_Fleet_Beacon ||
+					unitType == UnitType.Protoss_Arbiter_Tribunal) {
+				BuildingUnitManager.instance().addBuildingUnit(unitType, unit);
+			}
+		}
 		InformationManager.Instance().onUnitCreate(unit);
+	}
+	
+	// BasicBot 1.1 Patch Start ////////////////////////////////////////////////
+	// 일꾼 탄생/파괴 등에 대한 업데이트 로직 버그 수정 : onUnitShow 가 아니라 onUnitComplete 에서 처리하도록 수정
+
+	/// 유닛(건물/지상유닛/공중유닛)의 하던 일 (건물 건설, 업그레이드, 지상유닛 훈련 등)이 끝났을 때 발생하는 이벤트를 처리합니다
+	public void onUnitComplete(Unit unit)
+	{
+		if (InformationManager.Instance().selfPlayer == unit.getPlayer()) {
+			UnitType unitType = unit.getType();
+			if (unitType == UnitType.Protoss_Gateway || unitType == UnitType.Protoss_Stargate) {
+				if (unit.canSetRallyPoint()) {
+//					Position center = MapGrid.Instance().getCellCenter(MapGrid.Instance().getRows()>>1, MapGrid.Instance().getCols()>>1);
+					Chokepoint firstChokePoint = InformationManager.Instance().getFirstChokePoint(InformationManager.Instance().selfPlayer);
+					unit.setRallyPoint(firstChokePoint.getCenter());
+				}
+				BuildingUnitManager.instance().completeBuildingUnitInGroup(unitType, unit.getID());
+			}else if (unitType == UnitType.Protoss_Cybernetics_Core ||
+					unitType == UnitType.Protoss_Citadel_of_Adun || unitType == UnitType.Protoss_Templar_Archives ||
+					unitType == UnitType.Protoss_Forge || unitType == UnitType.Protoss_Shield_Battery ||
+					unitType == UnitType.Protoss_Robotics_Facility || unitType == UnitType.Protoss_Observatory ||				
+					unitType == UnitType.Protoss_Robotics_Support_Bay || unitType == UnitType.Protoss_Fleet_Beacon ||
+					unitType == UnitType.Protoss_Arbiter_Tribunal) {
+				BuildingUnitManager.instance().getBuildingUnit(unitType).complete();
+			} else { 
+				if (unitType != UnitType.Protoss_Probe) {
+					BattleUnitGroupManager.instance().addUnit(unit);
+				}
+			}
+		}
+		
+		InformationManager.Instance().onUnitComplete(unit);
+
+		// ResourceDepot 및 Worker 에 대한 처리
+		WorkerManager.Instance().onUnitComplete(unit);
 	}
 
 	///  유닛(건물/지상유닛/공중유닛)이 Destroy 될 때 발생하는 이벤트를 처리합니다
-	public void onUnitDestroy(Unit unit) {
+	public void onUnitDestroy(Unit unit) {		
+		if (InformationManager.Instance().selfPlayer == unit.getPlayer()) {
+			UnitType unitType = unit.getType();
+			if (unitType == UnitType.Protoss_Zealot || unitType == UnitType.Protoss_Dragoon ||
+					unitType == UnitType.Protoss_High_Templar || unitType == UnitType.Protoss_Dark_Templar ||
+					unitType == UnitType.Protoss_Observer || unitType == UnitType.Protoss_Shuttle ||
+					unitType == UnitType.Protoss_Corsair ||	unitType == UnitType.Protoss_Carrier ||
+					unitType == UnitType.Protoss_Arbiter ||	unitType == UnitType.Protoss_Archon ||
+					unitType == UnitType.Protoss_Scout) {
+				BattleUnitGroupManager.instance().removeUnit(unit);
+			} else if (unitType == UnitType.Protoss_Nexus || unitType == UnitType.Protoss_Photon_Cannon ||
+					unitType == UnitType.Protoss_Gateway || unitType == UnitType.Protoss_Stargate) {
+				BuildingUnitManager.instance().removeBuildingUnitFromGroup(unitType, unit.getID());
+			} else if (unitType == UnitType.Protoss_Assimilator || unitType == UnitType.Protoss_Cybernetics_Core ||
+					unitType == UnitType.Protoss_Citadel_of_Adun || unitType == UnitType.Protoss_Templar_Archives ||
+					unitType == UnitType.Protoss_Forge || unitType == UnitType.Protoss_Shield_Battery ||
+					unitType == UnitType.Protoss_Robotics_Facility || unitType == UnitType.Protoss_Observatory ||				
+					unitType == UnitType.Protoss_Robotics_Support_Bay || unitType == UnitType.Protoss_Fleet_Beacon ||
+					unitType == UnitType.Protoss_Arbiter_Tribunal) {			
+				BuildingUnitManager.instance().removeBuildingUnit(unitType);
+			} else {
+				
+			}
+		}
+		
 		// ResourceDepot 및 Worker 에 대한 처리
 		WorkerManager.Instance().onUnitDestroy(unit);
 
@@ -106,28 +181,28 @@ public class GameCommander {
 		InformationManager.Instance().onUnitRenegade(unit);
 	}
 
-	// BasicBot 1.1 Patch Start ////////////////////////////////////////////////
-	// 일꾼 탄생/파괴 등에 대한 업데이트 로직 버그 수정 : onUnitShow 가 아니라 onUnitComplete 에서 처리하도록 수정
-
-	/// 유닛(건물/지상유닛/공중유닛)의 하던 일 (건물 건설, 업그레이드, 지상유닛 훈련 등)이 끝났을 때 발생하는 이벤트를 처리합니다
-	public void onUnitComplete(Unit unit)
-	{
-		InformationManager.Instance().onUnitComplete(unit);
-
-		// ResourceDepot 및 Worker 에 대한 처리
-		WorkerManager.Instance().onUnitComplete(unit);
-	}
-
 	// BasicBot 1.1 Patch End //////////////////////////////////////////////////
 
 	/// 유닛(건물/지상유닛/공중유닛)이 Discover 될 때 발생하는 이벤트를 처리합니다<br>
 	/// 아군 유닛이 Create 되었을 때 라든가, 적군 유닛이 Discover 되었을 때 발생합니다
 	public void onUnitDiscover(Unit unit) {
+		UnitType unitType = unit.getType();
+		if (unit.getPlayer() == InformationManager.Instance().enemyPlayer) {
+			if (InformationManager.Instance().selfPlayer.getStartLocation().getDistance(unit.getPosition().toTilePosition()) < 50) {
+				BattleManager.instance().totalAttack(unit);
+			}
+		}
 	}
 
 	/// 유닛(건물/지상유닛/공중유닛)이 Evade 될 때 발생하는 이벤트를 처리합니다<br>
 	/// 유닛이 Destroy 될 때 발생합니다
 	public void onUnitEvade(Unit unit) {
+//		UnitType unitType = unit.getType();
+//		if (unit.getPlayer() == InformationManager.Instance().enemyPlayer) {
+//			System.out.println("enemy hide");
+//			Chokepoint secondChokePoint = InformationManager.Instance().getSecondChokePoint(InformationManager.Instance().selfPlayer);
+//			BattleManager.instance().totalAttack(secondChokePoint.getCenter());
+//		}
 	}	
 
 	// BasicBot 1.1 Patch Start ////////////////////////////////////////////////
@@ -145,7 +220,7 @@ public class GameCommander {
 	// BasicBot 1.1 Patch End //////////////////////////////////////////////////
 
 	/// 유닛(건물/지상유닛/공중유닛)이 Hide 될 때 발생하는 이벤트를 처리합니다<br>
-	/// 보이던 유닛이 Hide 될 때 발생합니다
+	/// 보이던 유닛이 죽었을 때 발생합니다
 	public void onUnitHide(Unit unit) {
 		InformationManager.Instance().onUnitHide(unit); 
 	}
