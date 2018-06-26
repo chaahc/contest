@@ -14,11 +14,7 @@ public class BuildingUnit {
 	public BuildingUnit(UnitType unitType, Unit unit) {
 		this.unitType = unitType;
 		this.unit = unit;
-		if (unitType == UnitType.Protoss_Assimilator) {
-			this.buildingStatus = BuildingStatus.COMPLETED;
-		}else {
-			this.buildingStatus = BuildingStatus.UNDER_CONSTRUCTION;
-		}
+		this.buildingStatus = BuildingStatus.UNDER_CONSTRUCTION;
 	}
 	
 	public Unit getUnit() {

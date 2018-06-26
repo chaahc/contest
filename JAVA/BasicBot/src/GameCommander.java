@@ -84,7 +84,7 @@ public class GameCommander {
 			if (unitType == UnitType.Protoss_Nexus || unitType == UnitType.Protoss_Photon_Cannon ||
 					unitType == UnitType.Protoss_Gateway || unitType == UnitType.Protoss_Stargate) {
 				BuildingUnitManager.instance().addBuildingUnitIntoGroup(unitType, unit);
-			}else if (unitType == UnitType.Protoss_Assimilator || unitType == UnitType.Protoss_Cybernetics_Core ||
+			}else if (unitType == UnitType.Protoss_Cybernetics_Core ||
 					unitType == UnitType.Protoss_Citadel_of_Adun || unitType == UnitType.Protoss_Templar_Archives ||
 					unitType == UnitType.Protoss_Forge || unitType == UnitType.Protoss_Shield_Battery ||
 					unitType == UnitType.Protoss_Robotics_Facility || unitType == UnitType.Protoss_Observatory ||				
@@ -107,11 +107,11 @@ public class GameCommander {
 			if (unitType == UnitType.Protoss_Gateway || unitType == UnitType.Protoss_Stargate) {
 				if (unit.canSetRallyPoint()) {
 //					Position center = MapGrid.Instance().getCellCenter(MapGrid.Instance().getRows()>>1, MapGrid.Instance().getCols()>>1);
-					Chokepoint firstChokePoint = InformationManager.Instance().getFirstChokePoint(InformationManager.Instance().selfPlayer);
-					unit.setRallyPoint(firstChokePoint.getCenter());
+					Chokepoint secondChokePoint = InformationManager.Instance().getSecondChokePoint(InformationManager.Instance().selfPlayer);
+					unit.setRallyPoint(secondChokePoint.getCenter());
 				}
 				BuildingUnitManager.instance().completeBuildingUnitInGroup(unitType, unit.getID());
-			}else if (unitType == UnitType.Protoss_Cybernetics_Core ||
+			}else if (unitType == UnitType.Protoss_Assimilator || unitType == UnitType.Protoss_Cybernetics_Core ||
 					unitType == UnitType.Protoss_Citadel_of_Adun || unitType == UnitType.Protoss_Templar_Archives ||
 					unitType == UnitType.Protoss_Forge || unitType == UnitType.Protoss_Shield_Battery ||
 					unitType == UnitType.Protoss_Robotics_Facility || unitType == UnitType.Protoss_Observatory ||				
@@ -165,7 +165,13 @@ public class GameCommander {
 	
 	/// 유닛(건물/지상유닛/공중유닛)이 Morph 될 때 발생하는 이벤트를 처리합니다<br>
 	/// Zerg 종족의 유닛은 건물 건설이나 지상유닛/공중유닛 생산에서 거의 대부분 Morph 형태로 진행됩니다
-	public void onUnitMorph(Unit unit) { 
+	public void onUnitMorph(Unit unit) {
+		if (InformationManager.Instance().selfPlayer == unit.getPlayer()) {
+			UnitType unitType = unit.getType();
+			if (unitType == UnitType.Protoss_Assimilator) {
+				BuildingUnitManager.instance().addBuildingUnit(unitType, unit);
+			}
+		}
 		InformationManager.Instance().onUnitMorph(unit);
 
 		// Zerg 종족 Worker 의 Morph 에 대한 처리

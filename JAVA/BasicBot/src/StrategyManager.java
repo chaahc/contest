@@ -1,6 +1,7 @@
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
-import bwapi.Player;
 import bwapi.Race;
 import bwapi.Unit;
 import bwapi.UnitType;
@@ -21,15 +22,22 @@ public class StrategyManager {
 		return instance;
 	}
 	
+	private BuildOrderSet buildOrderSet;
 	private boolean isInitialBuildOrderFinished;
 
 	public StrategyManager() {
 		isInitialBuildOrderFinished = false;
+		buildOrderSet = BuildOrderSetManager.instance().getBuildOrderSet(this.chooseStrategy());
+	}
+	
+	private StrategyType chooseStrategy() {
+//		required to choose strategy
+		return StrategyType.PROTOSS_BASIC;
 	}
 
 	/// 경기가 시작될 때 일회적으로 전략 초기 세팅 관련 로직을 실행합니다
 	public void onStart() {
-		setInitialBuildOrder();
+		this.buildOrderSet.executeInitialBuildOrder();
 	}
 
 	///  경기가 종료될 때 일회적으로 전략 결과 정리 관련 로직을 실행합니다
@@ -42,21 +50,22 @@ public class StrategyManager {
 		if (BuildManager.Instance().buildQueue.isEmpty()) {
 			isInitialBuildOrderFinished = true;
 		}
+		
+		if (isInitialBuildOrderFinished == false) {
+			return;
+		}
 		executeWorkerTraining();
 		executeSupplyManagement();
-
-		executeBuildOrderManagement();
-		executeBattleUnitTraining();
+		
+		this.buildOrderSet.executeBuildingUnitOrder();
+		this.buildOrderSet.executeBattleUnitOrder();
+		this.buildOrderSet.executeUpgradeOrder();
 		executeBattle();
 		executeDefense();
 		executeObservatoring();
 	}
 	
 	public void executeBuildOrderManagement() {
-		if (isInitialBuildOrderFinished == false) {
-			return;
-		}
-		
 		if (BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Nexus) == 1 && MyBotModule.Broodwar.self().minerals() >= 400) {
 			if (BuildManager.Instance().buildQueue.getItemCount(UnitType.Protoss_Nexus) == 0 && ConstructionManager.Instance().getConstructionQueueItemCount(UnitType.Protoss_Nexus, null) == 0) {
 				BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Nexus, BuildOrderItem.SeedPositionStrategy.FirstExpansionLocation, true);
@@ -119,10 +128,6 @@ public class StrategyManager {
 	}
 	
 	public void executeBattleUnitTraining() {
-		if (isInitialBuildOrderFinished == false) {
-			return;
-		}
-		
 		if (MyBotModule.Broodwar.self().supplyUsed() < MyBotModule.Broodwar.self().supplyTotal()) {
 			if (MyBotModule.Broodwar.self().minerals() >= 100) {
 				if (BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleUnitGroupManager.FRONT_GROUP).getUnitCount() <= 12) {
@@ -350,11 +355,6 @@ public class StrategyManager {
 
 	// 일꾼 계속 추가 생산
 	public void executeWorkerTraining() {
-		// InitialBuildOrder 진행중에는 아무것도 하지 않습니다
-		if (isInitialBuildOrderFinished == false) {
-			return;
-		}
-
 		if (MyBotModule.Broodwar.self().minerals() >= 50) {
 			// workerCount = 현재 일꾼 수 + 생산중인 일꾼 수
 			int workerCount = MyBotModule.Broodwar.self().allUnitCount(InformationManager.Instance().getWorkerType());
@@ -390,11 +390,6 @@ public class StrategyManager {
 		// 전투에 의해 유닛이 많이 죽을 것으로 예상되는 상황에서는 고의적으로 서플라이 추가를 하지 않을수도 있기 때문에
 		// 참가자께서 잘 판단하셔서 개발하시기 바랍니다.
 		
-		// InitialBuildOrder 진행중에는 아무것도 하지 않습니다
-		if (isInitialBuildOrderFinished == false) {
-			return;
-		}
-
 		// 1초에 한번만 실행
 		if (MyBotModule.Broodwar.getFrameCount() % 24 != 0) {
 			return;
