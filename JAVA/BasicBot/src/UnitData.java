@@ -3,7 +3,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-import bwapi.Color;
 import bwapi.Unit;
 import bwapi.UnitType;
 

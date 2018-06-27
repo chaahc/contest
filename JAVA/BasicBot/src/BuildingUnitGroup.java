@@ -41,6 +41,9 @@ public class BuildingUnitGroup {
 	}
 	
 	public void completeBuildingUnit(int unitId) {
+		if (this.buildingUnitGroup.get(unitId) == null) {
+			return;
+		}
 		this.buildingUnitGroup.get(unitId).complete();
 		if (this.underConstructionBuidlingUnitCount > 0) {
 			this.underConstructionBuidlingUnitCount--;

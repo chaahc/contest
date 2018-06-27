@@ -13,7 +13,6 @@ import bwapi.Race;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
-import bwapi.Unitset;
 import bwapi.WeaponType;
 import bwta.BWTA;
 import bwta.BaseLocation;

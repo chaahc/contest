@@ -1,7 +1,6 @@
 import java.awt.Point;
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Deque;
 
 import bwapi.TechType;

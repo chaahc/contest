@@ -1,5 +1,4 @@
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import bwapi.Unit;
@@ -43,18 +42,30 @@ public class BuildingUnitManager {
 	}
 	
 	public void addBuildingUnitIntoGroup(UnitType unitType, Unit unit) {
+		if (this.buildingUnitGroups.get(unitType) == null) {
+			return;
+		}
 		this.buildingUnitGroups.get(unitType).addBuildingUnit(unit);
 	}
 	
 	public void removeBuildingUnitFromGroup(UnitType unitType, int unitId) {
+		if (this.buildingUnitGroups.get(unitType) == null) {
+			return;
+		}
 		this.buildingUnitGroups.get(unitType).removeBuildingUnit(unitId);
 	}
 	
 	public void completeBuildingUnitInGroup(UnitType unitType, int unitId) {
+		if (this.buildingUnitGroups.get(unitType) == null) {
+			return;
+		}
 		this.buildingUnitGroups.get(unitType).completeBuildingUnit(unitId);
 	}
 	
 	public void trainBuildingUnit(UnitType buildingUnitType, UnitType trainUnitType) {
+		if (this.buildingUnitGroups.get(buildingUnitType) == null) {
+			return;
+		}
 		this.buildingUnitGroups.get(buildingUnitType).trainBuildingUnit(trainUnitType);
 	}
 }

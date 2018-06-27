@@ -7,7 +7,6 @@ import java.util.Map;
 
 import bwapi.Unit;
 import bwapi.UnitType;
-import bwapi.Unitset;
 
 public class BattleUnitGroupManager {
 	public static final int FRONT_GROUP = 0;

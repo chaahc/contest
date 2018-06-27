@@ -26,7 +26,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import bwapi.Color;
 import bwapi.DefaultBWListener;
 import bwapi.Game;
 import bwapi.Mirror;

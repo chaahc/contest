@@ -8,7 +8,6 @@ import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwta.BWTA;
-import bwta.BaseLocation;
 import bwta.Region;
 
 /// 건물 건설 Construction 명령 목록을 리스트로 관리하고, 건물 건설 명령이 잘 수행되도록 컨트롤하는 class
