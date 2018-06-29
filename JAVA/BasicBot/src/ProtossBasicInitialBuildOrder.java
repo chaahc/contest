@@ -1,9 +1,17 @@
+import bwapi.TilePosition;
+import bwapi.Unit;
 import bwapi.UnitType;
+import bwta.BWTA;
 
 public class ProtossBasicInitialBuildOrder extends InitialBuildOrder {
 	@Override
 	public void execute() {
 		// TODO Auto-generated method stub
+		
+		ProtossBasicBuildPosition.Instance().setPosition();
+		TilePosition firstPos = new TilePosition(ProtossBasicBuildPosition.Instance().firstPylonPosX, ProtossBasicBuildPosition.Instance().firstPylonPosY);
+		TilePosition secondPylonPos = new TilePosition(ProtossBasicBuildPosition.Instance().secondPylonPosX, ProtossBasicBuildPosition.Instance().secondPylonPosY);
+		
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
@@ -13,7 +21,7 @@ public class ProtossBasicInitialBuildOrder extends InitialBuildOrder {
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Pylon,
-				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
+				firstPos, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
@@ -23,7 +31,7 @@ public class ProtossBasicInitialBuildOrder extends InitialBuildOrder {
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Pylon,
-				BuildOrderItem.SeedPositionStrategy.SecondChokePoint);
+				secondPylonPos);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Forge,
