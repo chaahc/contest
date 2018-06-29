@@ -12,6 +12,7 @@ import bwapi.Position;
 import bwapi.Race;
 import bwapi.TilePosition;
 import bwapi.Unit;
+import bwapi.Unitset;
 import bwapi.UnitType;
 import bwapi.WeaponType;
 import bwta.BWTA;
@@ -52,8 +53,10 @@ public class InformationManager {
 	private Map<Player, BaseLocation> firstExpansionLocation = new HashMap<Player, BaseLocation>();
 	/// 해당 Player의 mainBaseLocation 에서 두번째로 가까운 (firstChokePoint가 아닌) ChokePoint<br>
 	/// 게임 맵에 따라서, secondChokePoint 는 일반 상식과 다른 지점이 될 수도 있습니다
-	private Map<Player, Chokepoint> secondChokePoint = new HashMap<Player, Chokepoint>();
-
+	private Map<Player, Chokepoint> secondChokePoint = new HashMap<Player, Chokepoint>();	
+        
+	private MapSpecificInformation mapSpecificInformation = null;
+	
 	/// Player - UnitData(각 Unit 과 그 Unit의 UnitInfo 를 Map 형태로 저장하는 자료구조) 를 저장하는 자료구조 객체
 	private Map<Player, UnitData> unitData = new HashMap<Player, UnitData>();
 
@@ -61,7 +64,7 @@ public class InformationManager {
 	public static InformationManager Instance() {
 		return instance;
 	}
-
+	
 	public InformationManager() {
 		selfPlayer = MyBotModule.Broodwar.self();
 		enemyPlayer = MyBotModule.Broodwar.enemy();
@@ -96,6 +99,7 @@ public class InformationManager {
 		secondChokePoint.put(enemyPlayer, null);
 
 		updateChokePointAndExpansionLocation();
+                updateMapSpecificInformation();
 		
 	}
 
@@ -745,4 +749,23 @@ public class InformationManager {
 			return UnitType.None;
 		}
 	}
+        public void updateMapSpecificInformation() {
+                MAP candiMapByName = null;
+                String mapName = MyBotModule.Broodwar.mapFileName().toUpperCase();
+                if (mapName.matches(".*CIRCUIT.*")){
+                        candiMapByName = MAP.CircuitBreaker;
+                } else if (mapName.matches(".*OVER.*")){
+                        candiMapByName = MAP.OverWatch;
+                } else {
+                        candiMapByName = MAP.Unknown;
+                }
+                
+                MapSpecificInformation tempMapInfo = new MapSpecificInformation();
+                tempMapInfo.setMap(candiMapByName);
+                mapSpecificInformation = tempMapInfo;
+
+        }
+        public MapSpecificInformation getMapSpecificInformation() {
+                return mapSpecificInformation;
+        }
 }
