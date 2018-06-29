@@ -12,7 +12,7 @@ import bwapi.Position;
 import bwapi.Race;
 import bwapi.TilePosition;
 import bwapi.Unit;
-import bwapi.UnitTest;
+import bwapi.Unitset;
 import bwapi.UnitType;
 import bwapi.WeaponType;
 import bwta.BWTA;
@@ -750,7 +750,7 @@ public class InformationManager {
 		}
 	}
         public void updateMapSpecificInformation() {
-                Map candiMapByName = null;
+                MAP candiMapByName = null;
                 String mapName = MyBotModule.Broodwar.mapFileName().toUpperCase();
                 if (mapName.matches(".*CIRCUIT.*")){
                         candiMapByName = MAP.CircuitBreaker;
