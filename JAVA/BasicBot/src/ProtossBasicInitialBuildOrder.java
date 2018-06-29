@@ -31,7 +31,7 @@ public class ProtossBasicInitialBuildOrder extends InitialBuildOrder {
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Pylon,
-				secondPylonPos);
+				secondPylonPos, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Forge,
