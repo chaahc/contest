@@ -13,16 +13,19 @@ public class HighTemplar extends BattleUnit {
 
 	public void psionicStorm(Position target) {
 		// TODO Auto-generated method stub
-		super.unit.useTech(TechType.Psionic_Storm, target);
-		
+		CommandUtil.useTech(super.unit, TechType.Psionic_Storm, target);
 	}
 	
 	public void hallucination(Unit target) {
-		super.unit.useTech(TechType.Hallucination, target);
+		CommandUtil.useTech(super.unit, TechType.Hallucination, target);
 	}
 	
 	public void archonWarp(Unit target) {
-		super.unit.useTech(TechType.Archon_Warp, target);
+		if (super.unit.canUseTech(TechType.Archon_Warp, target)) {
+			super.unit.useTech(TechType.Archon_Warp, target);
+			BattleUnitGroupManager.instance().removeUnit(super.unit);
+			BattleUnitGroupManager.instance().removeUnit(target);
+		}
 	}
 	
 	public void follow(Unit unit) {

@@ -13,7 +13,9 @@ public class Carrier extends BattleUnit implements WeaponTrainable{
 	@Override
 	public void train() {
 		// TODO Auto-generated method stub
-		super.unit.train(UnitType.Protoss_Interceptor);
+		if (super.unit.canTrain(UnitType.Protoss_Interceptor)) {
+			super.unit.train(UnitType.Protoss_Interceptor);
+		}
 	}
 
 }

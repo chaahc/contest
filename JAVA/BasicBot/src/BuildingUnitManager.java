@@ -16,6 +16,7 @@ public class BuildingUnitManager {
 	
 	public BuildingUnitManager() {
 		this.buildingUnitGroups.put(UnitType.Protoss_Nexus, new BuildingUnitGroup(UnitType.Protoss_Nexus));
+		this.buildingUnitGroups.put(UnitType.Protoss_Assimilator, new BuildingUnitGroup(UnitType.Protoss_Assimilator));
 		this.buildingUnitGroups.put(UnitType.Protoss_Photon_Cannon, new BuildingUnitGroup(UnitType.Protoss_Photon_Cannon));
 		this.buildingUnitGroups.put(UnitType.Protoss_Gateway, new BuildingUnitGroup(UnitType.Protoss_Gateway));
 		this.buildingUnitGroups.put(UnitType.Protoss_Stargate, new BuildingUnitGroup(UnitType.Protoss_Stargate));

@@ -36,18 +36,19 @@ public class BattleUnitGroupManager {
 		singleGroups.put(UnitType.Protoss_Observer, new BattleUnitGroup(UnitType.Protoss_Observer));
 		singleGroups.put(UnitType.Protoss_Reaver, new BattleUnitGroup(UnitType.Protoss_Reaver));
 		singleGroups.put(UnitType.Protoss_Shuttle, new BattleUnitGroup(UnitType.Protoss_Shuttle));
-		singleGroups.put(UnitType.Protoss_Scout, new BattleUnitGroup(UnitType.Protoss_Scout));
 		singleGroups.put(UnitType.Protoss_Corsair, new BattleUnitGroup(UnitType.Protoss_Corsair));
 		singleGroups.put(UnitType.Protoss_Carrier, new BattleUnitGroup(UnitType.Protoss_Carrier));
 		singleGroups.put(UnitType.Protoss_Arbiter, new BattleUnitGroup(UnitType.Protoss_Arbiter));
 	}
 	
-	public BattleUnitGroup getBattleUnitGroup(UnitType unitType) {
-		return singleGroups.get(unitType);
-	}
-	
+	//FOR ZEALOT, DRAGOON
 	public List<BattleUnitGroup> getBattleUnitGroups(UnitType unitType) {
 		return multiGroups.get(unitType);
+	}
+
+	//FOR OTHERS
+	public BattleUnitGroup getBattleUnitGroup(UnitType unitType) {
+		return singleGroups.get(unitType);
 	}
 	
 	public void addUnit(Unit unit) {
@@ -71,6 +72,9 @@ public class BattleUnitGroupManager {
 		} else if (UnitType.Protoss_Shuttle == unitType) {
 			BattleUnit battleUnit = new Shuttle(unitId, unit, unitType);
 			singleGroups.get(unitType).addBattleUnit(battleUnit);
+		} else if (UnitType.Protoss_Reaver == unitType) {
+			BattleUnit battleUnit = new Reaver(unitId, unit, unitType);
+			singleGroups.get(unitType).addBattleUnit(battleUnit);
 		} else if (UnitType.Protoss_Corsair == unitType) {
 			BattleUnit battleUnit = new Corsair(unitId, unit, unitType);
 			singleGroups.get(unitType).addBattleUnit(battleUnit);
@@ -82,9 +86,6 @@ public class BattleUnitGroupManager {
 			singleGroups.get(unitType).addBattleUnit(battleUnit);
 		} else if (UnitType.Protoss_Archon == unitType) {
 			BattleUnit battleUnit = new Archon(unitId, unit, unitType);
-			singleGroups.get(unitType).addBattleUnit(battleUnit);
-		} else if (UnitType.Protoss_Scout == unitType) {
-			BattleUnit battleUnit = new Scout(unitId, unit, unitType);
 			singleGroups.get(unitType).addBattleUnit(battleUnit);
 		}
 	}

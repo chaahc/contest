@@ -443,10 +443,10 @@ public class MyBotModule extends DefaultBWListener {
 		// otherwise you may run into problems when you use the %(percent) character!
 		Player self = Broodwar.self();
 
-		if ("afap".equals(commandString)) {
+		if ("afap".equals(commandString) || "+".equals(commandString)) {
 			Broodwar.setLocalSpeed(0);
 			Broodwar.setFrameSkip(0);
-		} else if ("fast".equals(commandString)) {
+		} else if ("fast".equals(commandString) || "-".equals(commandString)) {
 			Broodwar.setLocalSpeed(24);
 			Broodwar.setFrameSkip(0);
 		} else if ("slow".equals(commandString)) {

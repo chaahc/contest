@@ -81,12 +81,12 @@ public class GameCommander {
 	public void onUnitCreate(Unit unit) { 
 		if (InformationManager.Instance().selfPlayer == unit.getPlayer()) {
 			UnitType unitType = unit.getType();
-			if (unitType == UnitType.Protoss_Nexus || unitType == UnitType.Protoss_Photon_Cannon ||
-					unitType == UnitType.Protoss_Gateway || unitType == UnitType.Protoss_Stargate) {
+			if (unitType == UnitType.Protoss_Nexus || unitType == UnitType.Protoss_Assimilator ||
+					unitType == UnitType.Protoss_Photon_Cannon || unitType == UnitType.Protoss_Gateway ||
+					unitType == UnitType.Protoss_Stargate) {
 				BuildingUnitManager.instance().addBuildingUnitIntoGroup(unitType, unit);
-			}else if (unitType == UnitType.Protoss_Cybernetics_Core ||
-					unitType == UnitType.Protoss_Citadel_of_Adun || unitType == UnitType.Protoss_Templar_Archives ||
-					unitType == UnitType.Protoss_Forge || unitType == UnitType.Protoss_Shield_Battery ||
+			}else if (unitType == UnitType.Protoss_Cybernetics_Core || unitType == UnitType.Protoss_Citadel_of_Adun ||
+					unitType == UnitType.Protoss_Templar_Archives || unitType == UnitType.Protoss_Forge ||
 					unitType == UnitType.Protoss_Robotics_Facility || unitType == UnitType.Protoss_Observatory ||				
 					unitType == UnitType.Protoss_Robotics_Support_Bay || unitType == UnitType.Protoss_Fleet_Beacon ||
 					unitType == UnitType.Protoss_Arbiter_Tribunal) {
@@ -111,13 +111,14 @@ public class GameCommander {
 					unit.setRallyPoint(secondChokePoint.getCenter());
 				}
 				BuildingUnitManager.instance().completeBuildingUnitInGroup(unitType, unit.getID());
-			}else if (unitType == UnitType.Protoss_Assimilator || unitType == UnitType.Protoss_Cybernetics_Core ||
-					unitType == UnitType.Protoss_Citadel_of_Adun || unitType == UnitType.Protoss_Templar_Archives ||
-					unitType == UnitType.Protoss_Forge || unitType == UnitType.Protoss_Shield_Battery ||
-					unitType == UnitType.Protoss_Robotics_Facility || unitType == UnitType.Protoss_Observatory ||				
-					unitType == UnitType.Protoss_Robotics_Support_Bay || unitType == UnitType.Protoss_Fleet_Beacon ||
-					unitType == UnitType.Protoss_Arbiter_Tribunal) {
+			} else if (unitType == UnitType.Protoss_Cybernetics_Core || unitType == UnitType.Protoss_Citadel_of_Adun ||
+						unitType == UnitType.Protoss_Templar_Archives || unitType == UnitType.Protoss_Forge || 
+						unitType == UnitType.Protoss_Robotics_Facility || unitType == UnitType.Protoss_Observatory ||
+						unitType == UnitType.Protoss_Robotics_Support_Bay || unitType == UnitType.Protoss_Fleet_Beacon ||
+						unitType == UnitType.Protoss_Arbiter_Tribunal) {
 				BuildingUnitManager.instance().getBuildingUnit(unitType).complete();
+			} else if (unitType == UnitType.Protoss_Nexus || unitType == UnitType.Protoss_Assimilator) {
+				BuildingUnitManager.instance().completeBuildingUnitInGroup(unitType, unit.getID());
 			} else { 
 				if (unitType != UnitType.Protoss_Probe) {
 					BattleUnitGroupManager.instance().addUnit(unit);
@@ -139,18 +140,17 @@ public class GameCommander {
 					unitType == UnitType.Protoss_High_Templar || unitType == UnitType.Protoss_Dark_Templar ||
 					unitType == UnitType.Protoss_Observer || unitType == UnitType.Protoss_Shuttle ||
 					unitType == UnitType.Protoss_Corsair ||	unitType == UnitType.Protoss_Carrier ||
-					unitType == UnitType.Protoss_Arbiter ||	unitType == UnitType.Protoss_Archon ||
-					unitType == UnitType.Protoss_Scout) {
+					unitType == UnitType.Protoss_Arbiter ||	unitType == UnitType.Protoss_Archon) {
 				BattleUnitGroupManager.instance().removeUnit(unit);
-			} else if (unitType == UnitType.Protoss_Nexus || unitType == UnitType.Protoss_Photon_Cannon ||
-					unitType == UnitType.Protoss_Gateway || unitType == UnitType.Protoss_Stargate) {
+			} else if (unitType == UnitType.Protoss_Nexus || unitType == UnitType.Protoss_Assimilator ||
+					unitType == UnitType.Protoss_Photon_Cannon || unitType == UnitType.Protoss_Gateway ||
+					unitType == UnitType.Protoss_Stargate) {
 				BuildingUnitManager.instance().removeBuildingUnitFromGroup(unitType, unit.getID());
-			} else if (unitType == UnitType.Protoss_Assimilator || unitType == UnitType.Protoss_Cybernetics_Core ||
-					unitType == UnitType.Protoss_Citadel_of_Adun || unitType == UnitType.Protoss_Templar_Archives ||
-					unitType == UnitType.Protoss_Forge || unitType == UnitType.Protoss_Shield_Battery ||
-					unitType == UnitType.Protoss_Robotics_Facility || unitType == UnitType.Protoss_Observatory ||				
-					unitType == UnitType.Protoss_Robotics_Support_Bay || unitType == UnitType.Protoss_Fleet_Beacon ||
-					unitType == UnitType.Protoss_Arbiter_Tribunal) {			
+			} else if (unitType == UnitType.Protoss_Cybernetics_Core || unitType == UnitType.Protoss_Citadel_of_Adun ||
+					   unitType == UnitType.Protoss_Templar_Archives || unitType == UnitType.Protoss_Forge || 
+					   unitType == UnitType.Protoss_Robotics_Facility || unitType == UnitType.Protoss_Observatory ||				
+					   unitType == UnitType.Protoss_Robotics_Support_Bay || unitType == UnitType.Protoss_Fleet_Beacon ||
+					   unitType == UnitType.Protoss_Arbiter_Tribunal) {			
 				BuildingUnitManager.instance().removeBuildingUnit(unitType);
 			} else {
 				
@@ -169,7 +169,7 @@ public class GameCommander {
 		if (InformationManager.Instance().selfPlayer == unit.getPlayer()) {
 			UnitType unitType = unit.getType();
 			if (unitType == UnitType.Protoss_Assimilator) {
-				BuildingUnitManager.instance().addBuildingUnit(unitType, unit);
+				BuildingUnitManager.instance().addBuildingUnitIntoGroup(unitType, unit);
 			}
 		}
 		InformationManager.Instance().onUnitMorph(unit);

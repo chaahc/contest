@@ -1,6 +1,8 @@
 
 import bwapi.Position;
 import bwapi.Unit;
+import bwapi.UnitCommand;
+import bwapi.UnitCommandType;
 import bwapi.UnitType;
 
 public class BattleUnit {
@@ -39,6 +41,6 @@ public class BattleUnit {
 	}
 
 	public void move(Position position) {
-		this.unit.move(position);
+		CommandUtil.move(this.unit, position);
 	}
 }

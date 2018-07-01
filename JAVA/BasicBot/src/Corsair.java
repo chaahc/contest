@@ -13,6 +13,6 @@ public class Corsair extends BattleUnit {
 
 	public void disruptionWeb(Unit target) {
 		// TODO Auto-generated method stub
-		super.unit.useTech(TechType.Disruption_Web, target);
+		CommandUtil.useTech(super.unit, TechType.Disruption_Web, target);
 	}
 }

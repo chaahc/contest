@@ -149,7 +149,7 @@ public class WorkerManager {
 					setIdleWorker(worker);
 				}
 				else {
-					commandUtil.move(worker, data.getPosition());
+					CommandUtil.move(worker, data.getPosition());
 				}
 			}
 		}

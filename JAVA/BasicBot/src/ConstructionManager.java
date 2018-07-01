@@ -265,7 +265,7 @@ public class ConstructionManager {
 				// 한번도 안가본 곳에는 build 커맨드 자체를 지시할 수 없으므로, 일단 그곳으로 이동하게 합니다
 	            if (!isBuildingPositionExplored(b))
 	            {
-	            	commandUtil.move(b.getConstructionWorker(),b.getFinalPosition().toPosition());
+	            	CommandUtil.move(b.getConstructionWorker(),b.getFinalPosition().toPosition());
 	            }
 				else if (b.isBuildCommandGiven() == false)
 	            {

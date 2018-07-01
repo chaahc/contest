@@ -12,7 +12,9 @@ public class Reaver extends BattleUnit implements WeaponTrainable{
 	@Override
 	public void train() {
 		// TODO Auto-generated method stub
-		super.unit.train(UnitType.Protoss_Scarab);
+		if (super.unit.canTrain(UnitType.Protoss_Scarab)) {
+			super.unit.train(UnitType.Protoss_Scarab);
+		}
 	}
 
 }

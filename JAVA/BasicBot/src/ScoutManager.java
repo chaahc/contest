@@ -139,7 +139,7 @@ public class ScoutManager {
 
 				if (closestBaseLocation != null) {
 					// assign a scout to go scout it
-					commandUtil.move(currentScoutUnit, closestBaseLocation.getPosition());
+					CommandUtil.move(currentScoutUnit, closestBaseLocation.getPosition());
 					currentScoutTargetBaseLocation = closestBaseLocation;
 				}
 			}
