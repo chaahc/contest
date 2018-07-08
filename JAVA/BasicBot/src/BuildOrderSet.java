@@ -5,17 +5,20 @@ public class BuildOrderSet {
 	private BuildingUnitOrder buildingUnitOrder;
 	private BattleUnitOrder battleUnitOrder;
 	private UpgradeOrder upgradeOrder;
+	private BattleOrder battleOrder;
 	
 	public BuildOrderSet(StrategyType strategyType,
 						InitialBuildOrder initialBuilderOrder,
 						BuildingUnitOrder buildingUnitOrder,
 						BattleUnitOrder battleUnitOrder,
-						UpgradeOrder upgradeOrder) {
+						UpgradeOrder upgradeOrder,
+						BattleOrder battleOrder) {
 		this.strategyType = strategyType;
 		this.initialBuildOrder = initialBuilderOrder;
 		this.buildingUnitOrder = buildingUnitOrder;
 		this.battleUnitOrder = battleUnitOrder;
 		this.upgradeOrder = upgradeOrder;
+		this.battleOrder = battleOrder;
 	}
 	
 	public void executeInitialBuildOrder() {
@@ -34,6 +37,10 @@ public class BuildOrderSet {
 		this.upgradeOrder.execute();
 	}
 	
+	public void executeBattleOrder() {
+		this.battleOrder.execute();
+	}
+	
 	public void setBuildingUnitOrder(BuildingUnitOrder buildingUnitOrder) {
 		this.buildingUnitOrder = buildingUnitOrder;
 	}
@@ -44,5 +51,9 @@ public class BuildOrderSet {
 	
 	public void setUpgradeOrder(UpgradeOrder upgradeOrder) {
 		this.upgradeOrder = upgradeOrder;
+	}
+	
+	public void setBattleOrder(BattleOrder battleOrder) {
+		this.battleOrder = battleOrder;
 	}
 }

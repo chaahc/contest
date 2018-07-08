@@ -46,7 +46,7 @@ public class GameCommander {
 		if ( isToFindError) System.out.print("b");
 	
 		// 각 유닛의 위치를 자체 MapGrid 자료구조에 저장
-		MapGrid.Instance().update();
+//		MapGrid.Instance().update();
 
 		if ( isToFindError) System.out.print("c");
 
@@ -75,6 +75,10 @@ public class GameCommander {
 		StrategyManager.Instance().update();
 
 		if ( isToFindError) System.out.print("h)");
+		
+		BattleManager.instance().onExecuteBattleSingleOrder();
+		
+		if ( isToFindError) System.out.print("i)");
 	}
 
 	/// 유닛(건물/지상유닛/공중유닛)이 Create 될 때 발생하는 이벤트를 처리합니다

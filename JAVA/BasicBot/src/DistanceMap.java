@@ -12,13 +12,13 @@ public class DistanceMap {
 	// 지도를 바둑판처럼 Cell 들로 나누고, 매 frame 마다 각 Cell 의 timeLastVisited 시간정보, timeLastOpponentSeen 시간정보, ourUnits 와 oppUnits 목록을 업데이트 한다
 	// 가장 마지막에 방문했던 시각이 언제인지 -> Scout 에 활용
 	// 가장 마지막에 적을 발견했 시각이 언제인지 -> 적 의도 파악, 적 부대 파악, 전략 수립에 활용
-	class GridCell
+	public static class GridCell
 	{
-		private int timeLastVisited;
-		private int timeLastOpponentSeen;
-		private Unitset ourUnits;
-		private Unitset oppUnits;
-		private Position center;
+		public int timeLastVisited;
+		public int timeLastOpponentSeen;
+		public Unitset ourUnits;
+		public Unitset oppUnits;
+		public Position center;
 
 		public GridCell()
 		{

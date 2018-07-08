@@ -9,11 +9,6 @@ import bwapi.Unit;
 import bwapi.UnitType;
 
 public class BattleUnitGroupManager {
-	public static final int FRONT_GROUP = 0;
-	public static final int SUB_GROUP = 1;
-	public static final int SCOUT_GROUP = 2;
-	public static final int DEFENSE_GROUP =3;
-	
 	private static BattleUnitGroupManager instance = new BattleUnitGroupManager();
 	
 	public static BattleUnitGroupManager instance() {
@@ -56,10 +51,10 @@ public class BattleUnitGroupManager {
 		UnitType unitType = unit.getType();
 		if (UnitType.Protoss_Zealot == unitType) {
 			BattleUnit battleUnit = new Zealot(unitId, unit, unitType);
-			multiGroups.get(unitType).get(FRONT_GROUP).addBattleUnit(battleUnit);
+			multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).addBattleUnit(battleUnit);
 		} else if (UnitType.Protoss_Dragoon == unitType) {
 			BattleUnit battleUnit = new Dragoon(unitId, unit, unitType);
-			multiGroups.get(unitType).get(FRONT_GROUP).addBattleUnit(battleUnit);
+			multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).addBattleUnit(battleUnit);
 		} else if (UnitType.Protoss_High_Templar == unitType) {
 			BattleUnit battleUnit = new HighTemplar(unitId, unit, unitType);
 			singleGroups.get(unitType).addBattleUnit(battleUnit);
@@ -93,7 +88,7 @@ public class BattleUnitGroupManager {
 	public void removeUnit(Unit unit) {
 		UnitType unitType = unit.getType();
 		if (UnitType.Protoss_Zealot == unitType || UnitType.Protoss_Dragoon == unitType) {
-			multiGroups.get(unitType).get(FRONT_GROUP).removeBattleUnit(unit.getID());
+			multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).removeBattleUnit(unit.getID());
 		}else {
 			singleGroups.get(unitType).removeBattleUnit(unit.getID());
 		}

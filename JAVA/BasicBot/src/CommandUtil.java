@@ -10,7 +10,7 @@ import bwapi.UpgradeType;
 import bwapi.WeaponType;
 
 public class CommandUtil {
-	public static final int BASE_RADIUS = 200;
+	public static final int UNIT_RADIUS = 500;
 
 	public void attackUnit(Unit attacker, Unit target)
 	{
@@ -56,17 +56,15 @@ public class CommandUtil {
 		UnitCommand currentCommand = attacker.getLastCommand();
 
 		// if we've already told this unit to attack this target, ignore this command
-		if (currentCommand.getUnitCommandType() == UnitCommandType.Attack_Move &&	currentCommand.getTargetPosition().equals(targetPosition))
+		if (currentCommand.getUnitCommandType() == UnitCommandType.Attack_Move &&	currentCommand.getTargetPosition().equals(targetPosition) && attacker.isAttacking())
 		{
 			return;
 		}
 
 		// if nothing prevents it, attack the target
-		if (!attacker.isAttacking()) {
-			attacker.attack(targetPosition);
-		}
+		attacker.attack(targetPosition);
 	}
-
+	
 	public void rightClick(Unit unit, Unit target)
 	{
 		if (unit == null || target == null)
@@ -281,35 +279,19 @@ public class CommandUtil {
 
 		return count;
 	}
-
-	public Unit getClosestUnitTypeToTarget(Position selfUnitPosition)
-	{
-		Unit closestUnit = null;
-		double closestDist = BASE_RADIUS;
-
-		for (Unit unit : MyBotModule.Broodwar.enemy().getUnits())
-		{
-			double dist = unit.getDistance(selfUnitPosition);
-			if (closestUnit == null || dist < closestDist)
-			{
-				closestUnit = unit;
-				closestDist = dist;
-			}
-		}
-
-		return closestUnit;
-	}
 	
 	public static Unit getClosestUnit(Unit unit) {
-		double closestDistance = BASE_RADIUS;
+		double closestDistance = UNIT_RADIUS;
 		Unit closestUnit = null;
-		List<Unit> targetUnits = unit.getUnitsInRadius(BASE_RADIUS);
+		List<Unit> targetUnits = unit.getUnitsInRadius(UNIT_RADIUS);
 		for (Unit targetUnit : targetUnits) {
 			if (targetUnit.getPlayer() == InformationManager.Instance().enemyPlayer) {
-				int distance = targetUnit.getDistance(unit);
-				if (closestDistance > distance) {
-					closestDistance = distance;
-					closestUnit = targetUnit;
+				if (targetUnit.isTargetable()) {
+					int distance = targetUnit.getDistance(unit);
+					if (closestDistance > distance) {
+						closestDistance = distance;
+						closestUnit = targetUnit;
+					}	
 				}
 			}
 		}
@@ -317,19 +299,68 @@ public class CommandUtil {
 	}
 	
 	public static void useTech(Unit unit, TechType techType, Position target) {
-		if (MyBotModule.Broodwar.getFrameCount() - unit.getLastCommandFrame() > 3 &&
-				unit.canUseTech(techType, target)) {
-			System.out.println("TECH USED : " + techType);
+		if (unit.canUseTech(techType, target)) {
 			unit.useTech(techType, target);
 		}
 	}
 	
 	public static void useTech(Unit unit, TechType techType, Unit target) {
-		if (MyBotModule.Broodwar.getFrameCount() - unit.getLastCommandFrame() > 3 &&
-				unit.canUseTech(techType, target)) {
-			System.out.println("TECH USED : " + techType);
+		if (unit.canUseTech(techType, target)) {
 			unit.useTech(techType, target);
 		}
+	}
+	
+	public static void patrolMove(Unit attacker, final Position targetPosition)
+	{
+		// Position 객체에 대해서는 == 가 아니라 equals() 로 비교해야 합니다		
+		if (attacker == null || !targetPosition.isValid())
+		{
+			return;
+		}
+
+		// if we have issued a command to this unit already this frame, ignore this one
+		if (attacker.getLastCommandFrame() >= MyBotModule.Broodwar.getFrameCount() || attacker.isAttackFrame())
+		{
+			return;
+		}
+
+		// get the unit's current command
+		UnitCommand currentCommand = attacker.getLastCommand();
+
+		// if we've already told this unit to attack this target, ignore this command
+		if (currentCommand.getUnitCommandType() == UnitCommandType.Patrol && currentCommand.getTargetPosition().equals(targetPosition) && attacker.isPatrolling())
+		{
+			return;
+		}
+
+		// if nothing prevents it, attack the target
+		attacker.patrol(targetPosition);
+	}
+	
+	public static void rightClick(Unit unit, Position target)
+	{
+		if (unit == null || target == null)
+		{
+			return;
+		}
+
+		// if we have issued a command to this unit already this frame, ignore this one
+		if (unit.getLastCommandFrame() >= MyBotModule.Broodwar.getFrameCount() || unit.isAttackFrame())
+		{
+			return;
+		}
+
+		// get the unit's current command
+		UnitCommand currentCommand = unit.getLastCommand();
+
+		// if we've already told this unit to move to this position, ignore this command
+		if ((currentCommand.getUnitCommandType() == UnitCommandType.Right_Click_Unit) && (target.equals(currentCommand.getTargetPosition())) && unit.isMoving())
+		{
+			return;
+		}
+
+		// if nothing prevents it, attack the target
+		unit.rightClick(target);
 	}
 	
 	public static void move(Unit attacker, final Position targetPosition) {

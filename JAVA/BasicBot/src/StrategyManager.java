@@ -1,7 +1,5 @@
 import bwapi.Unit;
 import bwapi.UnitType;
-import bwta.BaseLocation;
-import bwta.Chokepoint;
 
 /// 상황을 판단하여, 정찰, 빌드, 공격, 방어 등을 수행하도록 총괄 지휘를 하는 class <br>
 /// InformationManager 에 있는 정보들로부터 상황을 판단하고, <br>
@@ -15,8 +13,6 @@ public class StrategyManager {
 	public static StrategyManager Instance() {
 		return instance;
 	}
-	
-	private CommandUtil commandUtil = new CommandUtil();
 	
 	private BuildOrderSet buildOrderSet;
 	private boolean isInitialBuildOrderFinished;
@@ -50,147 +46,16 @@ public class StrategyManager {
 		if (isInitialBuildOrderFinished == false) {
 			return;
 		}
+		
 		executeWorkerTraining();
 		executeSupplyManagement();
 		
 		this.buildOrderSet.executeBuildingUnitOrder();
 		this.buildOrderSet.executeBattleUnitOrder();
 		this.buildOrderSet.executeUpgradeOrder();
-		executeBattle();
-		executeDefense();
-		executeObservatoring();
-		trainWeapon(UnitType.Protoss_Carrier);
-		trainWeapon(UnitType.Protoss_Reaver);
+		this.buildOrderSet.executeBattleOrder();
 	}
 	
-	public void executeBattle() {
-		if (BattleManager.instance().getBattleMode() == BattleManager.BattleMode.WAIT) {
-			int zealotCount = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleUnitGroupManager.FRONT_GROUP).getUnitCount();
-			int dragoonCount = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleUnitGroupManager.FRONT_GROUP).getUnitCount();
-			if (zealotCount >= 12 && dragoonCount <= 10) {
-				Chokepoint enemySecondChokePoint = InformationManager.Instance().getSecondChokePoint(MyBotModule.Broodwar.enemy());
-				BattleManager.instance().totalAttack(enemySecondChokePoint.getCenter());
-			}
-			if (dragoonCount > 10) {
-				BaseLocation enemyFirstExpansionLocation = InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.enemy());
-				BattleManager.instance().totalAttack(enemyFirstExpansionLocation.getPosition());
-			}
-			BattleUnitGroup highTemplarGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_High_Templar);
-			if (highTemplarGroup.getUnitCount() > 0) {
-				for (int unitId : highTemplarGroup.battleUnits.keySet()) {
-					HighTemplar highTemplar = (HighTemplar) highTemplarGroup.battleUnits.get(unitId);
-					Unit enemyUnit = CommandUtil.getClosestUnit(highTemplar.getUnit());
-					if (enemyUnit != null) {
-						System.out.println("enemyUnit : " + enemyUnit.getType());
-						if (enemyUnit.getType() == UnitType.Protoss_Probe ||
-								enemyUnit.getType() == UnitType.Protoss_Zealot || 
-								enemyUnit.getType() == UnitType.Protoss_Dragoon ||
-								enemyUnit.getType() == UnitType.Protoss_Dark_Templar ||
-								enemyUnit.getType() == UnitType.Protoss_Archon ||
-								enemyUnit.getType() == UnitType.Terran_SCV ||
-								enemyUnit.getType() == UnitType.Terran_Marine ||
-								enemyUnit.getType() == UnitType.Terran_Firebat ||
-								enemyUnit.getType() == UnitType.Terran_Medic ||
-								enemyUnit.getType() == UnitType.Terran_Goliath ||
-								enemyUnit.getType() == UnitType.Terran_Siege_Tank_Tank_Mode ||
-								enemyUnit.getType() == UnitType.Terran_Siege_Tank_Siege_Mode ||
-								enemyUnit.getType() == UnitType.Terran_Wraith ||
-								enemyUnit.getType() == UnitType.Zerg_Drone ||
-								enemyUnit.getType() == UnitType.Zerg_Zergling ||
-								enemyUnit.getType() == UnitType.Zerg_Hydralisk ||
-								enemyUnit.getType() == UnitType.Zerg_Mutalisk ||
-								enemyUnit.getType() == UnitType.Zerg_Guardian ||
-								enemyUnit.getType() == UnitType.Zerg_Ultralisk) {
-							highTemplar.psionicStorm(enemyUnit.getPosition());
-						}
-					}
-					if (highTemplar.getUnit().getEnergy() < 50) {
-						BattleManager.instance().addArchonCandidate(highTemplar);
-					}
-				}
-				while(BattleManager.instance().getArchonCandidatesCount() > 1) {
-					HighTemplar highTemplar = BattleManager.instance().removeArchonCandidate();
-					HighTemplar targetHighTemplar = BattleManager.instance().removeArchonCandidate();
-					highTemplar.archonWarp(targetHighTemplar.getUnit());
-				}
-			}
-			BattleUnitGroup arbiterGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Arbiter);
-			if (arbiterGroup.getUnitCount() > 1) {
-				Chokepoint enemySecondChokePoint = InformationManager.Instance().getSecondChokePoint(MyBotModule.Broodwar.enemy());
-				BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
-				BaseLocation enemyFirstExpansionLocation = InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.enemy());
-				Unit leader = arbiterGroup.getLeader();
-				Arbiter arbiter = (Arbiter) arbiterGroup.battleUnits.get(leader.getID());
-				arbiter.move(enemySecondChokePoint.getCenter());
-				if (arbiter.unit.getEnergy() > 150) {
-					arbiter.move(enemyBaseLocation.getPosition());
-					if (arbiter.getUnit().getPosition() == enemyBaseLocation.getPosition()) {
-						arbiter.recall(enemyFirstExpansionLocation.getPosition());
-					}
-				}
-			}
-//			BattleUnitGroup corsairGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Corsair);
-//			if (corsairGroup.getUnitCount() > 0) {
-//				for (int unitId : corsairGroup.battleUnits.keySet()) {
-//					Corsair corsair = (Corsair) corsairGroup.battleUnits.get(unitId);
-//					Unit enemyUnit = CommandUtil.getClosestUnit(corsair.getUnit());
-//					if (enemyUnit != null) {
-//						if (enemyUnit.getType() == UnitType.Protoss_Photon_Cannon ||
-//								enemyUnit.getType() == UnitType.Terran_Bunker ||
-//								enemyUnit.getType() == UnitType.Terran_Missile_Turret ||
-//								enemyUnit.getType() == UnitType.Zerg_Sunken_Colony ||
-//								enemyUnit.getType() == UnitType.Zerg_Spore_Colony) {
-//							corsair.disruptionWeb(enemyUnit);
-//						}
-//					}
-//				}
-//			}
-		}
-	}
-	
-	
-	public void executeDefense() {
-		boolean isCloseToEnemy = false;
-		for (Unit unit : MyBotModule.Broodwar.enemy().getUnits()) {
-			if (InformationManager.Instance().selfPlayer.getStartLocation().getDistance(unit.getPosition().toTilePosition()) < 50) {
-				BattleManager.instance().setBattleMode(BattleManager.BattleMode.DEFENCE);
-				BattleManager.instance().closestAttack();
-				isCloseToEnemy = true;
-				System.out.println("DEFENCE MODE : " + InformationManager.Instance().selfPlayer.getStartLocation().getDistance(unit.getPosition().toTilePosition()));
-			}
-		}
-		if (!isCloseToEnemy) {
-			BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
-		}
-	}
-	
-	public void executeObservatoring() {
-		Unit zealot = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleUnitGroupManager.FRONT_GROUP).getLeader();
-		if (zealot != null) {
-			BattleUnitGroup observerGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Observer);
-			if (observerGroup.getUnitCount() > 0) {
-				for (int unitId : observerGroup.battleUnits.keySet()) {
-					BattleUnit observer = observerGroup.battleUnits.get(unitId);
-					if (observer != null) {
-						if (!observer.getUnit().isFollowing() && observer.getUnit().canFollow(zealot)) {
-							observer.getUnit().follow(zealot);
-						}
-					}					
-				}
-			}
-		}
-	}
-	
-	public void trainWeapon(UnitType unitType) {
-		BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(unitType);
-		if (battleUnitGroup.getUnitCount() > 0) {
-			for (int unitId : battleUnitGroup.battleUnits.keySet()) {
-				WeaponTrainable battleUnit = (WeaponTrainable) battleUnitGroup.battleUnits.get(unitId);
-				battleUnit.train();
-			}
-		}
-	}
-
 	// 일꾼 계속 추가 생산
 	public void executeWorkerTraining() {
 		if (MyBotModule.Broodwar.self().minerals() >= 50) {

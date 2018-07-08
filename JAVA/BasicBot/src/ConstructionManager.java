@@ -122,7 +122,7 @@ public class ConstructionManager {
 	    assignWorkersToUnassignedBuildings();       
 	    checkForStartedConstruction();              
 	    constructAssignedBuildings();               
-	    checkForDeadTerranBuilders();               
+//	    checkForDeadTerranBuilders();               
 	    checkForCompletedBuildings();           
 		checkForDeadlockConstruction();			
 	}

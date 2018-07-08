@@ -34,6 +34,13 @@ public class ProtossBasicUpgradeOrder extends UpgradeOrder {
 				return true;
 			}
 		});
+		super.order(UnitType.Protoss_Robotics_Support_Bay, UpgradeType.Gravitic_Drive, new OrderCondition() {
+			@Override
+			public boolean isActive() {
+				// TODO Auto-generated method stub
+				return true;
+			}
+		});
 //		super.order(UnitType.Protoss_Templar_Archives, TechType.Hallucination, new OrderCondition() {
 //			@Override
 //			public boolean isActive() {
@@ -63,13 +70,6 @@ public class ProtossBasicUpgradeOrder extends UpgradeOrder {
 			}
 		});
 //		super.order(UnitType.Protoss_Arbiter_Tribunal, TechType.Stasis_Field, new OrderCondition() {
-//			@Override
-//			public boolean isActive() {
-//				// TODO Auto-generated method stub
-//				return true;
-//			}
-//		});
-//		super.order(UnitType.Protoss_Robotics_Support_Bay, UpgradeType.Gravitic_Drive, new OrderCondition() {
 //			@Override
 //			public boolean isActive() {
 //				// TODO Auto-generated method stub

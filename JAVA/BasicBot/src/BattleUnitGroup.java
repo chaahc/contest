@@ -1,15 +1,15 @@
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
-import bwapi.Unit;
 import bwapi.UnitType;
 
 public class BattleUnitGroup {
 	private UnitType unitType;
 	public Map<Integer, BattleUnit> battleUnits = new HashMap<Integer, BattleUnit>();
 	private int unitCount;
-	private Unit leader;
+	private BattleUnit leader;
 	
 	public BattleUnitGroup(UnitType unitType) {
 		this.unitType = unitType;
@@ -17,15 +17,20 @@ public class BattleUnitGroup {
 	}
 	
 	public void addBattleUnit(BattleUnit battleUnit) {
-		battleUnits.put(battleUnit.unitId, battleUnit);
-		this.leader = battleUnit.getUnit();
+		this.battleUnits.put(battleUnit.unitId, battleUnit);
+		if (this.leader == null) {
+			this.leader = battleUnit;
+		}
 		this.unitCount++;
 	}
 	
 	public void removeBattleUnit(int unitId) {
-		battleUnits.remove(unitId);
+		this.battleUnits.remove(unitId);
 		if (unitCount > 0) {
 			this.unitCount--;
+		}
+		if (unitId == this.leader.getUnitId()) {
+			BattleManager.changeReader(this.leader, this);
 		}
 	}
 	
@@ -33,11 +38,11 @@ public class BattleUnitGroup {
 		return this.unitCount;
 	}
 	
-	public void setLeader(Unit unit) {
+	public void setLeader(BattleUnit unit) {
 		this.leader = unit;
 	}
 	
-	public Unit getLeader() {
+	public BattleUnit getLeader() {
 		return this.leader;
 	}
 }
