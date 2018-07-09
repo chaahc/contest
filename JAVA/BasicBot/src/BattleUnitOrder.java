@@ -13,7 +13,7 @@ public abstract class BattleUnitOrder implements BuildOrder {
 		}
 	}
 	
-	//FOR GATEWAY, STARGATE, PHOTON CANNON
+	//FOR GATEWAY, STARGATE
 	protected void bulkOrder(UnitType buildingUnitType, UnitType battleUnitType, OrderCondition orderCondition) {
 		if (MyBotModule.Broodwar.self().supplyUsed() < MyBotModule.Broodwar.self().supplyTotal()) {
 			if (orderCondition.isActive()) {
