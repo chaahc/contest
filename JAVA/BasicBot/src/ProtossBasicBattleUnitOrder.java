@@ -46,19 +46,19 @@ public class ProtossBasicBattleUnitOrder extends BattleUnitOrder {
 			}
 		});
 		
-//		super.order(UnitType.Protoss_Robotics_Facility, UnitType.Protoss_Shuttle, new OrderCondition() {
-//			@Override
-//			public boolean isActive() {
-//				// TODO Auto-generated method stub
-//				BuildingUnit roboticsFacility = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Robotics_Facility);
-//				if (roboticsFacility != null && roboticsFacility.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
-//						BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Shuttle).getUnitCount() < 1 &&
-//						MyBotModule.Broodwar.self().minerals() >= 200) {
-//					return true;
-//				}
-//				return false;
-//			}
-//		});
+		super.order(UnitType.Protoss_Robotics_Facility, UnitType.Protoss_Shuttle, new OrderCondition() {
+			@Override
+			public boolean isActive() {
+				// TODO Auto-generated method stub
+				BuildingUnit roboticsFacility = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Robotics_Facility);
+				if (roboticsFacility != null && roboticsFacility.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
+						BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Shuttle).getUnitCount() < 1 &&
+						MyBotModule.Broodwar.self().minerals() >= 200) {
+					return true;
+				}
+				return false;
+			}
+		});
 		
 //		super.order(UnitType.Protoss_Robotics_Facility, UnitType.Protoss_Reaver, new OrderCondition() {
 //			@Override

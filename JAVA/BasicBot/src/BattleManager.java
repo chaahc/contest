@@ -102,7 +102,7 @@ public class BattleManager {
 		BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(BattleGroupType.FRONT_GROUP.getValue());
 		BattleUnit leader = battleUnitGroup.getLeader();
 		
-		if (shouldRetreat(leader)) {
+		if (shouldRetreat(leader.getUnit())) {
 			BaseLocation selfFirstExpansionLocation = InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.self());
 			CommandUtil.rightClick(leader.getUnit(), selfFirstExpansionLocation.getPosition());
 		} else {
@@ -110,11 +110,11 @@ public class BattleManager {
 		}
 	}
 	
-	private boolean shouldRetreat(BattleUnit battleUnit) {
+	public static boolean shouldRetreat(Unit battleUnit) {
 		int enemyUnitScore = 0;
 		int selfUnitScore = 0;
 		boolean isEnemyUnitInvisible = false;
-		for (Unit unit : battleUnit.getUnit().getRegion().getUnits()) {
+		for (Unit unit : battleUnit.getRegion().getUnits()) {
 			if (unit.getType() == UnitType.Protoss_Dark_Templar || 
 					unit.getType() == UnitType.Zerg_Lurker) {
 				if (unit.isDetected()) {
@@ -226,7 +226,9 @@ public class BattleManager {
 		if (battleUnit.getUnit().exists()) {
 			if (battleUnit.getUnit().isUnderAttack() && battleUnit.getUnit().getShields() + battleUnit.getUnit().getHitPoints() < 100) {
 				Chokepoint selfFirstChokepoint = InformationManager.Instance().getFirstChokePoint(MyBotModule.Broodwar.self());
-				CommandUtil.rightClick(battleUnit.getUnit(), selfFirstChokepoint.getCenter());
+				//TODO choose better one
+//				CommandUtil.rightClick(battleUnit.getUnit(), selfFirstChokepoint.getCenter());
+				battleUnit.getUnit().move(selfFirstChokepoint.getCenter());
 			} else {
 				CommandUtil.patrolMove(battleUnit.getUnit(), position);
 			}

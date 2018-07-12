@@ -24,6 +24,7 @@ public class BattleOrder {
 		highTemplarAttack();
 		dropAttack();
 		corsairAttack();
+		arbiterAttack();
 	}
 	
 	public void changeBattleMode() {
@@ -110,7 +111,7 @@ public class BattleOrder {
 								(unit.getType() == UnitType.Protoss_Reaver && (unit.isUnderAttack() || unit.getScarabCount() == 0))) {				
 								System.out.println(unit.getID() + ", hp : " + unit.getShields() + unit.getHitPoints() +", mp : " + unit.getEnergy());
 								shuttle.getUnit().load(unit);
-							}
+							} 
 						}
 					}
 				} else {
@@ -119,16 +120,16 @@ public class BattleOrder {
 						System.out.println("target not reached, current position : " +shuttle.getUnit().getPosition().toTilePosition());
 						BattleManager.instance().addBattleSingleOrder(
 								new ShuttleMove(shuttle.getUnit(), Arrays.asList(
-										new MovePosition(new TilePosition(50, 120).toPosition()),
-										new MovePosition(new TilePosition(60, 120).toPosition())
+										new MovePosition(InformationManager.Instance().getFirstChokePoint(MyBotModule.Broodwar.self()).getCenter())
 										)
 									)
 								);		
 					}
 					System.out.println("shuttle current position : " +shuttle.getUnit().getPosition().toTilePosition());
-					if (shuttle.getUnit().getPosition().toTilePosition().equals(new TilePosition(60, 120))) {
+					if (shuttle.getUnit().getPosition().toTilePosition().equals(InformationManager.Instance().getFirstChokePoint(MyBotModule.Broodwar.self()).getCenter().toTilePosition())) {
 						System.out.println("target reached, current position : " + shuttle.getUnit().getPosition().toTilePosition());
 						shuttle.getUnit().unloadAll();
+						CommandUtil.move(shuttle.getUnit(), InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self()).getPosition());
 //						for (Unit unit : shuttle.getUnit().getLoadedUnits()) {
 //							if (unit.getType() == UnitType.Protoss_High_Templar && 
 //									unit.getEnergy() > TechType.Psionic_Storm.energyCost()) {
@@ -171,11 +172,20 @@ public class BattleOrder {
 				} else {
 					BattleUnitGroup arbiterGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Arbiter);
 					BattleUnit arbiter = arbiterGroup.getLeader();
-					if (arbiter != null && arbiter.getUnit().exists() && corsair.getUnit().canFollow(arbiter.getUnit())) {
-						corsair.getUnit().follow(arbiter.getUnit());
-					} else {
-						BaseLocation selfBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
-						CommandUtil.patrolMove(corsair.getUnit(), selfBaseLocation.getPosition());
+					if (arbiter != null && arbiter.getUnit().exists() && arbiter.getUnit().getEnergy() > 150) {
+						//required move logic
+						boolean isAroundArbiter = false;
+						for (Unit unit : corsair.getUnit().getUnitsInRadius(BASE_RADIUS)) {
+							if (unit.getType() == UnitType.Protoss_Arbiter) {
+								isAroundArbiter = true;
+								break;
+							}
+						}
+						if (!isAroundArbiter) {
+							corsair.getUnit().stop();
+						}
+						BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
+						CommandUtil.move(corsair.getUnit(), enemyBaseLocation.getPosition());
 					}
 				}
 			}
@@ -191,13 +201,28 @@ public class BattleOrder {
 	}
 	
 	public void arbiterAttack() {
+		if (MyBotModule.Broodwar.getFrameCount() % 24 != 0) {
+			return;
+		}
+		
 		BattleUnitGroup arbiterGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Arbiter);
 		if (arbiterGroup.getUnitCount() > 0) {
 			BattleUnitGroup dragoonGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue());
-			Arbiter arbiter = (Arbiter) arbiterGroup.getLeader();
-			//TODO move logic 
-			if (arbiter.getUnit().getEnergy() > 150) {
-				arbiter.recall(dragoonGroup.getLeader().getUnit().getPosition());
+			BattleUnit arbiter = arbiterGroup.getLeader();
+			if (!arbiter.getUnit().exists()) {
+				arbiter = BattleManager.changeReader(arbiter, arbiterGroup);
+			}
+			BattleUnitGroup corsairGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Corsair);
+			BattleUnit corsair = corsairGroup.getLeader();
+			if (corsair != null && corsair.getUnit().exists() && !arbiter.getUnit().isFollowing() && arbiter.getUnit().canFollow(corsair.getUnit())) {
+				arbiter.getUnit().follow(corsair.getUnit());
+			}
+			BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
+			if (arbiter.getUnit().getEnergy() > 150  
+					//required to move logic
+					&& (arbiter.getUnit().getDistance(enemyBaseLocation.getPosition()) < 300 || arbiter.getUnit().isUnderAttack())
+					) {
+				((Arbiter)arbiter).recall(dragoonGroup.getLeader().getUnit().getPosition());
 			}
 		}
 	}

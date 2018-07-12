@@ -124,9 +124,7 @@ public class GameCommander {
 			} else if (unitType == UnitType.Protoss_Nexus || unitType == UnitType.Protoss_Assimilator) {
 				BuildingUnitManager.instance().completeBuildingUnitInGroup(unitType, unit.getID());
 			} else { 
-				if (unitType != UnitType.Protoss_Probe) {
-					BattleUnitGroupManager.instance().addUnit(unit);
-				}
+				BattleUnitGroupManager.instance().addUnit(unit);
 			}
 		}
 		
@@ -140,7 +138,8 @@ public class GameCommander {
 	public void onUnitDestroy(Unit unit) {		
 		if (InformationManager.Instance().selfPlayer == unit.getPlayer()) {
 			UnitType unitType = unit.getType();
-			if (unitType == UnitType.Protoss_Zealot || unitType == UnitType.Protoss_Dragoon ||
+			if (unitType == UnitType.Protoss_Probe || 
+					unitType == UnitType.Protoss_Zealot || unitType == UnitType.Protoss_Dragoon ||
 					unitType == UnitType.Protoss_High_Templar || unitType == UnitType.Protoss_Dark_Templar ||
 					unitType == UnitType.Protoss_Observer || unitType == UnitType.Protoss_Shuttle ||
 					unitType == UnitType.Protoss_Corsair ||	unitType == UnitType.Protoss_Carrier ||
@@ -179,7 +178,7 @@ public class GameCommander {
 		InformationManager.Instance().onUnitMorph(unit);
 
 		// Zerg 종족 Worker 의 Morph 에 대한 처리
-		WorkerManager.Instance().onUnitMorph(unit);
+//		WorkerManager.Instance().onUnitMorph(unit);
 	}
 
 	/// 유닛(건물/지상유닛/공중유닛)의 소속 플레이어가 바뀔 때 발생하는 이벤트를 처리합니다<br>
@@ -196,12 +195,12 @@ public class GameCommander {
 	/// 유닛(건물/지상유닛/공중유닛)이 Discover 될 때 발생하는 이벤트를 처리합니다<br>
 	/// 아군 유닛이 Create 되었을 때 라든가, 적군 유닛이 Discover 되었을 때 발생합니다
 	public void onUnitDiscover(Unit unit) {
-		UnitType unitType = unit.getType();
-		if (unit.getPlayer() == InformationManager.Instance().enemyPlayer) {
-			if (InformationManager.Instance().selfPlayer.getStartLocation().getDistance(unit.getPosition().toTilePosition()) < 50) {
-				BattleManager.instance().totalAttack(unit);
-			}
-		}
+//		UnitType unitType = unit.getType();
+//		if (unit.getPlayer() == InformationManager.Instance().enemyPlayer) {
+//			if (InformationManager.Instance().selfPlayer.getStartLocation().getDistance(unit.getPosition().toTilePosition()) < 50) {
+//				BattleManager.instance().totalAttack(unit);
+//			}
+//		}
 	}
 
 	/// 유닛(건물/지상유닛/공중유닛)이 Evade 될 때 발생하는 이벤트를 처리합니다<br>

@@ -25,12 +25,14 @@ public class BattleUnitGroup {
 	}
 	
 	public void removeBattleUnit(int unitId) {
-		this.battleUnits.remove(unitId);
-		if (unitCount > 0) {
-			this.unitCount--;
-		}
-		if (unitId == this.leader.getUnitId()) {
-			BattleManager.changeReader(this.leader, this);
+		BattleUnit removedUnit = this.battleUnits.remove(unitId);
+		if (removedUnit != null) {
+			if (unitCount > 0) {
+				this.unitCount--;
+			}
+			if (unitId == this.leader.getUnitId()) {
+				this.leader = BattleManager.changeReader(this.leader, this);
+			}
 		}
 	}
 	

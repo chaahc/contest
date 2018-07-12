@@ -21,10 +21,17 @@ public class BattleUnitGroupManager {
 	public BattleUnitGroupManager() {
 		List<BattleUnitGroup> zealotGroup = new ArrayList<BattleUnitGroup>();
 		zealotGroup.add(new BattleUnitGroup(UnitType.Protoss_Zealot));
+		zealotGroup.add(new BattleUnitGroup(UnitType.Protoss_Zealot));
+		zealotGroup.add(new BattleUnitGroup(UnitType.Protoss_Zealot));
+		zealotGroup.add(new BattleUnitGroup(UnitType.Protoss_Zealot));
 		multiGroups.put(UnitType.Protoss_Zealot, zealotGroup);
 		List<BattleUnitGroup> dragoonGroup = new ArrayList<BattleUnitGroup>();
 		dragoonGroup.add(new BattleUnitGroup(UnitType.Protoss_Dragoon));
+		dragoonGroup.add(new BattleUnitGroup(UnitType.Protoss_Dragoon));
+		dragoonGroup.add(new BattleUnitGroup(UnitType.Protoss_Dragoon));
+		dragoonGroup.add(new BattleUnitGroup(UnitType.Protoss_Dragoon));
 		multiGroups.put(UnitType.Protoss_Dragoon, dragoonGroup);
+		singleGroups.put(UnitType.Protoss_Probe, new BattleUnitGroup(UnitType.Protoss_Probe));
 		singleGroups.put(UnitType.Protoss_High_Templar, new BattleUnitGroup(UnitType.Protoss_High_Templar));
 		singleGroups.put(UnitType.Protoss_Dark_Templar, new BattleUnitGroup(UnitType.Protoss_Dark_Templar));
 		singleGroups.put(UnitType.Protoss_Archon, new BattleUnitGroup(UnitType.Protoss_Archon));
@@ -49,12 +56,25 @@ public class BattleUnitGroupManager {
 	public void addUnit(Unit unit) {
 		int unitId = unit.getID();
 		UnitType unitType = unit.getType();
-		if (UnitType.Protoss_Zealot == unitType) {
+		if (UnitType.Protoss_Probe == unitType) {
+			BattleUnit battleUnit = new BattleUnit(unitId, unit, unitType);
+			singleGroups.get(UnitType.Protoss_Probe).addBattleUnit(battleUnit);
+		} else if (UnitType.Protoss_Zealot == unitType) {
 			BattleUnit battleUnit = new Zealot(unitId, unit, unitType);
-			multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).addBattleUnit(battleUnit);
+			//TODO required organizing logic 
+			if (multiGroups.get(unitType).get(BattleGroupType.SCOUT_GROUP.getValue()).getUnitCount() == 0) {
+				multiGroups.get(unitType).get(BattleGroupType.SCOUT_GROUP.getValue()).addBattleUnit(battleUnit);
+			} else {
+				multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).addBattleUnit(battleUnit);
+			}
 		} else if (UnitType.Protoss_Dragoon == unitType) {
 			BattleUnit battleUnit = new Dragoon(unitId, unit, unitType);
-			multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).addBattleUnit(battleUnit);
+			//TODO required organizing logic
+			if (multiGroups.get(unitType).get(BattleGroupType.SCOUT_GROUP.getValue()).getUnitCount() == 0) {
+				multiGroups.get(unitType).get(BattleGroupType.SCOUT_GROUP.getValue()).addBattleUnit(battleUnit);
+			} else {
+				multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).addBattleUnit(battleUnit);
+			}
 		} else if (UnitType.Protoss_High_Templar == unitType) {
 			BattleUnit battleUnit = new HighTemplar(unitId, unit, unitType);
 			singleGroups.get(unitType).addBattleUnit(battleUnit);
@@ -89,6 +109,9 @@ public class BattleUnitGroupManager {
 		UnitType unitType = unit.getType();
 		if (UnitType.Protoss_Zealot == unitType || UnitType.Protoss_Dragoon == unitType) {
 			multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).removeBattleUnit(unit.getID());
+			multiGroups.get(unitType).get(BattleGroupType.SUB_GROUP.getValue()).removeBattleUnit(unit.getID());
+			multiGroups.get(unitType).get(BattleGroupType.DEFENCE_GROUP.getValue()).removeBattleUnit(unit.getID());
+			multiGroups.get(unitType).get(BattleGroupType.SCOUT_GROUP.getValue()).removeBattleUnit(unit.getID());
 		}else {
 			singleGroups.get(unitType).removeBattleUnit(unit.getID());
 		}
