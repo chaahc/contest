@@ -56,7 +56,7 @@ public class Config {
 	/// 건물과 건물간 띄울 최소한의 간격 - ResourceDepot 건물의 경우 (Nexus, Hatchery, Command Center)
 	public static int BuildingResourceDepotSpacing = 0;
 	/// 건물과 건물간 띄울 최소한의 간격 - Protoss_Pylon 건물의 경우 - 게임 초기에
-	public static int BuildingPylonEarlyStageSpacing = 4;
+	public static int BuildingPylonEarlyStageSpacing = 0;
 	/// 건물과 건물간 띄울 최소한의 간격 - Protoss_Pylon 건물의 경우 - 게임 초기 이후에
 	public static int BuildingPylonSpacing = 2;
 	/// 건물과 건물간 띄울 최소한의 간격 - Terran_Supply_Depot 건물의 경우
