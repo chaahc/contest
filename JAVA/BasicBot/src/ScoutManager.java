@@ -25,8 +25,6 @@ public class ScoutManager {
 	};
 	
 	private BaseLocation currentScoutTargetBaseLocation = null;
-	private Vector<Position> enemyBaseRegionVertices = new Vector<Position>();
-	private int currentScoutFreeToVertexIndex = -1;
 	private Position currentScoutTargetPosition = Position.None;
 
 	private CommandUtil commandUtil = new CommandUtil();
@@ -176,12 +174,6 @@ public class ScoutManager {
 						}
 					}
 				}
-//					currentScoutTargetPosition = getScoutFleePositionFromEnemyRegionVertices();
-//					CommandUtil.move(currentScoutUnit, currentScoutTargetPosition);					
-					
-//					WorkerManager.Instance().setIdleWorker(currentScoutUnit);
-//					currentScoutStatus = ScoutStatus.NoScout.ordinal();
-//					currentScoutTargetPosition = myBaseLocation.getPosition();
 			}
 		}
 	}
@@ -202,11 +194,5 @@ public class ScoutManager {
 	public BaseLocation getScoutTargetBaseLocation()
 	{
 		return currentScoutTargetBaseLocation;
-	}
-
-	/// 적군의 Main Base Location 이 있는 Region 의 경계선에 해당하는 Vertex 들의 목록을 리턴합니다
-	public Vector<Position> getEnemyRegionVertices()
-	{
-		return enemyBaseRegionVertices;
 	}
 }

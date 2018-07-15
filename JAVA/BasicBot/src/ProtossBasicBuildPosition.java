@@ -18,13 +18,43 @@ public class ProtossBasicBuildPosition {
 	public static int firstPylonPosY = 0;
 	
 	public static int secondPylonPosX = 0;
-	public static int secondPylonPosY = 0;
+	public static int secondPylonPosY = 0;	
+	
+	public static int pylonPosX = 0;
+	public static int pylonPosY = 0;
+	
+	public static int gatewayPosX = 0;
+	public static int gatewayPosY = 0;
+	
+	public static int forgePosX = 0;
+	public static int forgePosY = 0;
+	
+	public static int firstPhotonPosX = 0;
+	public static int firstPhotonPosY = 0;
+	
+	public static int secondPhotonPosX = 0;
+	public static int secondPhotonPosY = 0;
 	
 	private static int[] firstPylonPosXX = null;
 	private static int[] firstPylonPosYY = null;
 	
 	private static int[] secondPylonPosXX = null;
 	private static int[] secondPylonPosYY = null;
+	
+	private static int[] pylonPosXX = null;
+	private static int[] pylonPosYY = null;
+	
+	private static int[] gatewayPosXX = null;
+	private static int[] gatewayPosYY = null;
+	
+	private static int[] forgePosXX = null;
+	private static int[] forgePosYY = null;
+	
+	private static int[] firstPhotonPosXX = null;
+	private static int[] firstPhotonPosYY = null;
+	
+	private static int[] secondPhotonPosXX = null;
+	private static int[] secondPhotonPosYY = null;
 	
 	private static ProtossBasicBuildPosition instance = new ProtossBasicBuildPosition();
 	
@@ -46,8 +76,19 @@ public class ProtossBasicBuildPosition {
 			firstPylonPosYY = new int[]{20,20,105,105};
 			secondPylonPosXX = new int[]{18,110,110,16};
 			secondPylonPosYY = new int[]{31,31,92,90};
+			
+			pylonPosXX = new int[]{17,108,108,18};
+			pylonPosYY = new int[]{37,37,96,96};
+			forgePosXX = new int[]{17,108,107,108};
+			forgePosYY = new int[]{35,35,94,94};
+			gatewayPosXX = new int[]{17,108,106,18};
+			gatewayPosYY = new int[]{32,32,91,91};
+			firstPhotonPosXX = new int[]{15,111,110,16};
+			firstPhotonPosYY = new int[]{33,33,96,94};
+			secondPhotonPosXX = new int[]{15,111,110,16};
+			secondPhotonPosYY = new int[]{35,35,94,92};
 		} 
-		//오버워치
+		//투혼
 		else if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.OverWatch) {
 			
 		}
@@ -70,6 +111,17 @@ public class ProtossBasicBuildPosition {
 				firstPylonPosY = firstPylonPosYY[0];
 				secondPylonPosX = secondPylonPosXX[0];
 				secondPylonPosY = secondPylonPosYY[0];
+				
+				pylonPosX = pylonPosXX[0];
+				pylonPosY = pylonPosYY[0];
+				forgePosX = forgePosXX[0];
+				forgePosY = forgePosYY[0];
+				gatewayPosX = gatewayPosXX[0];
+				gatewayPosY = gatewayPosYY[0];
+				firstPhotonPosX = firstPhotonPosXX[0];
+				firstPhotonPosY = firstPhotonPosYY[0];
+				secondPhotonPosX = secondPhotonPosXX[0];
+				secondPhotonPosY = secondPhotonPosYY[0];
 			}
 			else if(startingX == 117 && startingY ==9) {
 //				return new TilePosition(secondPylonPosXX[1], secondPylonPosYY[1]);
@@ -77,6 +129,17 @@ public class ProtossBasicBuildPosition {
 				firstPylonPosY = firstPylonPosYY[1];
 				secondPylonPosX = secondPylonPosXX[1];
 				secondPylonPosY = secondPylonPosYY[1];
+				
+				pylonPosX = pylonPosXX[1];
+				pylonPosY = pylonPosYY[1];
+				forgePosX = forgePosXX[1];
+				forgePosY = forgePosYY[1];
+				gatewayPosX = gatewayPosXX[1];
+				gatewayPosY = gatewayPosYY[1];
+				firstPhotonPosX = firstPhotonPosXX[1];
+				firstPhotonPosY = firstPhotonPosYY[1];
+				secondPhotonPosX = secondPhotonPosXX[1];
+				secondPhotonPosY = secondPhotonPosYY[1];
 			}
 			else if(startingX == 117 && startingY ==118) {
 //				return new TilePosition(secondPylonPosXX[2], secondPylonPosYY[2]);
@@ -84,6 +147,17 @@ public class ProtossBasicBuildPosition {
 				firstPylonPosY = firstPylonPosYY[2];
 				secondPylonPosX = secondPylonPosXX[2];
 				secondPylonPosY = secondPylonPosYY[2];
+				
+				pylonPosX = pylonPosXX[2];
+				pylonPosY = pylonPosYY[2];
+				forgePosX = forgePosXX[2];
+				forgePosY = forgePosYY[2];
+				gatewayPosX = gatewayPosXX[2];
+				gatewayPosY = gatewayPosYY[2];
+				firstPhotonPosX = firstPhotonPosXX[2];
+				firstPhotonPosY = firstPhotonPosYY[2];
+				secondPhotonPosX = secondPhotonPosXX[2];
+				secondPhotonPosY = secondPhotonPosYY[2];
 			}
 			else if(startingX == 7 && startingY ==118) {
 //				return new TilePosition(secondPylonPosXX[3], secondPylonPosYY[3]);
@@ -91,6 +165,17 @@ public class ProtossBasicBuildPosition {
 				firstPylonPosY = firstPylonPosYY[3];
 				secondPylonPosX = secondPylonPosXX[3];
 				secondPylonPosY = secondPylonPosYY[3];
+				
+				pylonPosX = pylonPosXX[3];
+				pylonPosY = pylonPosYY[3];
+				forgePosX = forgePosXX[3];
+				forgePosY = forgePosYY[3];
+				gatewayPosX = gatewayPosXX[3];
+				gatewayPosY = gatewayPosYY[3];
+				firstPhotonPosX = firstPhotonPosXX[3];
+				firstPhotonPosY = firstPhotonPosYY[3];
+				secondPhotonPosX = secondPhotonPosXX[3];
+				secondPhotonPosY = secondPhotonPosYY[3];
 			}
 		} 
 		//오버워치

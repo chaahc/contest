@@ -159,6 +159,13 @@ public class ConstructionPlaceFinder {
 					desiredPosition = getBuildLocationNear(buildingType, tempBaseLocation.getTilePosition());
 				}
 				break;
+				
+			case SecondExpansionLocation:
+				tempBaseLocation = InformationManager.Instance().getSecondExpansionLocation(MyBotModule.Broodwar.self());
+				if (tempBaseLocation != null) {
+					desiredPosition = getBuildLocationNear(buildingType, tempBaseLocation.getTilePosition());
+				}
+				break;
 
 			case FirstChokePoint:
 				tempChokePoint = InformationManager.Instance().getFirstChokePoint(MyBotModule.Broodwar.self());
@@ -169,6 +176,13 @@ public class ConstructionPlaceFinder {
 
 			case SecondChokePoint:
 				tempChokePoint = InformationManager.Instance().getSecondChokePoint(MyBotModule.Broodwar.self());
+				if (tempChokePoint != null) {
+					desiredPosition = getBuildLocationNear(buildingType, tempChokePoint.getCenter().toTilePosition());
+				}
+				break;
+				
+			case SecondExpansionChokePoint:
+				tempChokePoint = InformationManager.Instance().getSecondExpansionChokePoint(MyBotModule.Broodwar.self());
 				if (tempChokePoint != null) {
 					desiredPosition = getBuildLocationNear(buildingType, tempChokePoint.getCenter().toTilePosition());
 				}
