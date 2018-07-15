@@ -12,6 +12,7 @@ import bwta.Chokepoint;
 
 public class BattleOrder {
 	private static final int BASE_RADIUS = 500;
+	private static final int CORSAIR_RADIUS = 100;
 	
 	public void execute() {
 		changeBattleMode();
@@ -104,7 +105,6 @@ public class BattleOrder {
 			for (int unitId : shuttleGroup.battleUnits.keySet()) {
 				BattleUnit shuttle = shuttleGroup.battleUnits.get(unitId);
 				if (shuttle.getUnit().getSpaceRemaining() != 0) {
-					System.out.println(shuttle.getUnitId() + ",(spacious) loaded units : " + shuttle.getUnit().getLoadedUnits().size());
 					for (Unit unit : shuttle.getUnit().getUnitsInRadius(BASE_RADIUS)) {
 						if (unit.getPlayer() == MyBotModule.Broodwar.self()) {
 							if ((unit.getType() == UnitType.Protoss_High_Templar && (unit.isUnderAttack() || unit.getEnergy() < 50)) ||
@@ -115,7 +115,6 @@ public class BattleOrder {
 						}
 					}
 				} else {
-					System.out.println(shuttle.getUnitId() + ",(full) loaded units : " + shuttle.getUnit().getLoadedUnits().size());
 					if (!shuttle.getUnit().getPosition().toTilePosition().equals(new TilePosition(60, 120))) {
 						System.out.println("target not reached, current position : " +shuttle.getUnit().getPosition().toTilePosition());
 						BattleManager.instance().addBattleSingleOrder(
@@ -158,7 +157,7 @@ public class BattleOrder {
 			for (int unitId : corsairGroup.battleUnits.keySet()) {
 				Corsair corsair = (Corsair) corsairGroup.battleUnits.get(unitId);
 				if (corsair.getUnit().isUnderAttack()) {
-					for (Unit enemy : corsair.getUnit().getUnitsInRadius(BASE_RADIUS)) {
+					for (Unit enemy : corsair.getUnit().getUnitsInRadius(CORSAIR_RADIUS)) {
 						if (enemy != null && !enemy.isUnderDisruptionWeb()) {
 							if (enemy.getType() == UnitType.Protoss_Photon_Cannon ||
 									enemy.getType() == UnitType.Terran_Bunker ||
@@ -175,7 +174,7 @@ public class BattleOrder {
 					if (arbiter != null && arbiter.getUnit().exists() && arbiter.getUnit().getEnergy() > 150) {
 						//required move logic
 						boolean isAroundArbiter = false;
-						for (Unit unit : corsair.getUnit().getUnitsInRadius(BASE_RADIUS)) {
+						for (Unit unit : corsair.getUnit().getUnitsInRadius(CORSAIR_RADIUS)) {
 							if (unit.getType() == UnitType.Protoss_Arbiter) {
 								isAroundArbiter = true;
 								break;
@@ -183,9 +182,10 @@ public class BattleOrder {
 						}
 						if (!isAroundArbiter) {
 							corsair.getUnit().stop();
+						} else {
+							BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
+							CommandUtil.move(corsair.getUnit(), enemyBaseLocation.getPosition());
 						}
-						BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
-						CommandUtil.move(corsair.getUnit(), enemyBaseLocation.getPosition());
 					}
 				}
 			}
@@ -207,20 +207,24 @@ public class BattleOrder {
 		
 		BattleUnitGroup arbiterGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Arbiter);
 		if (arbiterGroup.getUnitCount() > 0) {
-			BattleUnitGroup dragoonGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue());
 			BattleUnit arbiter = arbiterGroup.getLeader();
 			if (!arbiter.getUnit().exists()) {
 				arbiter = BattleManager.changeReader(arbiter, arbiterGroup);
 			}
 			BattleUnitGroup corsairGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Corsair);
 			BattleUnit corsair = corsairGroup.getLeader();
-			if (corsair != null && corsair.getUnit().exists() && !arbiter.getUnit().isFollowing() && arbiter.getUnit().canFollow(corsair.getUnit())) {
+			if (corsair != null && corsair.getUnit().exists() &&
+					!arbiter.getUnit().isFollowing() && arbiter.getUnit().canFollow(corsair.getUnit())) {
 				arbiter.getUnit().follow(corsair.getUnit());
+			} else {
+				corsair = BattleManager.changeReader(corsair, corsairGroup);
 			}
 			BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
-			if (arbiter.getUnit().getEnergy() > 150  
-					//required to move logic
-					&& (arbiter.getUnit().getDistance(enemyBaseLocation.getPosition()) < 300 || arbiter.getUnit().isUnderAttack())
+			BattleUnitGroup dragoonGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue());
+			if (arbiter.getUnit().getEnergy() > 150 &&
+					(arbiter.getUnit().getDistance(enemyBaseLocation.getPosition()) < 200 ||
+					(arbiter.getUnit().isUnderAttack() &&
+							arbiter.getUnit().getShields() + arbiter.getUnit().getHitPoints() < 100))
 					) {
 				((Arbiter)arbiter).recall(dragoonGroup.getLeader().getUnit().getPosition());
 			}
@@ -247,9 +251,9 @@ public class BattleOrder {
 		if (MyBotModule.Broodwar.getFrameCount() % 24 != 0) {
 			return;
 		}
-		
+		Chokepoint selfFirstChokepoint = InformationManager.Instance().getFirstChokePoint(MyBotModule.Broodwar.self());
 		boolean isCloseToEnemy = false;
-		List<Unit> list = MyBotModule.Broodwar.getUnitsInRadius(InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self()).getPosition(), BASE_RADIUS);
+		List<Unit> list = MyBotModule.Broodwar.getUnitsInRadius(selfFirstChokepoint.getCenter(), BASE_RADIUS);
 		for (Unit unit : list) {
 			if (unit.getPlayer() == InformationManager.Instance().enemyPlayer) {
 				BattleManager.instance().setBattleMode(BattleManager.BattleMode.DEFENCE);
@@ -277,10 +281,14 @@ public class BattleOrder {
 			Iterator<Integer> iterator = observerGroup.battleUnits.keySet().iterator();
 			while (iterator.hasNext()) {
 				BattleUnit observer = observerGroup.battleUnits.get(iterator.next());
-				this.observerFollow(observer, zealot);
+				if (observer.getUnitId() != observerGroup.getLeader().getUnitId()) {
+					this.observerFollow(observer, zealot);
+				}
 				if (iterator.hasNext()) {
 					observer = observerGroup.battleUnits.get(iterator.next());
-					this.observerFollow(observer, dragoon);
+					if (observer.getUnitId() != observerGroup.getLeader().getUnitId()) {
+						this.observerFollow(observer, dragoon);
+					}
 				}
 			}
 		}

@@ -52,7 +52,7 @@ public class Config {
 	/// 각각의 Refinery 마다 투입할 일꾼 최대 숫자
 	public static int WorkersPerRefinery = 3;
 	/// 건물과 건물간 띄울 최소한의 간격 - 일반적인 건물의 경우
-	public static int BuildingSpacing = 8;
+	public static int BuildingSpacing = 16;
 	/// 건물과 건물간 띄울 최소한의 간격 - ResourceDepot 건물의 경우 (Nexus, Hatchery, Command Center)
 	public static int BuildingResourceDepotSpacing = 0;
 	/// 건물과 건물간 띄울 최소한의 간격 - Protoss_Pylon 건물의 경우 - 게임 초기에

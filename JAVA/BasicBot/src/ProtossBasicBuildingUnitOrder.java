@@ -17,6 +17,30 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 			}
 		});
 		
+		super.order(UnitType.Protoss_Nexus, BuildOrderItem.SeedPositionStrategy.SecondExpansionLocation, new OrderCondition() {
+			@Override
+			public boolean isActive() {
+				// TODO Auto-generated method stub
+				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) == 2 && 
+						MyBotModule.Broodwar.self().minerals() >= 400) {
+					return true;
+				}
+				return false;
+			}
+		});
+		
+		super.order(UnitType.Protoss_Pylon, BuildOrderItem.SeedPositionStrategy.SecondExpansionLocation, new OrderCondition() {
+			@Override
+			public boolean isActive() {
+				// TODO Auto-generated method stub
+				if (BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Nexus) == 3 && 
+						MyBotModule.Broodwar.self().minerals() >= 100) {
+					return true;
+				}
+				return false;
+			}
+		});
+		
 		super.order(UnitType.Protoss_Assimilator, BuildOrderItem.SeedPositionStrategy.MainBaseLocation, new OrderCondition() {
 			@Override
 			public boolean isActive() {
@@ -33,8 +57,21 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) == 2 &&						
+				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 2 &&						
 						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) < 6 &&
+						MyBotModule.Broodwar.self().minerals() >= 300) {
+					return true;
+				}
+				return false;
+			}
+		});
+		
+		super.order(UnitType.Protoss_Gateway, BuildOrderItem.SeedPositionStrategy.SecondChokePoint, new OrderCondition() {
+			@Override
+			public boolean isActive() {
+				// TODO Auto-generated method stub
+				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 2 &&						
+						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) > 5 &&
 						MyBotModule.Broodwar.self().minerals() >= 300) {
 					return true;
 				}
@@ -74,7 +111,7 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 				// TODO Auto-generated method stub
 				if (BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge) != null &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge).getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
-						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Photon_Cannon) < 4 &&
+						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Photon_Cannon) < 3 &&
 						MyBotModule.Broodwar.self().minerals() >= 150) {
 					return true;
 				}
@@ -86,7 +123,8 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Cybernetics_Core) != null &&
+				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) == 2 &&
+						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Cybernetics_Core) != null &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Cybernetics_Core).getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun) == null &&
 						MyBotModule.Broodwar.self().minerals() >= 150 && MyBotModule.Broodwar.self().gas() >= 100) {

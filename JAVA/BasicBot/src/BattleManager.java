@@ -132,7 +132,6 @@ public class BattleManager {
 				}
 			}
 		}
-		System.out.println("enemy : " + enemyUnitScore + ", self : " + selfUnitScore);
 		if (enemyUnitScore > selfUnitScore || isEnemyUnitInvisible) {
 			return true;
 		} else {

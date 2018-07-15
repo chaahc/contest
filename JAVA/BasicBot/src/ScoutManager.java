@@ -46,9 +46,16 @@ public class ScoutManager {
 		if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Probe).getUnitCount() > 7 &&
 				BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) == 0) {
 			assignScoutIfNeeded(UnitType.Protoss_Probe);
-		} else if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 0 &&
-				MyBotModule.Broodwar.getFrameCount() % 7200 == 0){
-			assignScoutIfNeeded(UnitType.Protoss_Zealot);
+		} else {
+			if (MyBotModule.Broodwar.getFrameCount() % 7200 == 0) {
+				BuildingUnit observatory = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Observatory);
+				if (observatory != null &&
+						observatory.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED) {
+					assignScoutIfNeeded(UnitType.Protoss_Observer);
+				} else if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 0) {
+					assignScoutIfNeeded(UnitType.Protoss_Zealot);
+				}
+			}
 		}
 		moveScoutUnit();
 
@@ -78,8 +85,16 @@ public class ScoutManager {
 				}
 			} else if (unitType == UnitType.Protoss_Zealot) {
 				BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(BattleGroupType.SCOUT_GROUP.getValue());
-				BattleUnit leader = battleUnitGroup.getLeader();
-				currentScoutUnit = leader.getUnit();
+				BattleUnit zealot = battleUnitGroup.getLeader();
+				if (zealot != null && zealot.getUnit().exists()) {
+					currentScoutUnit = zealot.getUnit();
+				}
+			} else if (unitType == UnitType.Protoss_Observer) {
+				BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(unitType);
+				BattleUnit observer = battleUnitGroup.getLeader();
+				if (observer != null && observer.getUnit().exists()) {
+					currentScoutUnit = observer.getUnit();
+				}
 			}
 		}
 	}
@@ -151,26 +166,45 @@ public class ScoutManager {
 				}
 				else {
 					currentScoutStatus = ScoutStatus.MoveAroundEnemyBaseLocation.ordinal();
-
-					if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
-						currentScoutUnit.move(myBaseLocation.getPosition());
-					} else {
-						boolean isWorkerInRange = false;
-						for (Unit unit : currentScoutUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS)) {
-							if (unit.getPlayer() == MyBotModule.Broodwar.enemy() && unit.getType().isWorker()) {
-								if (currentScoutUnit.getType() == UnitType.Protoss_Probe && 
-										unit.getOrderTarget() != null && unit.getOrderTarget().getID() == currentScoutUnit.getID()) {
+					if (currentScoutUnit.getType() == UnitType.Protoss_Observer) {
+						if (currentScoutUnit.isUnderAttack()) {
+							boolean isEnemyInRange = false;
+							for (Unit unit : currentScoutUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS)) {
+								if (unit.getPlayer() == MyBotModule.Broodwar.enemy() &&
+									(unit.getOrderTarget() != null && unit.getOrderTarget().getID() == currentScoutUnit.getID()) ||
+									unit.isInWeaponRange(currentScoutUnit)) {
+									isEnemyInRange = true;
 									currentScoutUnit.move(myBaseLocation.getPosition());
-									break;
-								} else {
-									commandUtil.attackMove(currentScoutUnit, unit.getPosition());
-									isWorkerInRange = true;
 									break;
 								}
 							}
-						}
-						if (!isWorkerInRange) {
+							if (!isEnemyInRange) {
+								currentScoutUnit.stop();
+							}
+						} else {
 							CommandUtil.move(currentScoutUnit, enemyBaseLocation.getPosition());
+						}
+					} else {
+						if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
+							currentScoutUnit.move(myBaseLocation.getPosition());
+						} else {
+							boolean isWorkerInRange = false;
+							for (Unit unit : currentScoutUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS)) {
+								if (unit.getPlayer() == MyBotModule.Broodwar.enemy() && unit.getType().isWorker()) {
+									if (currentScoutUnit.getType() == UnitType.Protoss_Probe && 
+											unit.getOrderTarget() != null && unit.getOrderTarget().getID() == currentScoutUnit.getID()) {
+										currentScoutUnit.move(myBaseLocation.getPosition());
+										break;
+									} else {
+										commandUtil.attackMove(currentScoutUnit, unit.getPosition());
+										isWorkerInRange = true;
+										break;
+									}
+								}
+							}
+							if (!isWorkerInRange) {
+								CommandUtil.move(currentScoutUnit, enemyBaseLocation.getPosition());
+							}
 						}
 					}
 				}
