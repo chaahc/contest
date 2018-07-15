@@ -16,7 +16,9 @@ public class BuildOrderItem {
 		MainBaseBackYard,			///< 아군 베이스 뒷편
 		FirstChokePoint,			///< 아군 첫번째 길목
 		FirstExpansionLocation,		///< 아군 첫번째 앞마당
+		SecondExpansionLocation,	///< 아군 두번째 앞마당
 		SecondChokePoint,			///< 아군 두번째 길목
+		SecondExpansionChokePoint,  ///< 아군 두번째 앞마당 길목
 		SeedPositionSpecified		///< 별도 지정 위치
 	};
 	

@@ -746,6 +746,13 @@ public class BuildManager {
 				seedPosition = tempBaseLocation.getPosition();
 			}
 			break;
+			
+		case SecondExpansionLocation:
+			tempBaseLocation = InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.self());
+			if (tempBaseLocation != null) {
+				seedPosition = tempBaseLocation.getPosition();
+			}
+			break;
 
 		case FirstChokePoint:
 			tempChokePoint = InformationManager.Instance().getFirstChokePoint(MyBotModule.Broodwar.self());
@@ -760,8 +767,16 @@ public class BuildManager {
 				seedPosition = tempChokePoint.getCenter();
 			}
 			break;
+			
+		case SecondExpansionChokePoint:
+			tempChokePoint = InformationManager.Instance().getSecondChokePoint(MyBotModule.Broodwar.self());
+			if (tempChokePoint != null) {
+				seedPosition = tempChokePoint.getCenter();
+			}
+			break;
 		}
 
+		
 		return seedPosition;
 
 		// BasicBot 1.1 Patch End //////////////////////////////////////////////////		
@@ -1037,7 +1052,7 @@ public class BuildManager {
 					}
 
 					// Pylon 이 해당 지역 주위에 먼저 지어져야 하는데, Pylon 이 해당 지역 주위에 없고, 예정되어있지도 않으면 dead lock
-					if (!isDeadlockCase && unitType.isBuilding() && unitType.requiresPsi()
+/*					if (!isDeadlockCase && unitType.isBuilding() && unitType.requiresPsi()
 							&& currentItem.seedLocationStrategy == BuildOrderItem.SeedPositionStrategy.SeedPositionSpecified) {
 
 						boolean hasFoundPylon = false;
@@ -1053,7 +1068,7 @@ public class BuildManager {
 						if (hasFoundPylon == false) {
 							isDeadlockCase = true;
 						}
-					}
+					}*/
 
 					// Creep 이 해당 지역 주위에 Hatchery나 Creep Colony 등을 통해 먼저 지어져야 하는데, 해당 지역 주위에 지어지지 않고 있으면 dead lock
 					if (!isDeadlockCase && unitType.isBuilding() && unitType.requiresCreep()

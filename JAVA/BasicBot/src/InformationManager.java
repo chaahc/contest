@@ -51,10 +51,14 @@ public class InformationManager {
 	private Map<Player, Chokepoint> firstChokePoint = new HashMap<Player, Chokepoint>();
 	/// 해당 Player의 mainBaseLocation 에서 가장 가까운 BaseLocation
 	private Map<Player, BaseLocation> firstExpansionLocation = new HashMap<Player, BaseLocation>();
+	/// 해당 Player의 mainBaseLocation 에서 두번째 가까운 BaseLocation
+	private Map<Player, BaseLocation> secondExpansionLocation = new HashMap<Player, BaseLocation>();
 	/// 해당 Player의 mainBaseLocation 에서 두번째로 가까운 (firstChokePoint가 아닌) ChokePoint<br>
 	/// 게임 맵에 따라서, secondChokePoint 는 일반 상식과 다른 지점이 될 수도 있습니다
 	private Map<Player, Chokepoint> secondChokePoint = new HashMap<Player, Chokepoint>();	
-        
+	/// 해당 Player의 secondExpansionLocation 에서 가장 가까운 ChokePoint
+	private Map<Player, Chokepoint> secondExpansionChokePoint = new HashMap<Player, Chokepoint>();
+	
 	private MapSpecificInformation mapSpecificInformation = null;
 	
 	/// Player - UnitData(각 Unit 과 그 Unit의 UnitInfo 를 Map 형태로 저장하는 자료구조) 를 저장하는 자료구조 객체
@@ -95,8 +99,12 @@ public class InformationManager {
 		firstChokePoint.put(enemyPlayer, null);
 		firstExpansionLocation.put(selfPlayer, null);
 		firstExpansionLocation.put(enemyPlayer, null);
+		secondExpansionLocation.put(selfPlayer, null);
+		secondExpansionLocation.put(enemyPlayer, null);
 		secondChokePoint.put(selfPlayer, null);
 		secondChokePoint.put(enemyPlayer, null);
+		secondExpansionChokePoint.put(selfPlayer, null);
+		secondExpansionChokePoint.put(enemyPlayer, null);
 
 		updateChokePointAndExpansionLocation();
                 updateMapSpecificInformation();
@@ -389,6 +397,20 @@ public class InformationManager {
 						firstExpansionLocation.put(selfPlayer, targetBaseLocation);
 					}
 				}
+				
+				closestDistance = 1000000000;
+				for (BaseLocation targetBaseLocation : BWTA.getBaseLocations())
+				{
+					if (targetBaseLocation.getTilePosition().equals(mainBaseLocations.get(selfPlayer).getTilePosition())) continue;
+					if (targetBaseLocation.getTilePosition().equals(firstExpansionLocation.get(selfPlayer).getTilePosition())) continue;
+					
+					tempDistance = BWTA.getGroundDistance(sourceBaseLocation.getTilePosition(), targetBaseLocation.getTilePosition());
+					if (tempDistance < closestDistance && tempDistance > 0) {
+						closestDistance = tempDistance;
+						secondExpansionLocation.put(selfPlayer, targetBaseLocation);
+						secondExpansionChokePoint.put(selfPlayer, BWTA.getNearestChokepoint(targetBaseLocation.getPosition()));
+					}
+				}
 	
 				closestDistance = 1000000000;
 				for(Chokepoint chokepoint : BWTA.getChokepoints() ) {
@@ -422,6 +444,20 @@ public class InformationManager {
 					if (tempDistance < closestDistance && tempDistance > 0) {
 						closestDistance = tempDistance;
 						firstExpansionLocation.put(enemyPlayer, targetBaseLocation);
+					}
+				}
+				
+				closestDistance = 1000000000;
+				for (BaseLocation targetBaseLocation : BWTA.getBaseLocations())
+				{
+					if (targetBaseLocation.getTilePosition().equals(mainBaseLocations.get(enemyPlayer).getTilePosition())) continue;
+					if (targetBaseLocation.getTilePosition().equals(firstExpansionLocation.get(enemyPlayer).getTilePosition())) continue;
+					
+					tempDistance = BWTA.getGroundDistance(sourceBaseLocation.getTilePosition(), targetBaseLocation.getTilePosition());
+					if (tempDistance < closestDistance && tempDistance > 0) {
+						closestDistance = tempDistance;
+						secondExpansionLocation.put(enemyPlayer, targetBaseLocation);
+						secondExpansionChokePoint.put(enemyPlayer, BWTA.getNearestChokepoint(targetBaseLocation.getPosition()));
 					}
 				}
 	
@@ -548,11 +584,22 @@ public class InformationManager {
 	public BaseLocation getFirstExpansionLocation(Player player) {
 		return firstExpansionLocation.get(player);
 	}
+	
+	/// 해당 Player (아군 or 적군) 의 Main BaseLocation 에서 두번째로 가까운 Expansion BaseLocation 를 리턴합니다		 
+	public BaseLocation getSecondExpansionLocation(Player player) {
+		return secondExpansionLocation.get(player);
+	}
 
 	/// 해당 Player (아군 or 적군) 의 Main BaseLocation 에서 두번째로 가까운 ChokePoint 를 리턴합니다<br>		 
 	/// 게임 맵에 따라서, secondChokePoint 는 일반 상식과 다른 지점이 될 수도 있습니다
 	public Chokepoint getSecondChokePoint(Player player) {
 		return secondChokePoint.get(player);
+	}
+	
+	/// 해당 Player (아군 or 적군) 의 second Expansion 에서 두번째로 가까운 ChokePoint 를 리턴합니다<br>		 
+	/// 게임 맵에 따라서, secondExpansionChokePoint 는 일반 상식과 다른 지점이 될 수도 있습니다
+	public Chokepoint getSecondExpansionChokePoint(Player player) {
+		return secondExpansionChokePoint.get(player);
 	}
 
 	/// 해당 UnitType 이 전투 유닛인지 리턴합니다
