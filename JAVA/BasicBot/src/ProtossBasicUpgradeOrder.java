@@ -41,7 +41,7 @@ public class ProtossBasicUpgradeOrder extends UpgradeOrder {
 				return true;
 			}
 		});
-		super.order(UnitType.Protoss_Forge, UpgradeType.Protoss_Air_Armor, new OrderCondition() {
+		super.order(UnitType.Protoss_Forge, UpgradeType.Protoss_Ground_Armor, new OrderCondition() {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
@@ -56,7 +56,11 @@ public class ProtossBasicUpgradeOrder extends UpgradeOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) == 2 && 
+				BuildingUnit forge = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge);
+				if (forge != null && 
+						forge.isUpgradeCompleted(UpgradeType.Protoss_Ground_Weapons) &&
+						forge.isUpgradeCompleted(UpgradeType.Protoss_Ground_Armor) &&
+						BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) == 2 && 
 						MyBotModule.Broodwar.self().minerals() >= 500 && MyBotModule.Broodwar.self().minerals() >= 500) {
 					return true;
 				}

@@ -1,4 +1,6 @@
+import bwapi.Unit;
 import bwapi.UnitType;
+import bwta.Region;
 
 public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 
@@ -22,6 +24,7 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 			public boolean isActive() {
 				// TODO Auto-generated method stub
 				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) == 2 && 
+						BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 5 &&
 						MyBotModule.Broodwar.self().minerals() >= 400) {
 					return true;
 				}
@@ -33,8 +36,24 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Nexus) == 3 && 
+				if (BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Nexus) == 3 &&
+						BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) == 2 &&
 						MyBotModule.Broodwar.self().minerals() >= 100) {
+					return true;
+				}
+				return false;
+			}
+		});
+		
+		super.order(UnitType.Protoss_Photon_Cannon, BuildOrderItem.SeedPositionStrategy.SecondExpansionLocation, new OrderCondition() {
+			@Override
+			public boolean isActive() {
+				// TODO Auto-generated method stub
+				if (BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge) != null &&
+						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge).getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
+								BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Nexus) == 3 &&
+										BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Photon_Cannon) < 6 &&
+						MyBotModule.Broodwar.self().minerals() >= 150) {
 					return true;
 				}
 				return false;

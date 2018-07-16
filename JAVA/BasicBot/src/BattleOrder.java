@@ -222,9 +222,9 @@ public class BattleOrder {
 			BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
 			BattleUnitGroup dragoonGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue());
 			if (arbiter.getUnit().getEnergy() > 150 &&
-					(arbiter.getUnit().getDistance(enemyBaseLocation.getPosition()) < 200 ||
+					(arbiter.getUnit().getDistance(enemyBaseLocation.getPosition()) < 300 ||
 					(arbiter.getUnit().isUnderAttack() &&
-							arbiter.getUnit().getShields() + arbiter.getUnit().getHitPoints() < 100))
+							arbiter.getUnit().getShields() + arbiter.getUnit().getHitPoints() < 200))
 					) {
 				((Arbiter)arbiter).recall(dragoonGroup.getLeader().getUnit().getPosition());
 			}
