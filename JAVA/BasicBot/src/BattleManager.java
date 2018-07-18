@@ -1,6 +1,7 @@
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
@@ -106,7 +107,25 @@ public class BattleManager {
 			BaseLocation selfFirstExpansionLocation = InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.self());
 			CommandUtil.rightClick(leader.getUnit(), selfFirstExpansionLocation.getPosition());
 		} else {
-			commandUtil.attackMove(leader.getUnit(), position);
+			if (unitType == UnitType.Protoss_Zealot) {
+				battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue());
+				BattleUnit dragoon = battleUnitGroup.getLeader();
+				System.out.println(dragoon.getUnitId() + "-zealot, distance : " + dragoon.getUnit().getDistance(leader.getUnit()));
+				if (dragoon.getUnit().isUnderAttack() || dragoon.getUnit().getDistance(leader.getUnit()) > 50) {
+					commandUtil.attackMove(leader.getUnit(), dragoon.getUnit().getPosition());
+				} else {
+					commandUtil.attackMove(leader.getUnit(), position);
+				}
+			} else if (unitType == UnitType.Protoss_Dragoon) {
+				battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue());
+				BattleUnit zealot = battleUnitGroup.getLeader();
+				System.out.println(zealot.getUnitId() + "-dragoon, distance : " + zealot.getUnit().getDistance(leader.getUnit()));
+				if (zealot.getUnit().isUnderAttack() || zealot.getUnit().getDistance(leader.getUnit()) > 50) {
+					commandUtil.attackMove(leader.getUnit(), zealot.getUnit().getPosition());
+				} else {
+					commandUtil.attackMove(leader.getUnit(), position);
+				}
+			}
 		}
 	}
 	
@@ -114,7 +133,11 @@ public class BattleManager {
 		int enemyUnitScore = 0;
 		int selfUnitScore = 0;
 		boolean isEnemyUnitInvisible = false;
-		for (Unit unit : battleUnit.getRegion().getUnits()) {
+		
+		List<Unit> targetUnits = battleUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS);
+		for (Unit unit : targetUnits) {
+		
+//		for (Unit unit : battleUnit.getRegion().getUnits()) {
 			if (unit.getType() == UnitType.Protoss_Dark_Templar || 
 					unit.getType() == UnitType.Zerg_Lurker) {
 				if (unit.isDetected()) {
@@ -124,7 +147,7 @@ public class BattleManager {
 				}
 			}
 			Integer score = unitScore.get(unit.getType());
-			if (score != null) {
+			if (score != null) { 
 				if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
 					enemyUnitScore += score;
 				} else if (unit.getPlayer() == MyBotModule.Broodwar.self()) {
@@ -132,9 +155,12 @@ public class BattleManager {
 				}
 			}
 		}
+		
 		if (enemyUnitScore > selfUnitScore || isEnemyUnitInvisible) {
+			System.out.println(battleUnit.getID() +"-"+battleUnit.getType() + ", pull back : enemy - " + enemyUnitScore + ", self - " + selfUnitScore);
 			return true;
 		} else {
+			System.out.println(battleUnit.getID() +"-"+battleUnit.getType() + ", attack : enemy - " + enemyUnitScore + ", self - " + selfUnitScore);
 			return false;
 		}
 	}
@@ -223,13 +249,15 @@ public class BattleManager {
 		}
 		BattleUnit battleUnit = battleUnitGroup.battleUnits.get(unitId);
 		if (battleUnit.getUnit().exists()) {
-			if (battleUnit.getUnit().isUnderAttack() && battleUnit.getUnit().getShields() + battleUnit.getUnit().getHitPoints() < 100) {
-				Chokepoint selfFirstChokepoint = InformationManager.Instance().getFirstChokePoint(MyBotModule.Broodwar.self());
-				//TODO choose better one
-//				CommandUtil.rightClick(battleUnit.getUnit(), selfFirstChokepoint.getCenter());
-				battleUnit.getUnit().move(selfFirstChokepoint.getCenter());
+			Chokepoint selfFirstChokepoint = InformationManager.Instance().getFirstChokePoint(MyBotModule.Broodwar.self());
+			if (shouldRetreat(battleUnit.getUnit())) {
+				CommandUtil.rightClick(battleUnit.getUnit(), selfFirstChokepoint.getCenter());
 			} else {
-				CommandUtil.patrolMove(battleUnit.getUnit(), position);
+				if (battleUnit.getUnit().isUnderAttack() && battleUnit.getUnit().getShields() + battleUnit.getUnit().getHitPoints() < 100) {
+					battleUnit.getUnit().move(selfFirstChokepoint.getCenter());
+				} else {
+					CommandUtil.patrolMove(battleUnit.getUnit(), position);
+				}
 			}
 		}
 	}

@@ -113,7 +113,7 @@ public class ScoutManager {
 		}
 
 		BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(InformationManager.Instance().enemyPlayer);
-		BaseLocation enemyFirstExpansionLocation = InformationManager.Instance().getFirstExpansionLocation(InformationManager.Instance().enemyPlayer);
+		BaseLocation enemySecondExpansionLocation = InformationManager.Instance().getSecondExpansionLocation(InformationManager.Instance().enemyPlayer);
 		BaseLocation myBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
 
 		if (enemyBaseLocation == null)
@@ -182,7 +182,7 @@ public class ScoutManager {
 								currentScoutUnit.stop();
 							}
 						} else {
-							CommandUtil.move(currentScoutUnit, enemyBaseLocation.getPosition());
+							CommandUtil.move(currentScoutUnit, enemySecondExpansionLocation.getPosition());
 						}
 					} else {
 						if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
@@ -203,7 +203,7 @@ public class ScoutManager {
 								}
 							}
 							if (!isWorkerInRange) {
-								CommandUtil.move(currentScoutUnit, enemyBaseLocation.getPosition());
+								CommandUtil.move(currentScoutUnit, enemySecondExpansionLocation.getPosition());
 							}
 						}
 					}
