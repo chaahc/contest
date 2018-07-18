@@ -13,6 +13,7 @@ import bwta.BaseLocation;
 import bwta.Chokepoint;
 
 public class BattleManager {
+	private static final int UNIT_GAP = 80;
 	private static BattleManager instance = new BattleManager();
 
 	public static BattleManager instance() {
@@ -111,7 +112,7 @@ public class BattleManager {
 				battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue());
 				BattleUnit dragoon = battleUnitGroup.getLeader();
 				System.out.println(dragoon.getUnitId() + "-zealot, distance : " + dragoon.getUnit().getDistance(leader.getUnit()));
-				if (dragoon.getUnit().isUnderAttack() || dragoon.getUnit().getDistance(leader.getUnit()) > 50) {
+				if (dragoon.getUnit().isUnderAttack() || dragoon.getUnit().getDistance(leader.getUnit()) > 400) {
 					commandUtil.attackMove(leader.getUnit(), dragoon.getUnit().getPosition());
 				} else {
 					commandUtil.attackMove(leader.getUnit(), position);
@@ -120,7 +121,7 @@ public class BattleManager {
 				battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue());
 				BattleUnit zealot = battleUnitGroup.getLeader();
 				System.out.println(zealot.getUnitId() + "-dragoon, distance : " + zealot.getUnit().getDistance(leader.getUnit()));
-				if (zealot.getUnit().isUnderAttack() || zealot.getUnit().getDistance(leader.getUnit()) > 50) {
+				if (zealot.getUnit().isUnderAttack() || zealot.getUnit().getDistance(leader.getUnit()) > 400) {
 					commandUtil.attackMove(leader.getUnit(), zealot.getUnit().getPosition());
 				} else {
 					commandUtil.attackMove(leader.getUnit(), position);
@@ -181,14 +182,14 @@ public class BattleManager {
 			Position right = null;
 			Position bottom = null;	
 			if (unitType == UnitType.Protoss_Zealot) {
-				leftTop = new Position(leader.getUnit().getLeft()-40, leader.getUnit().getTop()-40);
-				rightTop = new Position(leader.getUnit().getRight()+40, leader.getUnit().getTop()-40);
-				leftBottom = new Position(leader.getUnit().getLeft()-40, leader.getUnit().getBottom()+40);
-				rightBottom = new Position(leader.getUnit().getRight()+40, leader.getUnit().getBottom()+40);
-				top = new Position(leader.getUnit().getX(), leader.getUnit().getTop()-40);
-				left = new Position(leader.getUnit().getLeft()-40, leader.getUnit().getY());
-				right = new Position(leader.getUnit().getRight()+40, leader.getUnit().getY());
-				bottom = new Position(leader.getUnit().getX(), leader.getUnit().getBottom()+40);	
+				leftTop = new Position(leader.getUnit().getLeft()-UNIT_GAP, leader.getUnit().getTop()-UNIT_GAP);
+				rightTop = new Position(leader.getUnit().getRight()+UNIT_GAP, leader.getUnit().getTop()-UNIT_GAP);
+				leftBottom = new Position(leader.getUnit().getLeft()-UNIT_GAP, leader.getUnit().getBottom()+UNIT_GAP);
+				rightBottom = new Position(leader.getUnit().getRight()+UNIT_GAP, leader.getUnit().getBottom()+UNIT_GAP);
+				top = new Position(leader.getUnit().getX(), leader.getUnit().getTop()-UNIT_GAP);
+				left = new Position(leader.getUnit().getLeft()-UNIT_GAP, leader.getUnit().getY());
+				right = new Position(leader.getUnit().getRight()+UNIT_GAP, leader.getUnit().getY());
+				bottom = new Position(leader.getUnit().getX(), leader.getUnit().getBottom()+UNIT_GAP);	
 			} else if (unitType == UnitType.Protoss_Dragoon){
 				leftTop = new Position(leaderRegion.getBoundsLeft(), leaderRegion.getBoundsTop());
 				rightTop = new Position(leaderRegion.getBoundsRight(), leaderRegion.getBoundsTop());
