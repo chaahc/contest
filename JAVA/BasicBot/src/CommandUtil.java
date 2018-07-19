@@ -10,7 +10,8 @@ import bwapi.UpgradeType;
 import bwapi.WeaponType;
 
 public class CommandUtil {
-	public static final int UNIT_RADIUS = 500;
+	public static final int UNIT_RADIUS = 400;
+	public static final int DEFENCE_RADIUS = 500;
 
 	public void attackUnit(Unit attacker, Unit target)
 	{
@@ -281,9 +282,9 @@ public class CommandUtil {
 	}
 	
 	public static Unit getClosestUnit(Unit unit) {
-		double closestDistance = UNIT_RADIUS;
+		double closestDistance = DEFENCE_RADIUS;
 		Unit closestUnit = null;
-		List<Unit> targetUnits = unit.getUnitsInRadius(UNIT_RADIUS);
+		List<Unit> targetUnits = unit.getUnitsInRadius(DEFENCE_RADIUS);
 		for (Unit targetUnit : targetUnits) {
 			if (targetUnit.getPlayer() == InformationManager.Instance().enemyPlayer) {
 				if (targetUnit.isTargetable()) {

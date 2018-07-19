@@ -62,16 +62,30 @@ public class BattleUnitGroupManager {
 		} else if (UnitType.Protoss_Zealot == unitType) {
 			BattleUnit battleUnit = new Zealot(unitId, unit, unitType);
 			//TODO required organizing logic 
+			int frontCount = multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount();
+			int subCount = multiGroups.get(unitType).get(BattleGroupType.SUB_GROUP.getValue()).getUnitCount();
+			int defenceCount = multiGroups.get(unitType).get(BattleGroupType.DEFENCE_GROUP.getValue()).getUnitCount();
 			if (multiGroups.get(unitType).get(BattleGroupType.SCOUT_GROUP.getValue()).getUnitCount() == 0) {
 				multiGroups.get(unitType).get(BattleGroupType.SCOUT_GROUP.getValue()).addBattleUnit(battleUnit);
+			} else if (frontCount == 5 * defenceCount){
+				multiGroups.get(unitType).get(BattleGroupType.DEFENCE_GROUP.getValue()).addBattleUnit(battleUnit);
+			} else if (frontCount == 3 * subCount){
+				multiGroups.get(unitType).get(BattleGroupType.SUB_GROUP.getValue()).addBattleUnit(battleUnit);
 			} else {
 				multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).addBattleUnit(battleUnit);
 			}
 		} else if (UnitType.Protoss_Dragoon == unitType) {
 			BattleUnit battleUnit = new Dragoon(unitId, unit, unitType);
-			//TODO required organizing logic
+			//TODO required organizing logic 
+			int frontCount = multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount();
+			int subCount = multiGroups.get(unitType).get(BattleGroupType.SUB_GROUP.getValue()).getUnitCount();
+			int defenceCount = multiGroups.get(unitType).get(BattleGroupType.DEFENCE_GROUP.getValue()).getUnitCount();
 			if (multiGroups.get(unitType).get(BattleGroupType.SCOUT_GROUP.getValue()).getUnitCount() == 0) {
 				multiGroups.get(unitType).get(BattleGroupType.SCOUT_GROUP.getValue()).addBattleUnit(battleUnit);
+			} else if (frontCount == 5 * defenceCount){
+				multiGroups.get(unitType).get(BattleGroupType.DEFENCE_GROUP.getValue()).addBattleUnit(battleUnit);
+			} else if (frontCount == 3 * subCount){
+				multiGroups.get(unitType).get(BattleGroupType.SUB_GROUP.getValue()).addBattleUnit(battleUnit);
 			} else {
 				multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).addBattleUnit(battleUnit);
 			}
