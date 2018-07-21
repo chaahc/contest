@@ -74,18 +74,23 @@ public class WorkerManager {
 					workerData.setWorkerJob(worker, WorkerData.WorkerJob.Idle, (Unit)null);
 				}
 			}
-
-			// if its job is repair
-			if (workerData.getWorkerJob(worker) == WorkerData.WorkerJob.Repair)
-			{
-				Unit repairTargetUnit = workerData.getWorkerRepairUnit(worker);
-							
-				// 대상이 파괴되었거나, 수리가 다 끝난 경우
-				if (repairTargetUnit == null || !repairTargetUnit.exists() || repairTargetUnit.getHitPoints() <= 0 || repairTargetUnit.getHitPoints() == repairTargetUnit.getType().maxHitPoints())
-				{
-					workerData.setWorkerJob(worker, WorkerData.WorkerJob.Idle, (Unit)null);
-				}
+			
+			if (worker.isUnderAttack()) {
+				this.setCombatWorker(worker);
 			}
+
+//			// if its job is repair
+//			if (workerData.getWorkerJob(worker) == WorkerData.WorkerJob.Repair)
+//			{
+//				Unit repairTargetUnit = workerData.getWorkerRepairUnit(worker);
+//							
+//				// 대상이 파괴되었거나, 수리가 다 끝난 경우
+//				if (repairTargetUnit == null || !repairTargetUnit.exists() || repairTargetUnit.getHitPoints() <= 0 || repairTargetUnit.getHitPoints() == repairTargetUnit.getType().maxHitPoints())
+//				{
+//					workerData.setWorkerJob(worker, WorkerData.WorkerJob.Idle, (Unit)null);
+//				}
+//			}
+			
 		}
 	}
 
@@ -170,6 +175,8 @@ public class WorkerManager {
 				if (target != null)
 				{
 					commandUtil.attackUnit(worker, target);
+				} else {
+					this.setIdleWorker(worker);
 				}
 			}
 		}

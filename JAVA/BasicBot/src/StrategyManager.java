@@ -1,3 +1,4 @@
+import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
 
@@ -70,7 +71,7 @@ public class StrategyManager {
 				}
 			}
 
-			if (workerCount < 30) {
+			if (workerCount < 50) {
 				BuildingUnitManager.instance().trainBuildingUnit(UnitType.Protoss_Nexus, UnitType.Protoss_Probe);
 			}
 		}

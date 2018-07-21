@@ -34,6 +34,10 @@ public class BuildingUnitManager {
 		return buildingUnits.get(unitType);
 	}
 	
+	public BuildingUnitGroup getBuildingUnitGroup(UnitType unitType) {
+		return buildingUnitGroups.get(unitType);
+	}
+	
 	public int getBuildingUnitCount(UnitType unitType) {
 		return this.buildingUnitGroups.get(unitType).getBuildingUnitCount();
 	}

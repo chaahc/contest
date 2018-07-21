@@ -1,15 +1,11 @@
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Vector;
+import java.util.List;
 
-import bwapi.Color;
 import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwta.BWTA;
 import bwta.BaseLocation;
-import bwta.Region;
 
 /// 게임 초반에 일꾼 유닛 중에서 정찰 유닛을 하나 지정하고, 정찰 유닛을 이동시켜 정찰을 수행하는 class<br>
 /// 적군의 BaseLocation 위치를 알아내는 것까지만 개발되어있습니다
@@ -89,13 +85,7 @@ public class ScoutManager {
 				if (zealot != null && zealot.getUnit().exists()) {
 					currentScoutUnit = zealot.getUnit();
 				}
-			} else if (unitType == UnitType.Protoss_Observer) {
-				BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(unitType);
-				BattleUnit observer = battleUnitGroup.getLeader();
-				if (observer != null && observer.getUnit().exists()) {
-					currentScoutUnit = observer.getUnit();
-				}
-			}
+			} 
 		}
 	}
 
@@ -112,10 +102,10 @@ public class ScoutManager {
 			return;
 		}
 
-		BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(InformationManager.Instance().enemyPlayer);
-		BaseLocation enemySecondExpansionLocation = InformationManager.Instance().getSecondExpansionLocation(InformationManager.Instance().enemyPlayer);
+		BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
+		BaseLocation enemySecondExpansionLocation = InformationManager.Instance().getSecondExpansionLocation(MyBotModule.Broodwar.enemy());
 		BaseLocation myBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
-
+		
 		if (enemyBaseLocation == null)
 		{
 			// currentScoutTargetBaseLocation 가 null 이거나 정찰 유닛이 currentScoutTargetBaseLocation 에 도착했으면 
@@ -165,51 +155,49 @@ public class ScoutManager {
 					
 				}
 				else {
+					List<TilePosition> centerNearEnemy = ProtossBasicBuildPosition.Instance().getCenterExpansionNearEnemy(enemyBaseLocation.getTilePosition());
 					currentScoutStatus = ScoutStatus.MoveAroundEnemyBaseLocation.ordinal();
-					if (currentScoutUnit.getType() == UnitType.Protoss_Observer) {
-						if (currentScoutUnit.isUnderAttack()) {
-							boolean isEnemyInRange = false;
-							for (Unit unit : currentScoutUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS)) {
-								if (unit.getPlayer() == MyBotModule.Broodwar.enemy() &&
-									(unit.getOrderTarget() != null && unit.getOrderTarget().getID() == currentScoutUnit.getID()) ||
-									unit.isInWeaponRange(currentScoutUnit)) {
-									isEnemyInRange = true;
-									currentScoutUnit.move(myBaseLocation.getPosition());
+					
+					if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
+						this.runAway(centerNearEnemy);
+					} else {
+						boolean isWorkerInRange = false;
+						for (Unit unit : currentScoutUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS)) {
+							if (unit.getPlayer() == MyBotModule.Broodwar.enemy() && unit.getType().isWorker()) {
+								if (currentScoutUnit.getType() == UnitType.Protoss_Probe && 
+										unit.getOrderTarget() != null && unit.getOrderTarget().getID() == currentScoutUnit.getID()) {
+									this.runAway(centerNearEnemy);
+									break;
+								} else {
+									commandUtil.attackMove(currentScoutUnit, unit.getPosition());
+									isWorkerInRange = true;
 									break;
 								}
 							}
-							if (!isEnemyInRange) {
-								currentScoutUnit.stop();
-							}
-						} else {
-							CommandUtil.move(currentScoutUnit, enemySecondExpansionLocation.getPosition());
 						}
-					} else {
-						if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
-							currentScoutUnit.move(myBaseLocation.getPosition());
-						} else {
-							boolean isWorkerInRange = false;
-							for (Unit unit : currentScoutUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS)) {
-								if (unit.getPlayer() == MyBotModule.Broodwar.enemy() && unit.getType().isWorker()) {
-									if (currentScoutUnit.getType() == UnitType.Protoss_Probe && 
-											unit.getOrderTarget() != null && unit.getOrderTarget().getID() == currentScoutUnit.getID()) {
-										currentScoutUnit.move(myBaseLocation.getPosition());
-										break;
-									} else {
-										commandUtil.attackMove(currentScoutUnit, unit.getPosition());
-										isWorkerInRange = true;
-										break;
-									}
-								}
-							}
-							if (!isWorkerInRange) {
-								CommandUtil.move(currentScoutUnit, enemySecondExpansionLocation.getPosition());
-							}
+						if (!isWorkerInRange) {
+							CommandUtil.move(currentScoutUnit, enemySecondExpansionLocation.getPosition());
 						}
 					}
 				}
 			}
 		}
+	}
+	
+	public void runAway(List<TilePosition> centerNearEnemy) {
+		if (currentScoutUnit.getOrderTargetPosition().equals(centerNearEnemy.get(0).toPosition())) {
+			if (currentScoutUnit.getPosition().getDistance(centerNearEnemy.get(0).toPosition()) < 50) {
+				currentScoutUnit.move(centerNearEnemy.get(1).toPosition());
+			} else {
+				currentScoutUnit.move(centerNearEnemy.get(0).toPosition());
+			}
+		} else if (currentScoutUnit.getOrderTargetPosition().equals(centerNearEnemy.get(1).toPosition())){
+			if (currentScoutUnit.getPosition().getDistance(centerNearEnemy.get(1).toPosition()) < 50) {
+				currentScoutUnit.move(centerNearEnemy.get(0).toPosition());
+			} else {
+				currentScoutUnit.move(centerNearEnemy.get(1).toPosition());
+			}
+		} 
 	}
 	
 	/// 정찰 유닛을 리턴합니다

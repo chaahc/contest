@@ -599,6 +599,12 @@ public class ConstructionPlaceFinder {
 			int bx2 = bx1 + InformationManager.Instance().getBasicResourceDepotBuildingType().tileWidth();
 			int by2 = by1 + InformationManager.Instance().getBasicResourceDepotBuildingType().tileHeight();
 
+			// can't build on the cross position of resource depot
+			if (tx1 == bx1 || ty1 == by1) {
+				System.out.println("x : " + tx1 + ", y : " + ty1 + ", bx : " + bx1 + ", by : " + by1);
+				return true;
+			}
+			
 			// conditions for non-overlap are easy
 			boolean noOverlap = (tx2 < bx1) || (tx1 > bx2) || (ty2 < by1) || (ty1 > by2);
 

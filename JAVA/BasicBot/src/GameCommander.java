@@ -112,7 +112,7 @@ public class GameCommander {
 				if (unit.canSetRallyPoint()) {
 //					Position center = MapGrid.Instance().getCellCenter(MapGrid.Instance().getRows()>>1, MapGrid.Instance().getCols()>>1);
 					Chokepoint secondChokePoint = InformationManager.Instance().getSecondChokePoint(InformationManager.Instance().selfPlayer);
-					unit.setRallyPoint(new Position(secondChokePoint.getCenter().getX()+40, secondChokePoint.getCenter().getY()));
+					unit.setRallyPoint(secondChokePoint.getCenter());
 				}
 				BuildingUnitManager.instance().completeBuildingUnitInGroup(unitType, unit.getID());
 			} else if (unitType == UnitType.Protoss_Cybernetics_Core || unitType == UnitType.Protoss_Citadel_of_Adun ||

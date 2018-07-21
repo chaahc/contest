@@ -1,3 +1,9 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
@@ -10,6 +16,18 @@ public class ProtossBasicBuildPosition {
 	/// 건물과 건물간 띄울 최소한의 간격 - ResourceDepot 건물의 경우 (Nexus, Hatchery, Command Center)
 	private static int BuildingResourceDepotSpacingOld = Config.BuildingResourceDepotSpacing;
 	
+	public static Map<String, TilePosition> mapInfo = new HashMap<String, TilePosition>();
+	public static final String BASE11 = "12";
+	public static final String BASE12 = "12";
+	public static final String BASE1 = "1";
+	public static final String BASE3 = "3";
+	public static final String BASE5 = "5";
+	public static final String BASE6 = "6";
+	public static final String BASE7 = "7";
+	public static final String BASE9 = "9";
+	public static final String CENTER = "center";
+	
+	public static String START_BASE = "";
 	
 	public int startingX = 0;
 	public int startingY = 0;
@@ -87,6 +105,16 @@ public class ProtossBasicBuildPosition {
 			firstPhotonPosYY = new int[]{33,33,96,94};
 			secondPhotonPosXX = new int[]{15,111,110,16};
 			secondPhotonPosYY = new int[]{35,35,94,92};
+			
+			mapInfo.put(BASE11, new TilePosition(7, 9));
+			mapInfo.put(BASE12, new TilePosition(64, 6));
+			mapInfo.put(BASE1, new TilePosition(117, 9));
+			mapInfo.put(BASE3, new TilePosition(112, 64));
+			mapInfo.put(BASE5, new TilePosition(117, 118));
+			mapInfo.put(BASE6, new TilePosition(64, 120));
+			mapInfo.put(BASE7, new TilePosition(7, 118));
+			mapInfo.put(BASE9, new TilePosition(16, 64));
+			mapInfo.put(CENTER, new TilePosition(64, 64));
 		} 
 		//투혼
 		else if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.OverWatch) {
@@ -122,6 +150,8 @@ public class ProtossBasicBuildPosition {
 				firstPhotonPosY = firstPhotonPosYY[0];
 				secondPhotonPosX = secondPhotonPosXX[0];
 				secondPhotonPosY = secondPhotonPosYY[0];
+				
+				START_BASE = BASE11;
 			}
 			else if(startingX == 117 && startingY ==9) {
 //				return new TilePosition(secondPylonPosXX[1], secondPylonPosYY[1]);
@@ -140,6 +170,8 @@ public class ProtossBasicBuildPosition {
 				firstPhotonPosY = firstPhotonPosYY[1];
 				secondPhotonPosX = secondPhotonPosXX[1];
 				secondPhotonPosY = secondPhotonPosYY[1];
+				
+				START_BASE = BASE1;
 			}
 			else if(startingX == 117 && startingY ==118) {
 //				return new TilePosition(secondPylonPosXX[2], secondPylonPosYY[2]);
@@ -158,6 +190,8 @@ public class ProtossBasicBuildPosition {
 				firstPhotonPosY = firstPhotonPosYY[2];
 				secondPhotonPosX = secondPhotonPosXX[2];
 				secondPhotonPosY = secondPhotonPosYY[2];
+				
+				START_BASE = BASE5;
 			}
 			else if(startingX == 7 && startingY ==118) {
 //				return new TilePosition(secondPylonPosXX[3], secondPylonPosYY[3]);
@@ -176,6 +210,8 @@ public class ProtossBasicBuildPosition {
 				firstPhotonPosY = firstPhotonPosYY[3];
 				secondPhotonPosX = secondPhotonPosXX[3];
 				secondPhotonPosY = secondPhotonPosYY[3];
+				
+				START_BASE = BASE7;
 			}
 		} 
 		//오버워치
@@ -185,4 +221,21 @@ public class ProtossBasicBuildPosition {
 		
 	} 	
 	
+	public List<TilePosition> getCenterExpansionNearEnemy(TilePosition enemy) {
+		List<TilePosition> list = new ArrayList<TilePosition>();
+		if (mapInfo.get(BASE1).equals(enemy)) {
+			list.add(mapInfo.get(BASE12));
+			list.add(mapInfo.get(BASE3));
+		} else if (mapInfo.get(BASE5).equals(enemy)) {
+			list.add(mapInfo.get(BASE3));
+			list.add(mapInfo.get(BASE6));
+		} else if (mapInfo.get(BASE7).equals(enemy)) {
+			list.add(mapInfo.get(BASE6));
+			list.add(mapInfo.get(BASE9));
+		} else if (mapInfo.get(BASE11).equals(enemy)){
+			list.add(mapInfo.get(BASE9));
+			list.add(mapInfo.get(BASE12));
+		}
+		return list;
+	}
 }

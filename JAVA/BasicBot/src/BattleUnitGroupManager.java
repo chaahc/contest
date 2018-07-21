@@ -69,7 +69,7 @@ public class BattleUnitGroupManager {
 				multiGroups.get(unitType).get(BattleGroupType.SCOUT_GROUP.getValue()).addBattleUnit(battleUnit);
 			} else if (frontCount == 5 * defenceCount){
 				multiGroups.get(unitType).get(BattleGroupType.DEFENCE_GROUP.getValue()).addBattleUnit(battleUnit);
-			} else if (frontCount == 3 * subCount){
+			} else if (frontCount == 2 * subCount){
 				multiGroups.get(unitType).get(BattleGroupType.SUB_GROUP.getValue()).addBattleUnit(battleUnit);
 			} else {
 				multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).addBattleUnit(battleUnit);

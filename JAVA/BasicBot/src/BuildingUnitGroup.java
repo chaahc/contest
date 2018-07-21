@@ -6,7 +6,7 @@ import bwapi.UnitType;
 
 public class BuildingUnitGroup {
 	private UnitType unitType;
-	private Map<Integer, BuildingUnit> buildingUnitGroup = new HashMap<Integer, BuildingUnit>();
+	public Map<Integer, BuildingUnit> buildingUnitGroup = new HashMap<Integer, BuildingUnit>();
 	private int buildingUnitCount;
 	private int underConstructionBuidlingUnitCount;
 	

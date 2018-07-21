@@ -104,27 +104,33 @@ public class BattleManager {
 		BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(battleGroupType.getValue());
 		BattleUnit leader = battleUnitGroup.getLeader();
 		
-		if (shouldRetreat(leader.getUnit())) {
-			BaseLocation selfFirstExpansionLocation = InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.self());
-			CommandUtil.rightClick(leader.getUnit(), selfFirstExpansionLocation.getPosition());
-		} else {
-			if (unitType == UnitType.Protoss_Zealot) {
-				battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(battleGroupType.getValue());
-				BattleUnit dragoon = battleUnitGroup.getLeader();
-				System.out.println(dragoon.getUnitId() + "-zealot, distance : " + dragoon.getUnit().getDistance(leader.getUnit()));
-				if (dragoon.getUnit().isUnderAttack() || dragoon.getUnit().getDistance(leader.getUnit()) > 400) {
-					commandUtil.attackMove(leader.getUnit(), dragoon.getUnit().getPosition());
+		if (leader != null) {
+			if (shouldRetreat(leader.getUnit())) {
+				BaseLocation selfFirstExpansionLocation = InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.self());
+				CommandUtil.rightClick(leader.getUnit(), selfFirstExpansionLocation.getPosition());
+			} else {
+				if (battleGroupType == BattleGroupType.DEFENCE_GROUP) {
+					CommandUtil.patrolMove(leader.getUnit(), position);
 				} else {
-					commandUtil.attackMove(leader.getUnit(), position);
-				}
-			} else if (unitType == UnitType.Protoss_Dragoon) {
-				battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(battleGroupType.getValue());
-				BattleUnit zealot = battleUnitGroup.getLeader();
-				System.out.println(zealot.getUnitId() + "-dragoon, distance : " + zealot.getUnit().getDistance(leader.getUnit()));
-				if (zealot.getUnit().isUnderAttack() || zealot.getUnit().getDistance(leader.getUnit()) > 400) {
-					commandUtil.attackMove(leader.getUnit(), zealot.getUnit().getPosition());
-				} else {
-					commandUtil.attackMove(leader.getUnit(), position);
+					if (unitType == UnitType.Protoss_Zealot) {
+						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(battleGroupType.getValue());
+						BattleUnit dragoon = battleUnitGroup.getLeader();
+						System.out.println(dragoon.getUnitId() + "-zealot, distance : " + dragoon.getUnit().getDistance(leader.getUnit()));
+						if (dragoon.getUnit().isUnderAttack() || dragoon.getUnit().getDistance(leader.getUnit()) > 400) {
+							commandUtil.attackMove(leader.getUnit(), dragoon.getUnit().getPosition());
+						} else {
+							commandUtil.attackMove(leader.getUnit(), position);
+						}
+					} else if (unitType == UnitType.Protoss_Dragoon) {
+						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(battleGroupType.getValue());
+						BattleUnit zealot = battleUnitGroup.getLeader();
+						System.out.println(zealot.getUnitId() + "-dragoon, distance : " + zealot.getUnit().getDistance(leader.getUnit()));
+						if (zealot.getUnit().isUnderAttack() || zealot.getUnit().getDistance(leader.getUnit()) > 400) {
+							commandUtil.attackMove(leader.getUnit(), zealot.getUnit().getPosition());
+						} else {
+							commandUtil.attackMove(leader.getUnit(), position);
+						}
+					}
 				}
 			}
 		}
