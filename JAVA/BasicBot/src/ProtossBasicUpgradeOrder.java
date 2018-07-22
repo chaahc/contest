@@ -30,6 +30,13 @@ public class ProtossBasicUpgradeOrder extends UpgradeOrder {
 				return true;
 			}
 		});
+		super.order(UnitType.Protoss_Observatory, UpgradeType.Gravitic_Boosters, new OrderCondition() {
+			@Override
+			public boolean isActive() {
+				// TODO Auto-generated method stub
+				return true;
+			}
+		});
 		super.order(UnitType.Protoss_Forge, UpgradeType.Protoss_Ground_Weapons, new OrderCondition() {
 			@Override
 			public boolean isActive() {
@@ -67,6 +74,20 @@ public class ProtossBasicUpgradeOrder extends UpgradeOrder {
 				return true;
 			}
 		});
+		super.order(UnitType.Protoss_Arbiter_Tribunal, TechType.Stasis_Field, new OrderCondition() {
+			@Override
+			public boolean isActive() {
+				// TODO Auto-generated method stub
+				return true;
+			}
+		});
+		super.order(UnitType.Protoss_Arbiter_Tribunal, TechType.Recall, new OrderCondition() {
+			@Override
+			public boolean isActive() {
+				// TODO Auto-generated method stub
+				return true;
+			}
+		});
 //		super.order(UnitType.Protoss_Templar_Archives, TechType.Psionic_Storm, new OrderCondition() {
 //			@Override
 //			public boolean isActive() {
@@ -95,21 +116,7 @@ public class ProtossBasicUpgradeOrder extends UpgradeOrder {
 //				return true;
 //			}
 //		});
-		super.order(UnitType.Protoss_Fleet_Beacon, TechType.Disruption_Web, new OrderCondition() {
-			@Override
-			public boolean isActive() {
-				// TODO Auto-generated method stub
-				return true;
-			}
-		});
-		super.order(UnitType.Protoss_Arbiter_Tribunal, TechType.Recall, new OrderCondition() {
-			@Override
-			public boolean isActive() {
-				// TODO Auto-generated method stub
-				return true;
-			}
-		});
-//		super.order(UnitType.Protoss_Arbiter_Tribunal, TechType.Stasis_Field, new OrderCondition() {
+//		super.order(UnitType.Protoss_Fleet_Beacon, TechType.Disruption_Web, new OrderCondition() {
 //			@Override
 //			public boolean isActive() {
 //				// TODO Auto-generated method stub

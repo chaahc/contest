@@ -1,4 +1,6 @@
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import bwapi.Position;
 import bwapi.TilePosition;
@@ -80,10 +82,14 @@ public class ScoutManager {
 					//WorkerManager::Instance().setIdleWorker(currentScoutUnit);
 				}
 			} else if (unitType == UnitType.Protoss_Zealot) {
-				BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(BattleGroupType.SCOUT_GROUP.getValue());
-				BattleUnit zealot = battleUnitGroup.getLeader();
-				if (zealot != null && zealot.getUnit().exists()) {
-					currentScoutUnit = zealot.getUnit();
+				BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(BattleGroupType.FRONT_GROUP.getValue());
+				Iterator<Integer> iterator = battleUnitGroup.battleUnits.keySet().iterator();
+				while (iterator.hasNext()) {
+					BattleUnit zealot = battleUnitGroup.battleUnits.get(iterator.next());
+					BattleUnit leader = battleUnitGroup.getLeader();
+					if (leader != null && zealot != null && leader.getUnitId() != zealot.getUnitId()) {
+						currentScoutUnit = zealot.getUnit();
+					}
 				}
 			} 
 		}
@@ -104,7 +110,6 @@ public class ScoutManager {
 
 		BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
 		BaseLocation enemySecondExpansionLocation = InformationManager.Instance().getSecondExpansionLocation(MyBotModule.Broodwar.enemy());
-		BaseLocation myBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
 		
 		if (enemyBaseLocation == null)
 		{
@@ -155,18 +160,18 @@ public class ScoutManager {
 					
 				}
 				else {
-					List<TilePosition> centerNearEnemy = ProtossBasicBuildPosition.Instance().getCenterExpansionNearEnemy(enemyBaseLocation.getTilePosition());
+					List<TilePosition> centerExpansionNearEnemy = ProtossBasicBuildPosition.Instance().getCenterExpansionNearEnemy(enemyBaseLocation.getTilePosition());
 					currentScoutStatus = ScoutStatus.MoveAroundEnemyBaseLocation.ordinal();
 					
 					if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
-						this.runAway(centerNearEnemy);
+						this.runAway(centerExpansionNearEnemy);
 					} else {
 						boolean isWorkerInRange = false;
 						for (Unit unit : currentScoutUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS)) {
 							if (unit.getPlayer() == MyBotModule.Broodwar.enemy() && unit.getType().isWorker()) {
 								if (currentScoutUnit.getType() == UnitType.Protoss_Probe && 
 										unit.getOrderTarget() != null && unit.getOrderTarget().getID() == currentScoutUnit.getID()) {
-									this.runAway(centerNearEnemy);
+									this.runAway(centerExpansionNearEnemy);
 									break;
 								} else {
 									commandUtil.attackMove(currentScoutUnit, unit.getPosition());
@@ -184,20 +189,24 @@ public class ScoutManager {
 		}
 	}
 	
-	public void runAway(List<TilePosition> centerNearEnemy) {
-		if (currentScoutUnit.getOrderTargetPosition().equals(centerNearEnemy.get(0).toPosition())) {
-			if (currentScoutUnit.getPosition().getDistance(centerNearEnemy.get(0).toPosition()) < 50) {
-				currentScoutUnit.move(centerNearEnemy.get(1).toPosition());
-			} else {
-				currentScoutUnit.move(centerNearEnemy.get(0).toPosition());
-			}
-		} else if (currentScoutUnit.getOrderTargetPosition().equals(centerNearEnemy.get(1).toPosition())){
-			if (currentScoutUnit.getPosition().getDistance(centerNearEnemy.get(1).toPosition()) < 50) {
-				currentScoutUnit.move(centerNearEnemy.get(0).toPosition());
-			} else {
-				currentScoutUnit.move(centerNearEnemy.get(1).toPosition());
-			}
-		} 
+	public void runAway(List<TilePosition> centerExpansionNearEnemy) {
+		if (centerExpansionNearEnemy.isEmpty()) {
+			currentScoutUnit.move(ProtossBasicBuildPosition.mapInfo.get(ProtossBasicBuildPosition.START_BASE).toPosition());
+		} else {
+			if (centerExpansionNearEnemy.get(0).toPosition().equals(currentScoutUnit.getOrderTargetPosition())) {
+				if (centerExpansionNearEnemy.get(0).toPosition().getDistance(currentScoutUnit.getPosition()) < 50) {
+					currentScoutUnit.move(centerExpansionNearEnemy.get(1).toPosition());
+				} else {
+					currentScoutUnit.move(centerExpansionNearEnemy.get(0).toPosition());
+				}
+			} else if (centerExpansionNearEnemy.get(1).toPosition().equals(currentScoutUnit.getOrderTargetPosition())){
+				if (centerExpansionNearEnemy.get(1).toPosition().getDistance(currentScoutUnit.getPosition()) < 50) {
+					currentScoutUnit.move(centerExpansionNearEnemy.get(0).toPosition());
+				} else {
+					currentScoutUnit.move(centerExpansionNearEnemy.get(1).toPosition());
+				}
+			} 
+		}
 	}
 	
 	/// 정찰 유닛을 리턴합니다

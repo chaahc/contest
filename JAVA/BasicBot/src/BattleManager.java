@@ -57,38 +57,6 @@ public class BattleManager {
 	
 	private static Map<Integer, BattleSingleOrder> battleSingleOrderMap = new HashMap<Integer, BattleSingleOrder>();
 	
-	public void totalAttack(Unit unit) {
-		Position target = unit.getPosition();
-		this.totalAttack(target);
-	}
-	
-	public void totalAttack(Position position) {
-		BattleUnitGroup archonGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Archon);
-		for (int unitId : archonGroup.battleUnits.keySet()) {
-			Unit archon = archonGroup.battleUnits.get(unitId).getUnit();
-			Unit enemy = CommandUtil.getClosestUnit(archon);
-			CommandUtil.patrolMove(archon, enemy.getPosition());
-		}
-		BattleUnitGroup reaverGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Reaver);
-		for (int unitId : reaverGroup.battleUnits.keySet()) {
-			Unit reaver = reaverGroup.battleUnits.get(unitId).getUnit();
-			Unit enemy = CommandUtil.getClosestUnit(reaver);
-			CommandUtil.patrolMove(reaver, enemy.getPosition());
-		}
-		BattleUnitGroup corsairGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Corsair);
-		for (int unitId : corsairGroup.battleUnits.keySet()) {
-			Unit corsair = corsairGroup.battleUnits.get(unitId).getUnit();
-			Unit enemy = CommandUtil.getClosestUnit(corsair);
-			CommandUtil.patrolMove(corsair, enemy.getPosition());
-		}
-		BattleUnitGroup carrierGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier);
-		for (int unitId : carrierGroup.battleUnits.keySet()) {
-			Unit carrier = carrierGroup.battleUnits.get(unitId).getUnit();
-			Unit enemy = CommandUtil.getClosestUnit(carrier);
-			CommandUtil.patrolMove(carrier, enemy.getPosition());
-		}
-	}
-	
 	public void closestAttack(UnitType unitType, BattleGroupType battleGroupType) {
 		BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType)
 				.get(battleGroupType.getValue());
@@ -116,20 +84,21 @@ public class BattleManager {
 						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(battleGroupType.getValue());
 						BattleUnit dragoon = battleUnitGroup.getLeader();
 						System.out.println(dragoon.getUnitId() + "-zealot, distance : " + dragoon.getUnit().getDistance(leader.getUnit()));
-						if (dragoon.getUnit().isUnderAttack() || dragoon.getUnit().getDistance(leader.getUnit()) > 400) {
+						if (dragoon.getUnit().isUnderAttack() || dragoon.getUnit().getDistance(leader.getUnit()) > CommandUtil.UNIT_RADIUS) {
 							commandUtil.attackMove(leader.getUnit(), dragoon.getUnit().getPosition());
 						} else {
 							commandUtil.attackMove(leader.getUnit(), position);
 						}
 					} else if (unitType == UnitType.Protoss_Dragoon) {
-						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(battleGroupType.getValue());
-						BattleUnit zealot = battleUnitGroup.getLeader();
-						System.out.println(zealot.getUnitId() + "-dragoon, distance : " + zealot.getUnit().getDistance(leader.getUnit()));
-						if (zealot.getUnit().isUnderAttack() || zealot.getUnit().getDistance(leader.getUnit()) > 400) {
-							commandUtil.attackMove(leader.getUnit(), zealot.getUnit().getPosition());
-						} else {
-							commandUtil.attackMove(leader.getUnit(), position);
-						}
+//						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(battleGroupType.getValue());
+//						BattleUnit zealot = battleUnitGroup.getLeader();
+//						System.out.println(zealot.getUnitId() + "-dragoon, distance : " + zealot.getUnit().getDistance(leader.getUnit()));
+//						if (zealot.getUnit().isUnderAttack() || zealot.getUnit().getDistance(leader.getUnit()) > CommandUtil.UNIT_RADIUS) {
+//							commandUtil.attackMove(leader.getUnit(), zealot.getUnit().getPosition());
+//						} else {
+//							commandUtil.attackMove(leader.getUnit(), position);
+//						}
+						commandUtil.attackMove(leader.getUnit(), position);
 					}
 				}
 			}

@@ -17,7 +17,7 @@ public class ProtossBasicBuildPosition {
 	private static int BuildingResourceDepotSpacingOld = Config.BuildingResourceDepotSpacing;
 	
 	public static Map<String, TilePosition> mapInfo = new HashMap<String, TilePosition>();
-	public static final String BASE11 = "12";
+	public static final String BASE11 = "11";
 	public static final String BASE12 = "12";
 	public static final String BASE1 = "1";
 	public static final String BASE3 = "3";
@@ -26,6 +26,13 @@ public class ProtossBasicBuildPosition {
 	public static final String BASE7 = "7";
 	public static final String BASE9 = "9";
 	public static final String CENTER = "center";
+	public static final String PYLON11 = "P11";
+	public static final String PYLON1 = "P1";
+	public static final String PYLON5 = "P5";
+	public static final String PYLON7 = "P7";
+	private static List<TilePosition> centerExpansionNearSelf = new ArrayList<TilePosition>();
+	private static List<TilePosition> centerExpansionNearEnemy = new ArrayList<TilePosition>();
+	private static Map<String, TilePosition> scoutPositions = new HashMap<String, TilePosition>(mapInfo);
 	
 	public static String START_BASE = "";
 	
@@ -90,31 +97,35 @@ public class ProtossBasicBuildPosition {
 		//서킷브레이커
 		if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.CircuitBreaker) {
 			System.out.println("1");
-			firstPylonPosXX = new int[]{7,117,117,7};
-			firstPylonPosYY = new int[]{20,20,105,105};
-			secondPylonPosXX = new int[]{18,110,110,16};
-			secondPylonPosYY = new int[]{31,31,92,90};
+			firstPylonPosXX = new int[]{18,108,108,17};
+			firstPylonPosYY = new int[]{31,31,96,96};
+			secondPylonPosXX = new int[]{7,117,117,7};
+			secondPylonPosYY = new int[]{20,20,105,105};
 			
 			pylonPosXX = new int[]{17,108,108,18};
 			pylonPosYY = new int[]{37,37,96,96};
-			forgePosXX = new int[]{17,108,107,108};
-			forgePosYY = new int[]{35,35,94,94};
-			gatewayPosXX = new int[]{17,108,106,18};
-			gatewayPosYY = new int[]{32,32,91,91};
-			firstPhotonPosXX = new int[]{15,111,110,16};
-			firstPhotonPosYY = new int[]{33,33,96,94};
-			secondPhotonPosXX = new int[]{15,111,110,16};
-			secondPhotonPosYY = new int[]{35,35,94,92};
+			forgePosXX = new int[]{17,108,106,19};
+			forgePosYY = new int[]{35,35,91,92};
+			gatewayPosXX = new int[]{20,104,104,19};
+			gatewayPosYY = new int[]{30,30,95,95};
+			firstPhotonPosXX = new int[]{18,108,108,17};
+			firstPhotonPosYY = new int[]{33,33,94,94};
+			secondPhotonPosXX = new int[]{16,111,110,16};
+			secondPhotonPosYY = new int[]{33,35,94,92};
 			
 			mapInfo.put(BASE11, new TilePosition(7, 9));
-			mapInfo.put(BASE12, new TilePosition(64, 6));
+			mapInfo.put(BASE12, new TilePosition(63, 2));
 			mapInfo.put(BASE1, new TilePosition(117, 9));
-			mapInfo.put(BASE3, new TilePosition(112, 64));
+			mapInfo.put(BASE3, new TilePosition(116, 64));
 			mapInfo.put(BASE5, new TilePosition(117, 118));
-			mapInfo.put(BASE6, new TilePosition(64, 120));
+			mapInfo.put(BASE6, new TilePosition(63, 124));
 			mapInfo.put(BASE7, new TilePosition(7, 118));
-			mapInfo.put(BASE9, new TilePosition(16, 64));
+			mapInfo.put(BASE9, new TilePosition(12, 64));
 			mapInfo.put(CENTER, new TilePosition(64, 64));
+			mapInfo.put(PYLON11, new TilePosition(28, 28));
+			mapInfo.put(PYLON1, new TilePosition(98, 28));
+			mapInfo.put(PYLON5, new TilePosition(98, 98));
+			mapInfo.put(PYLON7, new TilePosition(28, 98));
 		} 
 		//투혼
 		else if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.OverWatch) {
@@ -218,24 +229,77 @@ public class ProtossBasicBuildPosition {
 		else if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.OverWatch) {
 			
 		}
-		
 	} 	
-	
 	public List<TilePosition> getCenterExpansionNearEnemy(TilePosition enemy) {
-		List<TilePosition> list = new ArrayList<TilePosition>();
-		if (mapInfo.get(BASE1).equals(enemy)) {
-			list.add(mapInfo.get(BASE12));
-			list.add(mapInfo.get(BASE3));
-		} else if (mapInfo.get(BASE5).equals(enemy)) {
-			list.add(mapInfo.get(BASE3));
-			list.add(mapInfo.get(BASE6));
-		} else if (mapInfo.get(BASE7).equals(enemy)) {
-			list.add(mapInfo.get(BASE6));
-			list.add(mapInfo.get(BASE9));
-		} else if (mapInfo.get(BASE11).equals(enemy)){
-			list.add(mapInfo.get(BASE9));
-			list.add(mapInfo.get(BASE12));
+		return getCenterExpansionNearBase(centerExpansionNearEnemy, enemy);
+	}
+	
+	public List<TilePosition> getCenterExpansionNearSelf() {
+		return getCenterExpansionNearBase(centerExpansionNearSelf, mapInfo.get(START_BASE));
+	}
+	
+	public List<TilePosition> getCenterExpansionNearBase(List<TilePosition> centerExpansionNearBase, TilePosition base) {
+		if (centerExpansionNearBase.isEmpty()) {
+			if (mapInfo.get(BASE1).equals(base)) {
+				centerExpansionNearBase.add(mapInfo.get(BASE12));
+				centerExpansionNearBase.add(mapInfo.get(BASE3));
+			} else if (mapInfo.get(BASE5).equals(base)) {
+				centerExpansionNearBase.add(mapInfo.get(BASE3));
+				centerExpansionNearBase.add(mapInfo.get(BASE6));
+			} else if (mapInfo.get(BASE7).equals(base)) {
+				centerExpansionNearBase.add(mapInfo.get(BASE6));
+				centerExpansionNearBase.add(mapInfo.get(BASE9));
+			} else if (mapInfo.get(BASE11).equals(base)){
+				centerExpansionNearBase.add(mapInfo.get(BASE9));
+				centerExpansionNearBase.add(mapInfo.get(BASE12));
+			}
 		}
-		return list;
+		return centerExpansionNearBase;
+	}
+	
+	public Map<String, TilePosition> getScoutPositions(TilePosition enemy) {
+		if (scoutPositions.isEmpty()) {
+			if (START_BASE.equals(BASE1)) {
+				scoutPositions.remove(BASE1);
+				scoutPositions.remove(BASE12);
+				scoutPositions.remove(BASE3);
+			} else if (START_BASE.equals(BASE5)) {
+				scoutPositions.remove(BASE5);
+				scoutPositions.remove(BASE3);
+				scoutPositions.remove(BASE6);
+			} else if (START_BASE.equals(BASE7)) {
+				scoutPositions.remove(BASE7);
+				scoutPositions.remove(BASE6);
+				scoutPositions.remove(BASE9);
+			} else if (START_BASE.equals(BASE11)) {
+				scoutPositions.remove(BASE11);
+				scoutPositions.remove(BASE9);
+				scoutPositions.remove(BASE12);
+			}
+			
+			if (mapInfo.get(BASE1).equals(enemy)) {
+				scoutPositions.remove(BASE1);
+				scoutPositions.remove(BASE12);
+				scoutPositions.remove(BASE3);
+			} else if (mapInfo.get(BASE5).equals(enemy)) {
+				scoutPositions.remove(BASE5);
+				scoutPositions.remove(BASE3);
+				scoutPositions.remove(BASE6);
+			} else if (mapInfo.get(BASE7).equals(enemy)) {
+				scoutPositions.remove(BASE7);
+				scoutPositions.remove(BASE6);
+				scoutPositions.remove(BASE9);
+			} else if (mapInfo.get(BASE11).equals(enemy)){
+				scoutPositions.remove(BASE11);
+				scoutPositions.remove(BASE9);
+				scoutPositions.remove(BASE12);
+			}
+			scoutPositions.remove(CENTER);
+			scoutPositions.remove(PYLON11);
+			scoutPositions.remove(PYLON1);
+			scoutPositions.remove(PYLON5);
+			scoutPositions.remove(PYLON7);
+		}
+		return scoutPositions;
 	}
 }

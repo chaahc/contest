@@ -27,7 +27,7 @@ public class ProtossBasicBattleUnitOrder extends BattleUnitOrder {
 				if (cyberneticsCore != null && cyberneticsCore.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
 						BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) >= 2 &&
 						(BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 8 ||
-						BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 5) &&
+						BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 2) &&
 						MyBotModule.Broodwar.self().minerals() >= 125 && MyBotModule.Broodwar.self().gas() >= 50) {
 					return true;
 				}
@@ -43,6 +43,20 @@ public class ProtossBasicBattleUnitOrder extends BattleUnitOrder {
 				if (observatory != null && observatory.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
 						BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Observer).getUnitCount() < 5 &&
 						MyBotModule.Broodwar.self().minerals() >= 25 && MyBotModule.Broodwar.self().gas() >= 75) {
+					return true;
+				}
+				return false;
+			}
+		});
+		
+		super.bulkOrder(UnitType.Protoss_Stargate, UnitType.Protoss_Arbiter, new OrderCondition() {
+			@Override
+			public boolean isActive() {
+				// TODO Auto-generated method stub
+				BuildingUnit arbiterTribunal = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Arbiter_Tribunal); 
+				if (arbiterTribunal != null && arbiterTribunal.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
+						BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Arbiter).getUnitCount() < 2 &&
+						MyBotModule.Broodwar.self().minerals() >= 100 && MyBotModule.Broodwar.self().gas() >= 350) {
 					return true;
 				}
 				return false;
@@ -111,20 +125,6 @@ public class ProtossBasicBattleUnitOrder extends BattleUnitOrder {
 //				if (fleetBeacon != null && fleetBeacon.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
 //				        BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier).getUnitCount() < 2 &&
 //						MyBotModule.Broodwar.self().minerals() >= 350 && MyBotModule.Broodwar.self().gas() >= 250) {
-//					return true;
-//				}
-//				return false;
-//			}
-//		});
-		
-//		super.bulkOrder(UnitType.Protoss_Stargate, UnitType.Protoss_Arbiter, new OrderCondition() {
-//			@Override
-//			public boolean isActive() {
-//				// TODO Auto-generated method stub
-//				BuildingUnit arbiterTribunal = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Arbiter_Tribunal); 
-//				if (arbiterTribunal != null && arbiterTribunal.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
-//						BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Arbiter).getUnitCount() < 2 &&
-//						MyBotModule.Broodwar.self().minerals() >= 100 && MyBotModule.Broodwar.self().gas() >= 350) {
 //					return true;
 //				}
 //				return false;

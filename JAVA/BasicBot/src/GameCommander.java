@@ -111,8 +111,8 @@ public class GameCommander {
 			if (unitType == UnitType.Protoss_Gateway || unitType == UnitType.Protoss_Stargate) {
 				if (unit.canSetRallyPoint()) {
 //					Position center = MapGrid.Instance().getCellCenter(MapGrid.Instance().getRows()>>1, MapGrid.Instance().getCols()>>1);
-					Chokepoint secondChokePoint = InformationManager.Instance().getSecondChokePoint(InformationManager.Instance().selfPlayer);
-					unit.setRallyPoint(secondChokePoint.getCenter());
+					Chokepoint firstChokePoint = InformationManager.Instance().getFirstChokePoint(InformationManager.Instance().selfPlayer);
+					unit.setRallyPoint(firstChokePoint.getCenter());
 				}
 				BuildingUnitManager.instance().completeBuildingUnitInGroup(unitType, unit.getID());
 			} else if (unitType == UnitType.Protoss_Cybernetics_Core || unitType == UnitType.Protoss_Citadel_of_Adun ||
