@@ -345,7 +345,9 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 		TilePosition pylonPosition = ProtossBasicBuildPosition.mapInfo.get("P"+ProtossBasicBuildPosition.START_BASE);
 		BattleUnit zealot =BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.DEFENCE_GROUP.getValue()).getLeader();
 		if (zealot != null && zealot.getUnit().exists()) {
-			if (BattleManager.instance().getBattleMode() != BattleManager.BattleMode.DEFENCE) {
+			if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 &&
+					!zealot.getUnit().isUnderAttack() &&
+					BattleManager.instance().getBattleMode() != BattleManager.BattleMode.DEFENCE) {
 				CommandUtil.move(zealot.getUnit(), pylonPosition.toPosition());
 			}
 			if (zealot.getUnit().getTilePosition().getDistance(pylonPosition) < 50) {
@@ -375,7 +377,8 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 						@Override
 						public boolean isActive() {
 							// TODO Auto-generated method stub
-							if (MyBotModule.Broodwar.self().minerals() >= 100) {
+							if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 &&	
+									MyBotModule.Broodwar.self().minerals() >= 100) {
 								return true;
 							}
 							return false;
