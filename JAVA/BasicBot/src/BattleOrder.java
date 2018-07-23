@@ -79,6 +79,7 @@ public class BattleOrder {
 		for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(centerExpansion, CommandUtil.UNIT_RADIUS)) {
 			if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
 				isEnemyInCenterExpansion = true;
+				break;
 			}
 		}
 		return isEnemyInCenterExpansion;

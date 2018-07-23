@@ -16,6 +16,7 @@ public class ZergBattleOrder extends BattleOrder {
 		super.executeTotalAttack();
 		
 		highTemplarAttack();
+		archonAttack();
 		corsairAttack();
 	}
 	

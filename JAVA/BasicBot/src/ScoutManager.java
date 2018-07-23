@@ -41,17 +41,17 @@ public class ScoutManager {
 		if (MyBotModule.Broodwar.getFrameCount() % 6 != 0) return;
 		
 		// scoutUnit 을 지정하고, scoutUnit 의 이동을 컨트롤함. 
-		if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Probe).getUnitCount() > 7 &&
-				BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) == 0) {
-			assignScoutIfNeeded(UnitType.Protoss_Probe);
-		} else {
+		if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Probe).getUnitCount() > 7) {
 			if (MyBotModule.Broodwar.getFrameCount() % 4320 == 0) {
 				BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue());
 				if (battleUnitGroup.getUnitCount() > 1) {
 					assignScoutIfNeeded(UnitType.Protoss_Zealot);
+				} else {
+					assignScoutIfNeeded(UnitType.Protoss_Probe);	
 				}
 			}
 		}
+		
 		moveScoutUnit();
 
 		// 참고로, scoutUnit 의 이동에 의해 발견된 정보를 처리하는 것은 InformationManager.update() 에서 수행함
@@ -87,6 +87,7 @@ public class ScoutManager {
 					if (leader != null && zealot != null && leader.getUnitId() != zealot.getUnitId()) {
 						currentScoutUnit = zealot.getUnit();
 						battleUnitGroup.removeBattleUnit(zealot.getUnitId());
+						break;
 					}
 				}
 			} 
