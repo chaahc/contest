@@ -45,8 +45,8 @@ public class ScoutManager {
 				BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) == 0) {
 			assignScoutIfNeeded(UnitType.Protoss_Probe);
 		} else {
-			if (MyBotModule.Broodwar.getFrameCount() % 7200 == 0) {
-				BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.DEFENCE_GROUP.getValue());
+			if (MyBotModule.Broodwar.getFrameCount() % 4320 == 0) {
+				BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue());
 				if (battleUnitGroup.getUnitCount() > 1) {
 					assignScoutIfNeeded(UnitType.Protoss_Zealot);
 				}
@@ -79,13 +79,14 @@ public class ScoutManager {
 					//WorkerManager::Instance().setIdleWorker(currentScoutUnit);
 				}
 			} else if (unitType == UnitType.Protoss_Zealot) {
-				BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(BattleGroupType.DEFENCE_GROUP.getValue());
+				BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(BattleGroupType.FRONT_GROUP.getValue());
 				Iterator<Integer> iterator = battleUnitGroup.battleUnits.keySet().iterator();
 				while (iterator.hasNext()) {
 					BattleUnit zealot = battleUnitGroup.battleUnits.get(iterator.next());
 					BattleUnit leader = battleUnitGroup.getLeader();
 					if (leader != null && zealot != null && leader.getUnitId() != zealot.getUnitId()) {
 						currentScoutUnit = zealot.getUnit();
+						battleUnitGroup.removeBattleUnit(zealot.getUnitId());
 					}
 				}
 			} 
