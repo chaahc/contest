@@ -6,6 +6,7 @@ import bwapi.Unit;
 import bwapi.UnitType;
 
 public class HighTemplar extends BattleUnit {
+	private boolean isSkillUsed = false;
 	public HighTemplar(int unitId, Unit unit, UnitType unitType) {
 		super(unitId, unit, unitType);
 		// TODO Auto-generated constructor stub
@@ -14,6 +15,7 @@ public class HighTemplar extends BattleUnit {
 	public void psionicStorm(Position target) {
 		// TODO Auto-generated method stub
 		CommandUtil.useTech(super.unit, TechType.Psionic_Storm, target);
+		this.isSkillUsed = true;
 	}
 	
 	public void hallucination(Unit target) {
@@ -30,5 +32,9 @@ public class HighTemplar extends BattleUnit {
 	
 	public void follow(Unit unit) {
 		super.unit.follow(unit);
+	}
+	
+	public boolean isSkillUsed() {
+		return this.isSkillUsed;
 	}
 }

@@ -83,8 +83,7 @@ public class BattleManager {
 					if (unitType == UnitType.Protoss_Zealot) {
 						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(battleGroupType.getValue());
 						BattleUnit dragoon = battleUnitGroup.getLeader();
-						System.out.println(dragoon.getUnitId() + "-zealot, distance : " + dragoon.getUnit().getDistance(leader.getUnit()));
-						if (dragoon.getUnit().isUnderAttack() || dragoon.getUnit().getDistance(leader.getUnit()) > CommandUtil.UNIT_RADIUS) {
+						if (dragoon != null && dragoon.getUnit().exists() && (dragoon.getUnit().isUnderAttack() || dragoon.getUnit().getDistance(leader.getUnit()) > CommandUtil.UNIT_RADIUS)) {
 							commandUtil.attackMove(leader.getUnit(), dragoon.getUnit().getPosition());
 						} else {
 							commandUtil.attackMove(leader.getUnit(), position);
@@ -245,7 +244,7 @@ public class BattleManager {
 	}
 	
 	public enum BattleMode {
-		WAIT, DEFENCE, TOTAL_ATTACK, RECALL_ATTACK, DROP_ATTACK;
+		WAIT, DEFENCE, TOTAL_ATTACK;
 	}
 	
 	public int getArchonCandidatesCount() {

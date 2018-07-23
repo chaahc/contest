@@ -1,3 +1,4 @@
+import bwapi.Race;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
@@ -25,7 +26,11 @@ public class StrategyManager {
 	
 	private StrategyType chooseStrategy() {
 //		required to choose strategy
-		return StrategyType.PROTOSS_BASIC;
+		if (MyBotModule.Broodwar.enemy().getRace() == Race.Zerg) {
+			return StrategyType.ZERG_BASIC;
+		} else {
+			return StrategyType.PROTOSS_BASIC;			
+		}
 	}
 
 	/// 경기가 시작될 때 일회적으로 전략 초기 세팅 관련 로직을 실행합니다

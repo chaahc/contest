@@ -472,6 +472,10 @@ public class BuildManager {
 		for (Unit unit : units) {
 			if (unit == null)
 				continue;
+			
+			if (ScoutManager.Instance().getScoutUnit() == unit) {
+				continue;
+			}
 
 			double distance = unit.getDistance(closestTo);
 			if (closestUnit == null || distance < minDist) {

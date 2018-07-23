@@ -8,7 +8,7 @@ import bwapi.Unit;
 import bwapi.UnitType;
 import bwta.BWTA;
 
-public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
+public class ZergBasicBuildingUnitOrder extends BuildingUnitOrder {
 
 	@Override
 	public void execute() {
@@ -108,19 +108,21 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 		
 		this.orderExpansionDefence();
 		
-		super.order(UnitType.Protoss_Gateway, BuildOrderItem.SeedPositionStrategy.SecondExpansionLocation, new OrderCondition() {
-			@Override
-			public boolean isActive() {
-				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 &&						
-						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) > 7 &&
-						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) < 12 &&
-						MyBotModule.Broodwar.self().minerals() >= 150) {
-					return true;
-				}
-				return false;
-			}
-		});
+//		super.order(UnitType.Protoss_Gateway, BuildOrderItem.SeedPositionStrategy.SecondExpansionLocation, new OrderCondition() {
+//			@Override
+//			public boolean isActive() {
+//				// TODO Auto-generated method stub
+//				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 &&						
+//						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) > 7 &&
+//						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) < 12 &&
+//						MyBotModule.Broodwar.self().minerals() >= 150) {
+//					return true;
+//				}
+//				return false;
+//			}
+//		});
+		
+
 		
 		super.order(UnitType.Protoss_Citadel_of_Adun, BuildOrderItem.SeedPositionStrategy.MainBaseBackYard, new OrderCondition() {
 			@Override
@@ -174,7 +176,7 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 &&
+				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 2 &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun) != null &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun).getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Templar_Archives) == null &&
@@ -200,19 +202,19 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 			}
 		});
 		
-		super.order(UnitType.Protoss_Arbiter_Tribunal, BuildOrderItem.SeedPositionStrategy.MainBaseBackYard, new OrderCondition() {
-			@Override
-			public boolean isActive() {
-				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Templar_Archives) != null &&
-						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Templar_Archives).getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
-						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Arbiter_Tribunal) == null &&
-						MyBotModule.Broodwar.self().minerals() >= 200 && MyBotModule.Broodwar.self().gas() >= 150) {
-					return true;
-				}
-				return false;
-			}
-		});
+//		super.order(UnitType.Protoss_Arbiter_Tribunal, BuildOrderItem.SeedPositionStrategy.MainBaseBackYard, new OrderCondition() {
+//			@Override
+//			public boolean isActive() {
+//				// TODO Auto-generated method stub
+//				if (BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Templar_Archives) != null &&
+//						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Templar_Archives).getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
+//						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Arbiter_Tribunal) == null &&
+//						MyBotModule.Broodwar.self().minerals() >= 200 && MyBotModule.Broodwar.self().gas() >= 150) {
+//					return true;
+//				}
+//				return false;
+//			}
+//		});
 	
 		
 //		super.order(UnitType.Protoss_Robotics_Support_Bay, BuildOrderItem.SeedPositionStrategy.MainBaseLocation, new OrderCondition() {
@@ -330,7 +332,7 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 					@Override
 					public boolean isActive() {
 						// TODO Auto-generated method stub
-						if (BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Nexus) == 3 && 
+						if (BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Nexus) > 2 && 
 								MyBotModule.Broodwar.self().minerals() >= 100) {
 							return true;
 						}
