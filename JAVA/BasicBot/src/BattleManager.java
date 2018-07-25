@@ -55,8 +55,6 @@ public class BattleManager {
 	
 	private static Queue<HighTemplar> archonCandidates = new LinkedList<HighTemplar>();
 	
-	private static Map<Integer, BattleSingleOrder> battleSingleOrderMap = new HashMap<Integer, BattleSingleOrder>();
-	
 	public void closestAttack(UnitType unitType, BattleGroupType battleGroupType) {
 		BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType)
 				.get(battleGroupType.getValue());
@@ -83,7 +81,7 @@ public class BattleManager {
 					if (unitType == UnitType.Protoss_Zealot) {
 						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(battleGroupType.getValue());
 						BattleUnit dragoon = battleUnitGroup.getLeader();
-						if (dragoon != null && dragoon.getUnit().exists() && (dragoon.getUnit().isUnderAttack() || dragoon.getUnit().getDistance(leader.getUnit()) > CommandUtil.UNIT_RADIUS)) {
+						if (dragoon != null && dragoon.getUnit().exists() && (dragoon.getUnit().isUnderAttack() || dragoon.getUnit().getDistance(leader.getUnit()) > 10)) {
 							commandUtil.attackMove(leader.getUnit(), dragoon.getUnit().getPosition());
 						} else {
 							commandUtil.attackMove(leader.getUnit(), position);
@@ -110,6 +108,11 @@ public class BattleManager {
 		boolean isEnemyUnitInvisible = false;
 		
 		List<Unit> targetUnits = battleUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS);
+		BaseLocation selfFirstExpansionLocation = InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.self());
+		if (battleUnit.getPosition().toTilePosition().getDistance(selfFirstExpansionLocation.getTilePosition())<10) {
+			System.out.println(battleUnit.getID() +"-"+battleUnit.getType() + ", attack - skip score");
+			return false;
+		}
 		for (Unit unit : targetUnits) {
 			if (unit.getType() == UnitType.Protoss_Dark_Templar || 
 					unit.getType() == UnitType.Zerg_Lurker) {
@@ -257,26 +260,5 @@ public class BattleManager {
 	
 	public HighTemplar removeArchonCandidate() {
 		return archonCandidates.remove();
-	}
-	
-	public void addBattleSingleOrder(BattleSingleOrder battleSingleOrder) {
-		if (!battleSingleOrderMap.containsKey(battleSingleOrder.getUnitId())) {
-			battleSingleOrderMap.put(battleSingleOrder.getUnitId(), battleSingleOrder);
-		}
-	}
-	
-	public void removeBattleSingleOrder(int unitId) {
-		battleSingleOrderMap.remove(unitId);
-	}
-	
-	public void onExecuteBattleSingleOrder() {
-		if (MyBotModule.Broodwar.getFrameCount() % 24 != 0) {
-			return;
-		}
-		Iterator<Integer> iterator = battleSingleOrderMap.keySet().iterator();
-		while (iterator.hasNext()) {
-			BattleSingleOrder battleSingleOrder = battleSingleOrderMap.get(iterator.next());
-			battleSingleOrder.execute();
-		}
 	}
 }

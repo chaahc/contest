@@ -10,7 +10,7 @@ public class ProtossBasicUpgradeOrder extends UpgradeOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) == 2) {
+				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 2) {
 					return true;
 				}
 				return false;
@@ -41,7 +41,7 @@ public class ProtossBasicUpgradeOrder extends UpgradeOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) == 2 && 
+				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 2 && 
 						MyBotModule.Broodwar.self().minerals() >= 500 && MyBotModule.Broodwar.self().minerals() >= 500) {
 					return true;
 				}
@@ -52,22 +52,7 @@ public class ProtossBasicUpgradeOrder extends UpgradeOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) == 2 && 
-						MyBotModule.Broodwar.self().minerals() >= 500 && MyBotModule.Broodwar.self().minerals() >= 500) {
-					return true;
-				}
-				return true;
-			}
-		});
-		super.order(UnitType.Protoss_Forge, UpgradeType.Protoss_Plasma_Shields, new OrderCondition() {
-			@Override
-			public boolean isActive() {
-				// TODO Auto-generated method stub
-				BuildingUnit forge = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge);
-				if (forge != null && 
-						forge.isUpgradeCompleted(UpgradeType.Protoss_Ground_Weapons) &&
-						forge.isUpgradeCompleted(UpgradeType.Protoss_Ground_Armor) &&
-						BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) == 2 && 
+				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 2 && 
 						MyBotModule.Broodwar.self().minerals() >= 500 && MyBotModule.Broodwar.self().minerals() >= 500) {
 					return true;
 				}
@@ -88,6 +73,21 @@ public class ProtossBasicUpgradeOrder extends UpgradeOrder {
 				return true;
 			}
 		});
+//		super.order(UnitType.Protoss_Forge, UpgradeType.Protoss_Plasma_Shields, new OrderCondition() {
+//		@Override
+//		public boolean isActive() {
+//			// TODO Auto-generated method stub
+//			BuildingUnit forge = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge);
+//			if (forge != null && 
+//					forge.isUpgradeCompleted(UpgradeType.Protoss_Ground_Weapons) &&
+//					forge.isUpgradeCompleted(UpgradeType.Protoss_Ground_Armor) &&
+//					BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) == 2 && 
+//					MyBotModule.Broodwar.self().minerals() >= 500 && MyBotModule.Broodwar.self().minerals() >= 500) {
+//				return true;
+//			}
+//			return true;
+//		}
+//	});
 //		super.order(UnitType.Protoss_Templar_Archives, TechType.Psionic_Storm, new OrderCondition() {
 //			@Override
 //			public boolean isActive() {

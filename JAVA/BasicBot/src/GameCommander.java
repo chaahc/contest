@@ -75,10 +75,6 @@ public class GameCommander {
 		StrategyManager.Instance().update();
 
 		if ( isToFindError) System.out.print("h)");
-		
-		BattleManager.instance().onExecuteBattleSingleOrder();
-		
-		if ( isToFindError) System.out.print("i)");
 	}
 
 	/// 유닛(건물/지상유닛/공중유닛)이 Create 될 때 발생하는 이벤트를 처리합니다
@@ -112,7 +108,13 @@ public class GameCommander {
 				if (unit.canSetRallyPoint()) {
 //					Position center = MapGrid.Instance().getCellCenter(MapGrid.Instance().getRows()>>1, MapGrid.Instance().getCols()>>1);
 					Chokepoint firstChokePoint = InformationManager.Instance().getFirstChokePoint(InformationManager.Instance().selfPlayer);
-					unit.setRallyPoint(firstChokePoint.getCenter());
+					BuildingUnit forge = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge);
+					if (forge != null ) {
+						unit.setRallyPoint(forge.getUnit().getPosition());	
+					} else {
+						unit.setRallyPoint(MyBotModule.Broodwar.getRegionAt(firstChokePoint.getCenter()).getClosestAccessibleRegion().getCenter());
+					}
+					
 				}
 				BuildingUnitManager.instance().completeBuildingUnitInGroup(unitType, unit.getID());
 			} else if (unitType == UnitType.Protoss_Cybernetics_Core || unitType == UnitType.Protoss_Citadel_of_Adun ||

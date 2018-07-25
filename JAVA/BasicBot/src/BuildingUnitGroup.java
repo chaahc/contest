@@ -55,7 +55,13 @@ public class BuildingUnitGroup {
 			if (this.buildingUnitGroup.get(unitId).getUnit().isTraining()) {
 				continue;
 			}
-			this.buildingUnitGroup.get(unitId).getUnit().train(unitType);
+			if (unitType == UnitType.Protoss_High_Templar) {
+				this.buildingUnitGroup.get(unitId).getUnit().train(unitType);
+				break;
+			} else {
+				this.buildingUnitGroup.get(unitId).getUnit().train(unitType);
+			}
+
 		}
 	}
 	

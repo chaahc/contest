@@ -66,7 +66,7 @@ public class BattleUnitGroupManager {
 			int defenceCount = multiGroups.get(unitType).get(BattleGroupType.DEFENCE_GROUP.getValue()).getUnitCount();
 			if (frontCount == 8 * defenceCount){
 				multiGroups.get(unitType).get(BattleGroupType.DEFENCE_GROUP.getValue()).addBattleUnit(battleUnit);
-			} else if (frontCount == 3 * subCount){
+			} else if (frontCount == 2 * subCount){
 				multiGroups.get(unitType).get(BattleGroupType.SUB_GROUP.getValue()).addBattleUnit(battleUnit);
 			} else {
 				multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).addBattleUnit(battleUnit);
@@ -77,9 +77,9 @@ public class BattleUnitGroupManager {
 			int frontCount = multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount();
 			int subCount = multiGroups.get(unitType).get(BattleGroupType.SUB_GROUP.getValue()).getUnitCount();
 			int defenceCount = multiGroups.get(unitType).get(BattleGroupType.DEFENCE_GROUP.getValue()).getUnitCount();
-			if (frontCount == 10 * defenceCount){
+			if (frontCount == 8 * defenceCount){
 				multiGroups.get(unitType).get(BattleGroupType.DEFENCE_GROUP.getValue()).addBattleUnit(battleUnit);
-			} else if (frontCount == 3 * subCount){
+			} else if (frontCount == 2 * subCount){
 				multiGroups.get(unitType).get(BattleGroupType.SUB_GROUP.getValue()).addBattleUnit(battleUnit);
 			} else {
 				multiGroups.get(unitType).get(BattleGroupType.FRONT_GROUP.getValue()).addBattleUnit(battleUnit);

@@ -454,10 +454,14 @@ public class WorkerManager {
 		for (Unit unit : workerData.getWorkers())
 		{
 			if (unit == null) continue;
-
+			
 			// worker 가 2개 이상이면, avoidWorkerID 는 피한다
 			if (workerData.getWorkers().size() >= 2 && avoidWorkerID != 0 && unit.getID() == avoidWorkerID) continue;
 
+			if (workerData.getWorkerJob(unit) == WorkerData.WorkerJob.Scout) {
+				continue;
+			}
+			
 			// Move / Idle Worker
 			if (unit.isCompleted() && (workerData.getWorkerJob(unit) == WorkerData.WorkerJob.Move || workerData.getWorkerJob(unit) == WorkerData.WorkerJob.Idle))
 			{

@@ -32,7 +32,7 @@ public class ProtossBasicBuildPosition {
 	public static final String PYLON7 = "P7";
 	private static List<TilePosition> centerExpansionNearSelf = new ArrayList<TilePosition>();
 	private static List<TilePosition> centerExpansionNearEnemy = new ArrayList<TilePosition>();
-	private static Map<String, TilePosition> scoutPositions = new HashMap<String, TilePosition>(mapInfo);
+	private static Map<String, TilePosition> scoutPositions = new HashMap<String, TilePosition>();
 	
 	public static String START_BASE = "";
 	
@@ -257,48 +257,33 @@ public class ProtossBasicBuildPosition {
 		return centerExpansionNearBase;
 	}
 	
-	public Map<String, TilePosition> getScoutPositions(TilePosition enemy) {
+	public Map<String, TilePosition> getScoutPositions() {
 		if (scoutPositions.isEmpty()) {
 			if (START_BASE.equals(BASE1)) {
-				scoutPositions.remove(BASE1);
-				scoutPositions.remove(BASE12);
-				scoutPositions.remove(BASE3);
+				scoutPositions.put(BASE11, mapInfo.get(BASE11));
+				scoutPositions.put(BASE9, mapInfo.get(BASE9));
+				scoutPositions.put(BASE7, mapInfo.get(BASE7));
+				scoutPositions.put(BASE6, mapInfo.get(BASE6));
+				scoutPositions.put(BASE5, mapInfo.get(BASE5));
 			} else if (START_BASE.equals(BASE5)) {
-				scoutPositions.remove(BASE5);
-				scoutPositions.remove(BASE3);
-				scoutPositions.remove(BASE6);
+				scoutPositions.put(BASE1, mapInfo.get(BASE1));
+				scoutPositions.put(BASE12, mapInfo.get(BASE12));
+				scoutPositions.put(BASE11, mapInfo.get(BASE11));
+				scoutPositions.put(BASE9, mapInfo.get(BASE9));
+				scoutPositions.put(BASE7, mapInfo.get(BASE7));
 			} else if (START_BASE.equals(BASE7)) {
-				scoutPositions.remove(BASE7);
-				scoutPositions.remove(BASE6);
-				scoutPositions.remove(BASE9);
+				scoutPositions.put(BASE5, mapInfo.get(BASE5));
+				scoutPositions.put(BASE3, mapInfo.get(BASE3));
+				scoutPositions.put(BASE1, mapInfo.get(BASE1));
+				scoutPositions.put(BASE12, mapInfo.get(BASE12));
+				scoutPositions.put(BASE11, mapInfo.get(BASE11));
 			} else if (START_BASE.equals(BASE11)) {
-				scoutPositions.remove(BASE11);
-				scoutPositions.remove(BASE9);
-				scoutPositions.remove(BASE12);
+				scoutPositions.put(BASE7, mapInfo.get(BASE7));
+				scoutPositions.put(BASE6, mapInfo.get(BASE6));
+				scoutPositions.put(BASE5, mapInfo.get(BASE5));
+				scoutPositions.put(BASE3, mapInfo.get(BASE3));
+				scoutPositions.put(BASE1, mapInfo.get(BASE1));
 			}
-			
-			if (mapInfo.get(BASE1).equals(enemy)) {
-				scoutPositions.remove(BASE1);
-				scoutPositions.remove(BASE12);
-				scoutPositions.remove(BASE3);
-			} else if (mapInfo.get(BASE5).equals(enemy)) {
-				scoutPositions.remove(BASE5);
-				scoutPositions.remove(BASE3);
-				scoutPositions.remove(BASE6);
-			} else if (mapInfo.get(BASE7).equals(enemy)) {
-				scoutPositions.remove(BASE7);
-				scoutPositions.remove(BASE6);
-				scoutPositions.remove(BASE9);
-			} else if (mapInfo.get(BASE11).equals(enemy)){
-				scoutPositions.remove(BASE11);
-				scoutPositions.remove(BASE9);
-				scoutPositions.remove(BASE12);
-			}
-			scoutPositions.remove(CENTER);
-			scoutPositions.remove(PYLON11);
-			scoutPositions.remove(PYLON1);
-			scoutPositions.remove(PYLON5);
-			scoutPositions.remove(PYLON7);
 		}
 		return scoutPositions;
 	}
