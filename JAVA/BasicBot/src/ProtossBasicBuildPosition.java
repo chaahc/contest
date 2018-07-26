@@ -230,6 +230,21 @@ public class ProtossBasicBuildPosition {
 			
 		}
 	} 	
+	
+	public TilePosition getEnemyBase(TilePosition enemy) {
+		TilePosition enemyBaseLocation = null;
+		if (mapInfo.get(BASE1).equals(enemy)) {
+			enemyBaseLocation = new TilePosition(107, 3);
+		} else if (mapInfo.get(BASE5).equals(enemy)) {
+			enemyBaseLocation = new TilePosition(107, 123);
+		} else if (mapInfo.get(BASE7).equals(enemy)) {
+			enemyBaseLocation = new TilePosition(22, 123);
+		} else if (mapInfo.get(BASE11).equals(enemy)){
+			enemyBaseLocation = new TilePosition(22, 3);
+		}
+		return enemyBaseLocation;
+	}
+	
 	public List<TilePosition> getCenterExpansionNearEnemy(TilePosition enemy) {
 		return getCenterExpansionNearBase(centerExpansionNearEnemy, enemy);
 	}

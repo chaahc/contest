@@ -15,10 +15,10 @@ public class ZergBattleOrder extends BattleOrder {
 		super.detectEnemyAttack(InformationManager.Instance().getSecondExpansionLocation(MyBotModule.Broodwar.self()).getPosition());
 		super.observing();
 		super.defenceExpansion();
-		super.enemyAttack();
+		super.enemyExpansionAttack();
 		super.onewayAttack();
 		super.totalAttack();
-		super.moveStuckUnit();
+		super.moveStuckDragoon();
 		
 		highTemplarAttack();
 		archonAttack();
