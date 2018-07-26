@@ -44,9 +44,7 @@ public class ScoutManager {
 		if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Probe).getUnitCount() > 7) {
 			BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue());
 			if (battleUnitGroup.getUnitCount() > 1) {
-				if (MyBotModule.Broodwar.getFrameCount() % 4320 == 0) {
-					assignScoutIfNeeded(UnitType.Protoss_Zealot);
-				}
+				assignScoutIfNeeded(UnitType.Protoss_Zealot);
 			} else {
 				assignScoutIfNeeded(UnitType.Protoss_Probe);	
 			}
@@ -62,35 +60,47 @@ public class ScoutManager {
 	{
 		BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
 
-		if (enemyBaseLocation == null ||
-			currentScoutUnit == null || currentScoutUnit.exists() == false || currentScoutUnit.getHitPoints() <= 0) {
-			currentScoutUnit = null;
-			currentScoutStatus = ScoutStatus.NoScout.ordinal();
-			
-			if (unitType == UnitType.Protoss_Probe) {
-				BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(unitType);
-				BattleUnit probe = battleUnitGroup.getLeader();
-				if (probe != null && probe.getUnit().exists()) {
-					// set unit as scout unit
-					currentScoutUnit = probe.getUnit();
-					WorkerManager.Instance().setScoutWorker(currentScoutUnit);
-
-					// 참고로, 일꾼의 정찰 임무를 해제하려면, 다음과 같이 하면 된다
-					//WorkerManager::Instance().setIdleWorker(currentScoutUnit);
-				}
-			} else if (unitType == UnitType.Protoss_Zealot) {
-				BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(BattleGroupType.FRONT_GROUP.getValue());
-				Iterator<Integer> iterator = battleUnitGroup.battleUnits.keySet().iterator();
-				while (iterator.hasNext()) {
-					BattleUnit zealot = battleUnitGroup.battleUnits.get(iterator.next());
-					BattleUnit leader = battleUnitGroup.getLeader();
-					if (leader != null && zealot != null && leader.getUnitId() != zealot.getUnitId()) {
-						currentScoutUnit = zealot.getUnit();
-						battleUnitGroup.removeBattleUnit(zealot.getUnitId());
-						break;
+		if (enemyBaseLocation == null) {
+			if (currentScoutUnit == null || currentScoutUnit.exists() == false || currentScoutUnit.getHitPoints() <= 0) {
+				currentScoutUnit = null;
+				currentScoutStatus = ScoutStatus.NoScout.ordinal();
+				
+				if (unitType == UnitType.Protoss_Probe) {
+					BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(unitType);
+					for (int unitId : battleUnitGroup.battleUnits.keySet()) {
+						BattleUnit probe = battleUnitGroup.battleUnits.get(unitId);
+						if (probe != null && probe.getUnit().exists() &&
+								!probe.getUnit().isCarryingMinerals() &&
+								!probe.getUnit().isGatheringMinerals()) {
+							// set unit as scout unit
+							currentScoutUnit = probe.getUnit();
+							WorkerManager.Instance().setScoutWorker(currentScoutUnit);
+							break;	
+							// 참고로, 일꾼의 정찰 임무를 해제하려면, 다음과 같이 하면 된다
+							//WorkerManager::Instance().setIdleWorker(currentScoutUnit);
+						}
 					}
-				}
-			} 
+				} 
+			}
+		} else {
+			if (currentScoutUnit == null || currentScoutUnit.exists() == false || currentScoutUnit.getHitPoints() <= 0) {
+				currentScoutUnit = null;
+				currentScoutStatus = ScoutStatus.NoScout.ordinal();
+				
+				if (unitType == UnitType.Protoss_Zealot) {
+					BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(BattleGroupType.FRONT_GROUP.getValue());
+					Iterator<Integer> iterator = battleUnitGroup.battleUnits.keySet().iterator();
+					while (iterator.hasNext()) {
+						BattleUnit zealot = battleUnitGroup.battleUnits.get(iterator.next());
+						BattleUnit leader = battleUnitGroup.getLeader();
+						if (leader != null && zealot != null && leader.getUnitId() != zealot.getUnitId()) {
+							currentScoutUnit = zealot.getUnit();
+							battleUnitGroup.removeBattleUnit(zealot.getUnitId());
+							break;
+						}
+					}
+				} 
+			}
 		}
 	}
 
@@ -108,7 +118,6 @@ public class ScoutManager {
 		}
 
 		BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
-		BaseLocation enemySecondExpansionLocation = InformationManager.Instance().getSecondExpansionLocation(MyBotModule.Broodwar.enemy());
 		
 		if (enemyBaseLocation == null)
 		{
@@ -162,14 +171,15 @@ public class ScoutManager {
 					currentScoutStatus = ScoutStatus.MoveAroundEnemyBaseLocation.ordinal();
 					
 					if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
-						this.runAway();
+						this.scout(true);
 					} else {
 						boolean isWorkerInRange = false;
 						for (Unit unit : currentScoutUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS)) {
-							if (unit.getPlayer() == MyBotModule.Broodwar.enemy() && unit.getType().isWorker()) {
+							if (unit.getPlayer() == MyBotModule.Broodwar.enemy() &&
+									unit.getType().isWorker()) {
 								if (currentScoutUnit.getType() == UnitType.Protoss_Probe && 
 										unit.getOrderTarget() != null && unit.getOrderTarget().getID() == currentScoutUnit.getID()) {
-									this.runAway();
+									this.scout(true);
 									break;
 								} else {
 									commandUtil.attackMove(currentScoutUnit, unit.getPosition());
@@ -179,8 +189,7 @@ public class ScoutManager {
 							}
 						}
 						if (!isWorkerInRange) {
-							this.runAway();
-//							CommandUtil.move(currentScoutUnit, enemySecondExpansionLocation.getPosition());
+							this.scout(false);
 						}
 					}
 				}
@@ -188,11 +197,18 @@ public class ScoutManager {
 		}
 	}
 	
-	public void runAway() {
+	public void scout(boolean isRunAway) {
 		for (String base : ProtossBasicBuildPosition.Instance().getScoutPositions().keySet()) {
-			TilePosition tilePosition = ProtossBasicBuildPosition.Instance().getScoutPositions().get(base);
+			TilePosition tilePosition = ProtossBasicBuildPosition.Instance().getScoutPositions().get(base); 
+			if (tilePosition.equals(InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy()).getTilePosition())) {
+				continue;
+			}
 			if (currentScoutUnit.getDistance(tilePosition.toPosition()) > 50 && !currentScoutUnit.isMoving()) {
-				currentScoutUnit.move(tilePosition.toPosition(), true);
+				if (isRunAway) {
+					currentScoutUnit.move(tilePosition.toPosition(), true);
+				} else {
+					currentScoutUnit.attack(tilePosition.toPosition(), true);
+				}
 			}
 		}
 	}

@@ -16,7 +16,8 @@ public class ZergBattleOrder extends BattleOrder {
 		super.observing();
 		super.defenceExpansion();
 		super.enemyAttack();
-		super.executeTotalAttack();
+		super.onewayAttack();
+		super.totalAttack();
 		
 		highTemplarAttack();
 		archonAttack();
@@ -50,7 +51,7 @@ public class ZergBattleOrder extends BattleOrder {
 						}
 					}
 					if (maxEnemyCount == 0) {
-						BattleUnit leader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getLeader();
+						BattleUnit leader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getLeader();
 						super.unitFollow(highTemplar, leader);
 //						CommandUtil.rightClick(highTemplar.getUnit(), leader.getUnit().getPosition());
 					} else {

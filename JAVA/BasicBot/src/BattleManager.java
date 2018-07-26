@@ -66,6 +66,14 @@ public class BattleManager {
 		}
 	}
 	
+	public void onewayAttack(UnitType unitType, BattleGroupType battleGroupType, Position position) {
+		BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType)
+				.get(battleGroupType.getValue());
+		for (int unitId : battleUnitGroup.battleUnits.keySet()) {
+			commandUtil.attackMove(battleUnitGroup.battleUnits.get(unitId).getUnit(), position);
+		}
+	}
+	
 	public void leaderAttack(UnitType unitType, Position position, BattleGroupType battleGroupType) {
 		BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(battleGroupType.getValue());
 		BattleUnit leader = battleUnitGroup.getLeader();
@@ -81,20 +89,12 @@ public class BattleManager {
 					if (unitType == UnitType.Protoss_Zealot) {
 						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(battleGroupType.getValue());
 						BattleUnit dragoon = battleUnitGroup.getLeader();
-						if (dragoon != null && dragoon.getUnit().exists() && (dragoon.getUnit().isUnderAttack() || dragoon.getUnit().getDistance(leader.getUnit()) > 10)) {
-							commandUtil.attackMove(leader.getUnit(), dragoon.getUnit().getPosition());
+						if (dragoon != null && dragoon.getUnit().exists() && ((dragoon.getUnit().isUnderAttack() && dragoon.getUnit().isAttacking()) || dragoon.getUnit().getDistance(leader.getUnit()) > 10)) {
+							commandUtil.attackMove(leader.getUnit(), dragoon.getUnit().getRegion().getCenter());
 						} else {
 							commandUtil.attackMove(leader.getUnit(), position);
 						}
 					} else if (unitType == UnitType.Protoss_Dragoon) {
-//						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(battleGroupType.getValue());
-//						BattleUnit zealot = battleUnitGroup.getLeader();
-//						System.out.println(zealot.getUnitId() + "-dragoon, distance : " + zealot.getUnit().getDistance(leader.getUnit()));
-//						if (zealot.getUnit().isUnderAttack() || zealot.getUnit().getDistance(leader.getUnit()) > CommandUtil.UNIT_RADIUS) {
-//							commandUtil.attackMove(leader.getUnit(), zealot.getUnit().getPosition());
-//						} else {
-//							commandUtil.attackMove(leader.getUnit(), position);
-//						}
 						commandUtil.attackMove(leader.getUnit(), position);
 					}
 				}
@@ -247,7 +247,7 @@ public class BattleManager {
 	}
 	
 	public enum BattleMode {
-		WAIT, DEFENCE, TOTAL_ATTACK;
+		WAIT, DEFENCE, TOTAL_ATTACK, ONEWAY_ATTACK;
 	}
 	
 	public int getArchonCandidatesCount() {

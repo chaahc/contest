@@ -1,9 +1,8 @@
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import bwapi.Position;
+import bwapi.Region;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
@@ -12,7 +11,7 @@ import bwta.BaseLocation;
 import bwta.Chokepoint;
 
 public class BattleOrder {
-	public static final int TOTAL_RADIUS = 1000;
+	public static final int TOTAL_RADIUS = 600;
 	public static final int BASE_RADIUS = 500;
 	public static final int CORSAIR_RADIUS = 100;
 	
@@ -26,7 +25,8 @@ public class BattleOrder {
 		observing();
 		defenceExpansion();
 		enemyAttack();
-		executeTotalAttack();
+		onewayAttack();
+		totalAttack();
 		
 //		highTemplarAttack();
 //		dropAttack();
@@ -35,8 +35,24 @@ public class BattleOrder {
 	}
 	
 	protected void changeBattleMode() {
-		if (InformationManager.Instance().selfPlayer.supplyUsed() > 350) {
-			BattleManager.instance().setBattleMode(BattleManager.BattleMode.TOTAL_ATTACK);
+		int enemyCount = 0;
+		BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
+		if (enemyBaseLocation != null) {
+			for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(enemyBaseLocation.getPosition(), TOTAL_RADIUS)) {
+				if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
+					System.out.println(unit.getID() + ", enemy : " + unit.getType() + ", count : " + enemyCount);
+					enemyCount++;
+				}
+			}
+		}
+		if (enemyCount > 0) {
+			if (InformationManager.Instance().selfPlayer.supplyUsed() > 350) { 
+				BattleManager.instance().setBattleMode(BattleManager.BattleMode.ONEWAY_ATTACK);
+			} else if (InformationManager.Instance().selfPlayer.supplyUsed() > 300) {
+				BattleManager.instance().setBattleMode(BattleManager.BattleMode.TOTAL_ATTACK);
+			} else {
+				BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
+			}
 		} else {
 			BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
 		}
@@ -46,12 +62,14 @@ public class BattleOrder {
 		if (MyBotModule.Broodwar.getFrameCount() % 24 != 0) {
 			return;
 		}
-		BattleManager.instance().makeFormation(UnitType.Protoss_Zealot, BattleGroupType.FRONT_GROUP);
-		BattleManager.instance().makeFormation(UnitType.Protoss_Dragoon, BattleGroupType.FRONT_GROUP);
-		BattleManager.instance().makeFormation(UnitType.Protoss_Zealot, BattleGroupType.SUB_GROUP);
-		BattleManager.instance().makeFormation(UnitType.Protoss_Dragoon, BattleGroupType.SUB_GROUP);
-		BattleManager.instance().makeFormation(UnitType.Protoss_Zealot, BattleGroupType.DEFENCE_GROUP);
-		BattleManager.instance().makeFormation(UnitType.Protoss_Dragoon, BattleGroupType.DEFENCE_GROUP);
+		if (BattleManager.instance().getBattleMode() != BattleManager.BattleMode.ONEWAY_ATTACK) {
+			BattleManager.instance().makeFormation(UnitType.Protoss_Zealot, BattleGroupType.FRONT_GROUP);
+			BattleManager.instance().makeFormation(UnitType.Protoss_Dragoon, BattleGroupType.FRONT_GROUP);
+			BattleManager.instance().makeFormation(UnitType.Protoss_Zealot, BattleGroupType.SUB_GROUP);
+			BattleManager.instance().makeFormation(UnitType.Protoss_Dragoon, BattleGroupType.SUB_GROUP);
+			BattleManager.instance().makeFormation(UnitType.Protoss_Zealot, BattleGroupType.DEFENCE_GROUP);
+			BattleManager.instance().makeFormation(UnitType.Protoss_Dragoon, BattleGroupType.DEFENCE_GROUP);
+		}
 	}
 	
 	protected void enemyAttack() {
@@ -63,16 +81,16 @@ public class BattleOrder {
 			BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
 			if (enemyBaseLocation != null) {
 				BaseLocation enemySecondExpansionLocation = InformationManager.Instance().getSecondExpansionLocation(MyBotModule.Broodwar.enemy());
-				BattleUnit frontLeader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.SUB_GROUP.getValue()).getLeader();
-				if (frontLeader.getUnit().isUnderAttack()) {
-					BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, frontLeader.getUnit().getPosition(), BattleGroupType.FRONT_GROUP);
-					BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, frontLeader.getUnit().getPosition(), BattleGroupType.FRONT_GROUP);
+				BattleUnit subLeader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.SUB_GROUP.getValue()).getLeader();
+				if (subLeader.getUnit().isUnderAttack() && subLeader.getUnit().isAttacking()) {
+					BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, subLeader.getUnit().getPosition(), BattleGroupType.FRONT_GROUP);
+					BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, subLeader.getUnit().getPosition(), BattleGroupType.FRONT_GROUP);
 				} else {
 					BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, enemySecondExpansionLocation.getPosition(), BattleGroupType.FRONT_GROUP);
 					BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, enemySecondExpansionLocation.getPosition(), BattleGroupType.FRONT_GROUP);
 				}
-				frontLeader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getLeader();
-				if (frontLeader.getUnit().isUnderAttack()) {
+				BattleUnit frontLeader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getLeader();
+				if (frontLeader.getUnit().isUnderAttack() && subLeader.getUnit().isAttacking()) {
 					BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, frontLeader.getUnit().getPosition(), BattleGroupType.SUB_GROUP);
 					BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, frontLeader.getUnit().getPosition(), BattleGroupType.SUB_GROUP);
 				} else if (!this.centerExpansionAttack(BattleGroupType.SUB_GROUP)) {
@@ -121,12 +139,16 @@ public class BattleOrder {
 		List<Unit> list = MyBotModule.Broodwar.getUnitsInRadius(target, BASE_RADIUS);
 		Position enemyPosition = null;
 		int enemyCount = 0;
+		int selfCount = 0;
 		for (Unit unit : list) {
 			if (unit.getPlayer() == InformationManager.Instance().enemyPlayer) {
 				BattleManager.instance().setBattleMode(BattleManager.BattleMode.DEFENCE);
 				isEnemyAttack = true;
 				enemyPosition = unit.getRegion().getPoint();
 				enemyCount++;
+			} else if (unit.getPlayer() == InformationManager.Instance().selfPlayer &&
+					unit.getType().canAttack()) {
+				selfCount++;
 			}
 		}
 		if (isEnemyAttack) {
@@ -134,16 +156,12 @@ public class BattleOrder {
 			BattleManager.instance().closestAttack(UnitType.Protoss_Dragoon, BattleGroupType.DEFENCE_GROUP);
 			BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, enemyPosition, BattleGroupType.SUB_GROUP);
 			BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, enemyPosition, BattleGroupType.SUB_GROUP);
-			int subZealotCount = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.SUB_GROUP.getValue()).getUnitCount();
-			int subDragoonCount = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.SUB_GROUP.getValue()).getUnitCount();
-			if (subZealotCount + subDragoonCount <= enemyCount) {
+			if (selfCount <= enemyCount) {
 				BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, enemyPosition, BattleGroupType.FRONT_GROUP);
 				BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, enemyPosition, BattleGroupType.FRONT_GROUP);
 			}
 		} else {
-			if (BattleManager.instance().getBattleMode() != BattleManager.BattleMode.TOTAL_ATTACK) {
-				BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
-			}
+			this.changeBattleMode();
 		}
 	}
 	
@@ -170,8 +188,9 @@ public class BattleOrder {
 			return;
 		}
 		
-		BattleUnitGroup observerGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Observer);		
-		if (observerGroup.getUnitCount() > 0) {
+		BattleUnitGroup observerGroup = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Observer);	
+		BattleUnit observerLeader = observerGroup.getLeader();
+		if (observerGroup.getUnitCount() > 0 && observerGroup.getUnitCount() < 5) {
 			Iterator<Integer> iterator = observerGroup.battleUnits.keySet().iterator();
 			BattleUnit observer = observerGroup.battleUnits.get(iterator.next());
 			BattleUnit leader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getLeader();
@@ -192,12 +211,12 @@ public class BattleOrder {
 					}
 				}
 			}
-			if (iterator.hasNext()) {
-				observer = observerGroup.battleUnits.get(iterator.next());
+		} else {
+			if (observerLeader != null && observerLeader.getUnit().exists()) {
 				for (String base : ProtossBasicBuildPosition.Instance().getScoutPositions().keySet()) {
 					TilePosition tilePosition = ProtossBasicBuildPosition.Instance().getScoutPositions().get(base);
-					if (observer.getUnit().getDistance(tilePosition.toPosition()) > 50 && !observer.getUnit().isMoving()) {
-						observer.getUnit().move(tilePosition.toPosition(), true);
+					if (observerLeader.getUnit().getDistance(tilePosition.toPosition()) > 50 && !observerLeader.getUnit().isMoving()) {
+						observerLeader.getUnit().move(tilePosition.toPosition(), true);
 					}
 				}
 			}
@@ -224,42 +243,44 @@ public class BattleOrder {
 		}
 	}
 	
-	protected void executeTotalAttack() {
+	protected void onewayAttack() {
+		if (MyBotModule.Broodwar.getFrameCount() % 24 != 0) {
+			return;
+		}
+		if (BattleManager.instance().getBattleMode() == BattleManager.BattleMode.ONEWAY_ATTACK) {
+			BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
+			BattleManager.instance().onewayAttack(UnitType.Protoss_Zealot, BattleGroupType.FRONT_GROUP, enemyBaseLocation.getPosition());
+			BattleManager.instance().onewayAttack(UnitType.Protoss_Dragoon, BattleGroupType.FRONT_GROUP, enemyBaseLocation.getPosition());
+			BattleManager.instance().onewayAttack(UnitType.Protoss_Zealot, BattleGroupType.SUB_GROUP, enemyBaseLocation.getPosition());
+			BattleManager.instance().onewayAttack(UnitType.Protoss_Dragoon, BattleGroupType.SUB_GROUP, enemyBaseLocation.getPosition());
+		}
+	}
+	
+	protected void totalAttack() {
 		if (MyBotModule.Broodwar.getFrameCount() % 24 != 0) {
 			return;
 		}
 		
 		if (BattleManager.instance().getBattleMode() == BattleManager.BattleMode.TOTAL_ATTACK) {
 			BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
-			Position targetPosition = null;
-			List<Unit> enemyUnits = MyBotModule.Broodwar.getUnitsInRadius(enemyBaseLocation.getPosition(), TOTAL_RADIUS);
-			if (!enemyUnits.isEmpty()) {
-				for (Unit enemyUnit : enemyUnits) {
-					if (enemyUnit.getPlayer() == MyBotModule.Broodwar.enemy()) {
-						targetPosition = enemyUnit.getPosition();
-					}
-				}
-			}
-			
-			if (targetPosition != null) {
+			Position targetPosition = enemyBaseLocation.getRegion().getCenter();
+//			if (targetPosition != null) {
+//				BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, targetPosition, BattleGroupType.FRONT_GROUP);
+//				BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, targetPosition, BattleGroupType.FRONT_GROUP);
+//				BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, targetPosition, BattleGroupType.SUB_GROUP);
+//				BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, targetPosition, BattleGroupType.SUB_GROUP);
+//			} else {
 				BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, targetPosition, BattleGroupType.FRONT_GROUP);
 				BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, targetPosition, BattleGroupType.FRONT_GROUP);
-				BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, targetPosition, BattleGroupType.SUB_GROUP);
-				BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, targetPosition, BattleGroupType.SUB_GROUP);
-			} else {
 				if (ScoutManager.Instance().getScoutUnit() != null && ScoutManager.Instance().getScoutUnit().exists()) {
-					BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, ScoutManager.Instance().getScoutUnit().getRegion().getCenter(), BattleGroupType.FRONT_GROUP);
-					BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, ScoutManager.Instance().getScoutUnit().getRegion().getCenter(), BattleGroupType.FRONT_GROUP);
-					BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, ScoutManager.Instance().getScoutUnit().getRegion().getCenter(), BattleGroupType.SUB_GROUP);
-					BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, ScoutManager.Instance().getScoutUnit().getRegion().getCenter(), BattleGroupType.SUB_GROUP);	
+					Region region = ScoutManager.Instance().getScoutUnit().getRegion();
+					BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, new Position(region.getBoundsLeft(), region.getBoundsTop()), BattleGroupType.SUB_GROUP);
+					BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, new Position(region.getBoundsRight(), region.getBoundsBottom()), BattleGroupType.SUB_GROUP);	
 				} else {
-					targetPosition = enemyBaseLocation.getPosition();
-					BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, targetPosition, BattleGroupType.FRONT_GROUP);
-					BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, targetPosition, BattleGroupType.FRONT_GROUP);
 					BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, targetPosition, BattleGroupType.SUB_GROUP);
 					BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, targetPosition, BattleGroupType.SUB_GROUP);
 				}
-			}
+//			}
 		}
 	}
 	
