@@ -18,6 +18,7 @@ public class ZergBattleOrder extends BattleOrder {
 		super.enemyAttack();
 		super.onewayAttack();
 		super.totalAttack();
+		super.moveStuckUnit();
 		
 		highTemplarAttack();
 		archonAttack();
