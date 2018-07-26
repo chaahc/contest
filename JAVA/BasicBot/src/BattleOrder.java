@@ -66,22 +66,26 @@ public class BattleOrder {
 		}
 		
 		BattleUnit shuttle = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Shuttle).getLeader();
-		if (shuttle != null && shuttle.getUnit().exists()) {
-			BuildingUnitGroup gatewayGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Gateway);
-			gateloop : for (int unitId : gatewayGroup.buildingUnitGroup.keySet()) {
-				BuildingUnit gateway = gatewayGroup.buildingUnitGroup.get(unitId);
-				for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(gateway.getUnit().getPosition(), 50)) {
-					if (unit.getType() == UnitType.Protoss_Dragoon) {
-						if (shuttle.getUnit().getSpaceRemaining() != 0 && !shuttle.getUnit().isUpgrading()) {
-							shuttle.getUnit().load(unit);
-						} else {
-							break gateloop;
+		if (shuttle != null) {
+			if (shuttle.getUnit().exists()) {
+				BuildingUnitGroup gatewayGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Gateway);
+				gateloop : for (int unitId : gatewayGroup.buildingUnitGroup.keySet()) {
+					BuildingUnit gateway = gatewayGroup.buildingUnitGroup.get(unitId);
+					for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(gateway.getUnit().getPosition(), 80)) {
+						if (unit.getType() == UnitType.Protoss_Dragoon) {
+							if (shuttle.getUnit().getSpaceRemaining() != 0 && !shuttle.getUnit().isUpgrading()) {
+								shuttle.getUnit().load(unit);
+							} else {
+								break gateloop;
+							}
 						}
 					}
 				}
+				TilePosition unloadPosition = ProtossBasicBuildPosition.mapInfo.get("P"+ProtossBasicBuildPosition.START_BASE);
+				shuttle.getUnit().unloadAll(unloadPosition.toPosition());
+			} else {
+				BattleManager.changeReader(shuttle, BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Shuttle));
 			}
-			TilePosition unloadPosition = ProtossBasicBuildPosition.mapInfo.get("P"+ProtossBasicBuildPosition.START_BASE);
-			shuttle.getUnit().unloadAll(unloadPosition.toPosition());
 		}
 	}
 	
