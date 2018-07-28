@@ -151,7 +151,7 @@ public abstract class BuildingUnitOrder implements BuildOrder{
 					@Override
 					public boolean isActive() {
 						// TODO Auto-generated method stub
-						if (BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Nexus) == 3 && 
+						if (BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 && 
 								MyBotModule.Broodwar.self().minerals() >= 100) {
 							return true;
 						}

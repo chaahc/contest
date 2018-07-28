@@ -74,7 +74,6 @@ public class BuildManager {
 			
 			// this is the unit which can produce the currentItem
 			Unit producer = getProducer(currentItem.metaType, seedPosition, currentItem.producerID);
-			
 			// BasicBot 1.1 Patch End //////////////////////////////////////////////////
 
 			/*
@@ -124,6 +123,7 @@ public class BuildManager {
 
 			// if we can make the current item, create it
 			if (producer != null && canMake == true) {
+				System.out.println("producer : " + producer.getType() + ", target : " + currentItem.metaType.getUnitType());
 				MetaType t = currentItem.metaType;
 
 				if (t.isUnit()) {
@@ -275,7 +275,7 @@ public class BuildManager {
 	/// @param producerID 파라메타 입력 시 해당 ID의 unit 만 producer 후보가 될 수 있습니다
 	public Unit getProducer(MetaType t, Position closestTo, int producerID) {
 		// get the type of unit that builds this
-		UnitType producerType = t.whatBuilds();
+//		UnitType producerType = t.whatBuilds();
 		
 		// make a set of all candidate producers
 //		List<Unit> candidateProducers = new ArrayList<Unit>();
@@ -405,15 +405,22 @@ public class BuildManager {
 //			candidateProducers.add(unit); // C++ :
 											// candidateProducers.insert(unit);
 		}*/
-		if (producerType.isBuilding()) {
+		if (t.isBuilding()) {
 			return getClosestUnitToPosition(closestTo);
-		} else if (producerType.isWorker()) {
+		} else if (t.getUnitType().isWorker()) {
 			BuildingUnitGroup nexusGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Nexus);
 			Iterator<Integer> iterator = nexusGroup.buildingUnitGroup.keySet().iterator();
 			BuildingUnit nexus = nexusGroup.buildingUnitGroup.get(iterator.next());
 			return nexus.getUnit();
-		} 
-		return getClosestUnitToPosition(closestTo);
+		} else if (t.getUnitType() == UnitType.Protoss_Zealot){
+			BuildingUnitGroup gatewayGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Gateway);
+			Iterator<Integer> iterator = gatewayGroup.buildingUnitGroup.keySet().iterator();
+			if (iterator.hasNext()) {
+				BuildingUnit gateway = gatewayGroup.buildingUnitGroup.get(iterator.next());
+				return gateway.getUnit();
+			}
+		}
+		return null;
 	}
 
 	/// 해당 MetaType 을 build 할 수 있는 producer 를 찾아 반환합니다
@@ -1278,7 +1285,6 @@ public class BuildManager {
 						}
 					}
 				}
-
 				if (!isDeadlockCase) {
 					// producerID 를 지정했는데, 해당 ID 를 가진 유닛이 존재하지 않으면 dead lock
 					if (currentItem.producerID != -1 ) {

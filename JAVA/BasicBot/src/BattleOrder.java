@@ -11,7 +11,7 @@ import bwta.BaseLocation;
 import bwta.Chokepoint;
 
 public class BattleOrder {
-	public static final int TOTAL_RADIUS = 700;
+	public static final int TOTAL_RADIUS = 1000;
 	public static final int BASE_RADIUS = 500;
 	public static final int CORSAIR_RADIUS = 100;
 	

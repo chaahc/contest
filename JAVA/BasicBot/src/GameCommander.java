@@ -93,6 +93,8 @@ public class GameCommander {
 					unitType == UnitType.Protoss_Arbiter_Tribunal) {
 				BuildingUnitManager.instance().addBuildingUnit(unitType, unit);
 				ConstructionManager.Instance().checkForStartedConstruction(unit);
+			} else if (unitType == UnitType.Protoss_Pylon) {
+				ConstructionManager.Instance().checkForStartedConstruction(unit);
 			}
 		}
 		InformationManager.Instance().onUnitCreate(unit);
