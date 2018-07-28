@@ -120,7 +120,7 @@ public class ConstructionManager {
 	    
 	    validateWorkersAndBuildings();          
 	    assignWorkersToUnassignedBuildings();       
-	    checkForStartedConstruction();              
+//	    checkForStartedConstruction();              
 	    constructAssignedBuildings();               
 //	    checkForDeadTerranBuilders();               
 	    checkForCompletedBuildings();           
@@ -316,16 +316,16 @@ public class ConstructionManager {
 
 	/// 건설이 시작되면, 해당 ConstructionTask 의 건설 진행상태를 UnderConstruction 으로 변경하고<br>
 	/// 저그 및 프로토스 종족의 경우 건설 일꾼을 해제합니다
-	public void checkForStartedConstruction()
+	public void checkForStartedConstruction(Unit buildingThatStartedConstruction)
 	{				
 		// for each building unit which is being constructed
-	    for (Unit buildingThatStartedConstruction : MyBotModule.Broodwar.self().getUnits())
-	    {
+//	    for (Unit buildingThatStartedConstruction : MyBotModule.Broodwar.self().getUnits())
+//	    {
 	        // filter out units which aren't buildings under construction
-	        if (!buildingThatStartedConstruction.getType().isBuilding() || !buildingThatStartedConstruction.isBeingConstructed())
-	        {
-	            continue;
-	        }
+//	        if (!buildingThatStartedConstruction.getType().isBuilding() || !buildingThatStartedConstruction.isBeingConstructed())
+//	        {
+//	            continue;
+//	        }
 			
 	        // check all our building status objects to see if we have a match and if we do, update it
 	        for (ConstructionTask b : constructionQueue)
@@ -349,6 +349,7 @@ public class ConstructionManager {
 
 	                b.setBuildingUnit(buildingThatStartedConstruction);
 
+	                /*
 	                // if we are zerg, make the buildingUnit null since it's morphed or destroyed
 					// Extractor 의 경우 destroyed 되고, 그외 건물의 경우 morphed 된다
 	                if (MyBotModule.Broodwar.self().getRace() == Race.Zerg)
@@ -356,11 +357,14 @@ public class ConstructionManager {
 	                	b.setConstructionWorker(null);
 	                }
 					// if we are protoss, give the worker back to worker manager
-					else if (MyBotModule.Broodwar.self().getRace() == Race.Protoss)
+					else
+					
+					if (MyBotModule.Broodwar.self().getRace() == Race.Protoss)
 	                {
+	                */
 	                    WorkerManager.Instance().setIdleWorker(b.getConstructionWorker());
 	                    b.setConstructionWorker(null);
-	                }
+//	                }
 
 	                // free this space
 	                ConstructionPlaceFinder.Instance().freeTiles(b.getFinalPosition(),b.getType().tileWidth(),b.getType().tileHeight());
@@ -372,7 +376,7 @@ public class ConstructionManager {
 	                break;
 	            }
 	        }
-	    }
+//	    }
 	}
 
 	/// 테란의 경우 건설 진행상태가 UnderConstruction 이지만 건설 일꾼이 죽은 경우, 다른 건설 일꾼을 지정해서 건설이 속행되도록 합니다<br>
@@ -436,10 +440,10 @@ public class ConstructionManager {
 				//System.out.println("Construction " + b.getType() + " completed at " + b.getFinalPosition().getX() + "," + b.getFinalPosition().getY());
 	        	
 				// if we are terran, give the worker back to worker manager
-	            if (MyBotModule.Broodwar.self().getRace() == Race.Terran)
-	            {
-	                WorkerManager.Instance().setIdleWorker(b.getConstructionWorker());
-	            }
+//	            if (MyBotModule.Broodwar.self().getRace() == Race.Terran)
+//	            {
+//	                WorkerManager.Instance().setIdleWorker(b.getConstructionWorker());
+//	            }
 
 	            // remove this unit from the under construction vector
 	            toRemove.add(b);

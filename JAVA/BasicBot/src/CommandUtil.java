@@ -248,7 +248,7 @@ public class CommandUtil {
 
 		return weapon.maxRange();
 	}
-
+/*
 	public int GetAllUnitCount(UnitType type)
 	{
 		int count = 0;
@@ -280,7 +280,7 @@ public class CommandUtil {
 
 		return count;
 	}
-	
+	*/
 	public static Unit getClosestUnit(Unit unit) {
 		double closestDistance = DEFENCE_RADIUS;
 		Unit closestUnit = null;

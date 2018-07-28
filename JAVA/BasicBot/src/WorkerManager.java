@@ -97,23 +97,28 @@ public class WorkerManager {
 
 	public void handleGasWorkers()
 	{
+		BuildingUnitGroup assimilatorGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Assimilator);
+		
+		for (int unitId : assimilatorGroup.buildingUnitGroup.keySet()) {
+			BuildingUnit assimilator = assimilatorGroup.buildingUnitGroup.get(unitId);
+			if (assimilator.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED) {
 		// for each unit we have
-		for (Unit unit : MyBotModule.Broodwar.self().getUnits())
-		{
+//		for (Unit unit : MyBotModule.Broodwar.self().getUnits())
+//		{
 			// refinery 가 건설 completed 되었으면,
-			if (unit.getType().isRefinery() && unit.isCompleted() )
-			{
+//			if (unit.getType().isRefinery() && unit.isCompleted() )
+//			{
 				// get the number of workers currently assigned to it
-				int numAssigned = workerData.getNumAssignedWorkers(unit);
+				int numAssigned = workerData.getNumAssignedWorkers(assimilator.getUnit());
 
 				// if it's less than we want it to be, fill 'er up
 				// 단점 : 미네랄 일꾼은 적은데 가스 일꾼은 무조건 3~4명인 경우 발생.
 				for (int i = 0; i<(Config.WorkersPerRefinery - numAssigned); ++i)
 				{
-					Unit gasWorker = chooseGasWorkerFromMineralWorkers(unit);
+					Unit gasWorker = chooseGasWorkerFromMineralWorkers(assimilator.getUnit());
 					if (gasWorker != null)
 					{
-						workerData.setWorkerJob(gasWorker, WorkerData.WorkerJob.Gas, unit);
+						workerData.setWorkerJob(gasWorker, WorkerData.WorkerJob.Gas, assimilator.getUnit());
 					}
 				}
 			}
@@ -170,8 +175,8 @@ public class WorkerManager {
 			if (workerData.getWorkerJob(worker) == WorkerData.WorkerJob.Combat)
 			{
 				MyBotModule.Broodwar.drawCircleMap(worker.getPosition().getX(), worker.getPosition().getY(), 4, Color.Yellow, true);
-				Unit target = getClosestEnemyUnitFromWorker(worker);
-
+//				Unit target = getClosestEnemyUnitFromWorker(worker);
+				Unit target = CommandUtil.getClosestUnit(worker);
 				if (target != null)
 				{
 					commandUtil.attackUnit(worker, target);
@@ -183,35 +188,35 @@ public class WorkerManager {
 	}
 
 
-	public void handleRepairWorkers()
-	{
-		if (MyBotModule.Broodwar.self().getRace() != Race.Terran)
-		{
-			return;
-		}
-
-		for (Unit unit : MyBotModule.Broodwar.self().getUnits())
-		{
-			// 건물의 경우 아무리 멀어도 무조건 수리. 일꾼 한명이 순서대로 수리
-			if (unit.getType().isBuilding() && unit.isCompleted() == true && unit.getHitPoints() < unit.getType().maxHitPoints())
-			{
-				Unit repairWorker = chooseRepairWorkerClosestTo(unit.getPosition(), 0);
-				setRepairWorker(repairWorker, unit);
-				break;
-			}
-			// 메카닉 유닛 (SCV, 시즈탱크, 레이쓰 등)의 경우 근처에 SCV가 있는 경우 수리. 일꾼 한명이 순서대로 수리
-			else if (unit.getType().isMechanical() && unit.isCompleted() == true && unit.getHitPoints() < unit.getType().maxHitPoints())
-			{
-				// SCV 는 수리 대상에서 제외. 전투 유닛만 수리하도록 한다
-				if (unit.getType() != UnitType.Terran_SCV) {
-					Unit repairWorker = chooseRepairWorkerClosestTo(unit.getPosition(), 10 * Config.TILE_SIZE);
-					setRepairWorker(repairWorker, unit);
-					break;
-				}
-			}
-
-		}
-	}
+//	public void handleRepairWorkers()
+//	{
+//		if (MyBotModule.Broodwar.self().getRace() != Race.Terran)
+//		{
+//			return;
+//		}
+//
+//		for (Unit unit : MyBotModule.Broodwar.self().getUnits())
+//		{
+//			// 건물의 경우 아무리 멀어도 무조건 수리. 일꾼 한명이 순서대로 수리
+//			if (unit.getType().isBuilding() && unit.isCompleted() == true && unit.getHitPoints() < unit.getType().maxHitPoints())
+//			{
+//				Unit repairWorker = chooseRepairWorkerClosestTo(unit.getPosition(), 0);
+//				setRepairWorker(repairWorker, unit);
+//				break;
+//			}
+//			// 메카닉 유닛 (SCV, 시즈탱크, 레이쓰 등)의 경우 근처에 SCV가 있는 경우 수리. 일꾼 한명이 순서대로 수리
+//			else if (unit.getType().isMechanical() && unit.isCompleted() == true && unit.getHitPoints() < unit.getType().maxHitPoints())
+//			{
+//				// SCV 는 수리 대상에서 제외. 전투 유닛만 수리하도록 한다
+//				if (unit.getType() != UnitType.Terran_SCV) {
+//					Unit repairWorker = chooseRepairWorkerClosestTo(unit.getPosition(), 10 * Config.TILE_SIZE);
+//					setRepairWorker(repairWorker, unit);
+//					break;
+//				}
+//			}
+//
+//		}
+//	}
 
 	/// position 에서 가장 가까운 Mineral 혹은 Idle 혹은 Move 일꾼 유닛들 중에서 Repair 임무를 수행할 일꾼 유닛을 정해서 리턴합니다
 	public Unit chooseRepairWorkerClosestTo(Position p, int maxRange)
@@ -277,36 +282,36 @@ public class WorkerManager {
 	}
 	
 	/// target 으로부터 가장 가까운 Mineral 일꾼 유닛을 리턴합니다
-	public Unit getClosestMineralWorkerTo(Position target)
-	{
-		Unit closestUnit = null;
-
-		// BasicBot 1.1 Patch Start ////////////////////////////////////////////////
-		// 변수 기본값 수정
-
-		double closestDist = 1000000000;
-
-		// BasicBot 1.1 Patch End //////////////////////////////////////////////////
-
-		for (Unit unit : MyBotModule.Broodwar.self().getUnits())
-		{
-			if (unit.isCompleted()
-				&& unit.getHitPoints() > 0
-				&& unit.exists()
-				&& unit.getType().isWorker()
-				&& WorkerManager.Instance().isMineralWorker(unit))
-			{
-				double dist = unit.getDistance(target);
-				if (closestUnit == null || dist < closestDist)
-				{
-					closestUnit = unit;
-					closestDist = dist;
-				}
-			}
-		}
-
-		return closestUnit;
-	}
+//	public Unit getClosestMineralWorkerTo(Position target)
+//	{
+//		Unit closestUnit = null;
+//
+//		// BasicBot 1.1 Patch Start ////////////////////////////////////////////////
+//		// 변수 기본값 수정
+//
+//		double closestDist = 1000000000;
+//
+//		// BasicBot 1.1 Patch End //////////////////////////////////////////////////
+//
+//		for (Unit unit : MyBotModule.Broodwar.self().getUnits())
+//		{
+//			if (unit.isCompleted()
+//				&& unit.getHitPoints() > 0
+//				&& unit.exists()
+//				&& unit.getType().isWorker()
+//				&& WorkerManager.Instance().isMineralWorker(unit))
+//			{
+//				double dist = unit.getDistance(target);
+//				if (closestUnit == null || dist < closestDist)
+//				{
+//					closestUnit = unit;
+//					closestDist = dist;
+//				}
+//			}
+//		}
+//
+//		return closestUnit;
+//	}
 
 	/// 해당 일꾼 유닛 unit 으로부터 가장 가까운 ResourceDepot 건물을 리턴합니다
 	public Unit getClosestResourceDepotFromWorker(Unit worker)
@@ -322,18 +327,22 @@ public class WorkerManager {
 		// 완성된, 공중에 떠있지 않고 땅에 정착해있는, ResourceDepot 혹은 Lair 나 Hive로 변형중인 Hatchery 중에서
 		// 첫째로 미네랄 일꾼수가 꽉 차지않은 곳
 		// 둘째로 가까운 곳을 찾는다
-		for (Unit unit : MyBotModule.Broodwar.self().getUnits())
-		{
-			if (unit == null) continue;
-			
-			if (unit.getType().isResourceDepot()
-				&& (unit.isCompleted() || unit.getType() == UnitType.Zerg_Lair || unit.getType() == UnitType.Zerg_Hive) 
-				&& unit.isLifted() == false)
-			{
-				if (workerData.depotHasEnoughMineralWorkers(unit) == false) {
-					double distance = unit.getDistance(worker);
+//		for (Unit unit : MyBotModule.Broodwar.self().getUnits())
+//		{
+//			if (unit == null) continue;
+//			
+//			if (unit.getType().isResourceDepot()
+//				&& (unit.isCompleted() || unit.getType() == UnitType.Zerg_Lair || unit.getType() == UnitType.Zerg_Hive) 
+//				&& unit.isLifted() == false)
+//			{
+		BuildingUnitGroup nexusGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Nexus);
+		for (int unitId : nexusGroup.buildingUnitGroup.keySet()) {
+			BuildingUnit nexus = nexusGroup.buildingUnitGroup.get(unitId);
+			if (nexus.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED){
+				if (workerData.depotHasEnoughMineralWorkers(nexus.getUnit()) == false) {
+					double distance = nexus.getUnit().getDistance(worker);
 					if (closestDistance > distance) {
-						closestDepot = unit;
+						closestDepot = nexus.getUnit();
 						closestDistance = distance;
 					}
 				}
@@ -343,39 +352,41 @@ public class WorkerManager {
 		// 모든 ResourceDepot 이 다 일꾼수가 꽉 차있거나, 완성된 ResourceDepot 이 하나도 없고 건설중이라면, 
 		// ResourceDepot 주위에 미네랄이 남아있는 곳 중에서 가까운 곳이 선택되도록 한다
 		if (closestDepot == null) {
-			for (Unit unit : MyBotModule.Broodwar.self().getUnits())
-			{
-				if (unit == null) continue;
-				
-				if (unit.getType().isResourceDepot())
-				{
-					if (workerData.getMineralsNearDepot(unit) > 0) {
-						double distance = unit.getDistance(worker);
-						if (closestDistance > distance) {
-							closestDepot = unit;
-							closestDistance = distance;
-						}
+//			for (Unit unit : MyBotModule.Broodwar.self().getUnits())
+//			{
+//				if (unit == null) continue;
+//				
+//				if (unit.getType().isResourceDepot())
+//				{
+			for (int unitId : nexusGroup.buildingUnitGroup.keySet()) {
+				BuildingUnit nexus = nexusGroup.buildingUnitGroup.get(unitId);
+				if (workerData.getMineralsNearDepot(nexus.getUnit()) > 0) {
+					double distance = nexus.getUnit().getDistance(worker);
+					if (closestDistance > distance) {
+						closestDepot = nexus.getUnit();
+						closestDistance = distance;
 					}
 				}
 			}
-			
 		}
 
 		// 모든 ResourceDepot 주위에 미네랄이 하나도 없다면, 일꾼에게 가장 가까운 곳을 선택한다  
 		if (closestDepot == null) {
-			for (Unit unit : MyBotModule.Broodwar.self().getUnits())
-			{
-				if (unit == null) continue;
-				
-				if (unit.getType().isResourceDepot())
-				{
-					double distance = unit.getDistance(worker);
-					if (closestDistance > distance) {
-						closestDepot = unit;
-						closestDistance = distance;
-					}
+//			for (Unit unit : MyBotModule.Broodwar.self().getUnits())
+//			{
+//				if (unit == null) continue;
+//				
+//				if (unit.getType().isResourceDepot())
+//				{
+			for (int unitId : nexusGroup.buildingUnitGroup.keySet()) {
+				BuildingUnit nexus = nexusGroup.buildingUnitGroup.get(unitId);
+				double distance = nexus.getUnit().getDistance(worker);
+				if (closestDistance > distance) {
+					closestDepot = nexus.getUnit();
+					closestDistance = distance;
 				}
-			}			
+			}
+//			}			
 		}
 
 		return closestDepot;
@@ -611,26 +622,26 @@ public class WorkerManager {
 
 
 	/// 해당 일꾼 유닛으로부터 가장 가까운 적군 유닛을 리턴합니다
-	public Unit getClosestEnemyUnitFromWorker(Unit worker)
-	{
-		if (worker == null) return null;
-
-		Unit closestUnit = null;
-		double closestDist = 10000;
-
-		for (Unit unit : MyBotModule.Broodwar.enemy().getUnits())
-		{
-			double dist = unit.getDistance(worker);
-
-			if ((dist < 400) && (closestUnit == null || (dist < closestDist)))
-			{
-				closestUnit = unit;
-				closestDist = dist;
-			}
-		}
-
-		return closestUnit;
-	}
+//	public Unit getClosestEnemyUnitFromWorker(Unit worker)
+//	{
+//		if (worker == null) return null;
+//
+//		Unit closestUnit = null;
+//		double closestDist = 10000;
+//
+//		for (Unit unit : MyBotModule.Broodwar.enemy().getUnits())
+//		{
+//			double dist = unit.getDistance(worker);
+//
+//			if ((dist < 400) && (closestUnit == null || (dist < closestDist)))
+//			{
+//				closestUnit = unit;
+//				closestDist = dist;
+//			}
+//		}
+//
+//		return closestUnit;
+//	}
 
 	/// 해당 일꾼 유닛에게 Combat 임무를 부여합니다
 	public void setCombatWorker(Unit worker)

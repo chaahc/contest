@@ -66,15 +66,25 @@ public class StrategyManager {
 	public void executeWorkerTraining() {
 		if (MyBotModule.Broodwar.self().minerals() >= 50) {
 			// workerCount = 현재 일꾼 수 + 생산중인 일꾼 수
-			int workerCount = MyBotModule.Broodwar.self().allUnitCount(InformationManager.Instance().getWorkerType());
+			int workerCount = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Probe).getUnitCount();
+//			int workerCount = MyBotModule.Broodwar.self().allUnitCount(InformationManager.Instance().getWorkerType());
 
-			for (Unit unit : MyBotModule.Broodwar.self().getUnits()) {
-				if (unit.getType().isResourceDepot()) {
-					if (unit.isTraining()) {
-						workerCount += unit.getTrainingQueue().size();
-					}
+			BuildingUnitGroup nexusGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Nexus);
+			for (int unitId : nexusGroup.buildingUnitGroup.keySet()) {
+				BuildingUnit nexus = nexusGroup.buildingUnitGroup.get(unitId);
+				if (nexus.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
+						nexus.getUnit().isTraining()) {
+					workerCount += nexus.getUnit().getTrainingQueue().size();
 				}
 			}
+			
+//			for (Unit unit : MyBotModule.Broodwar.self().getUnits()) {
+//				if (unit.getType().isResourceDepot()) {
+//					if (unit.isTraining()) {
+//						workerCount += unit.getTrainingQueue().size();
+//					}
+//				}
+//			}
 
 			if (workerCount < 50) {
 				BuildingUnitManager.instance().trainBuildingUnit(UnitType.Protoss_Nexus, UnitType.Protoss_Probe);
