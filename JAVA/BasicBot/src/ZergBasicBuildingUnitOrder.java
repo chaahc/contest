@@ -100,22 +100,6 @@ public class ZergBasicBuildingUnitOrder extends BuildingUnitOrder {
 		
 		super.orderExpansionDefence();
 		
-//		super.order(UnitType.Protoss_Gateway, BuildOrderItem.SeedPositionStrategy.SecondExpansionLocation, new OrderCondition() {
-//			@Override
-//			public boolean isActive() {
-//				// TODO Auto-generated method stub
-//				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 &&						
-//						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) > 7 &&
-//						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) < 12 &&
-//						MyBotModule.Broodwar.self().minerals() >= 150) {
-//					return true;
-//				}
-//				return false;
-//			}
-//		});
-		
-
-		
 		super.order(UnitType.Protoss_Citadel_of_Adun, BuildOrderItem.SeedPositionStrategy.MainBaseBackYard, new OrderCondition() {
 			@Override
 			public boolean isActive() {

@@ -76,7 +76,20 @@ public class WorkerManager {
 			}
 			
 			if (worker.isUnderAttack()) {
-				this.setCombatWorker(worker);
+				int enemyCount = 0;
+				for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(worker.getPosition(), CommandUtil.UNIT_RADIUS)) {
+					if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
+						enemyCount++;
+					}
+				}
+				if (enemyCount > 3) {
+					BuildingUnit forge = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge);
+					if (forge != null) {
+						worker.move(forge.getUnit().getPosition());
+					}
+				} else {
+					this.setCombatWorker(worker);
+				}
 			}
 
 //			// if its job is repair

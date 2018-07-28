@@ -72,7 +72,7 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 			public boolean isActive() {
 				// TODO Auto-generated method stub
 				if (BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Nexus) >= 2 &&						
-						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) < 6 &&
+						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) < 8 &&
 						MyBotModule.Broodwar.self().minerals() >= 150) {
 					return true;
 				}
@@ -85,8 +85,8 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 			public boolean isActive() {
 				// TODO Auto-generated method stub
 				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 &&						
-						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) > 5 &&
-						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) < 8 &&
+						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) > 7 &&
+						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) < 9 &&
 						MyBotModule.Broodwar.self().minerals() >= 150) {
 					return true;
 				}
@@ -108,21 +108,7 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 		});
 		
 		this.orderExpansionDefence();
-		
-//		super.order(UnitType.Protoss_Gateway, BuildOrderItem.SeedPositionStrategy.SecondExpansionLocation, new OrderCondition() {
-//			@Override
-//			public boolean isActive() {
-//				// TODO Auto-generated method stub
-//				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 &&						
-//						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) > 7 &&
-//						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) < 12 &&
-//						MyBotModule.Broodwar.self().minerals() >= 150) {
-//					return true;
-//				}
-//				return false;
-//			}
-//		});
-		
+			
 		super.order(UnitType.Protoss_Citadel_of_Adun, BuildOrderItem.SeedPositionStrategy.MainBaseBackYard, new OrderCondition() {
 			@Override
 			public boolean isActive() {

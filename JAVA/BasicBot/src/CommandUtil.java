@@ -30,7 +30,7 @@ public class CommandUtil {
 		UnitCommand currentCommand = attacker.getLastCommand();
 
 		// if we've already told this unit to attack this target, ignore this command
-		if (currentCommand.getUnitCommandType() == UnitCommandType.Attack_Unit &&	currentCommand.getTarget() == target)
+		if (currentCommand.getUnitCommandType() == UnitCommandType.Attack_Unit & currentCommand.getTarget() == target  && attacker.isAttacking())
 		{
 			return;
 		}

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -110,7 +111,7 @@ public class BattleManager {
 		List<Unit> targetUnits = battleUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS);
 		BaseLocation selfFirstExpansionLocation = InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.self());
 		if (battleUnit.getPosition().toTilePosition().getDistance(selfFirstExpansionLocation.getTilePosition())<10) {
-			System.out.println(battleUnit.getID() +"-"+battleUnit.getType() + ", attack - skip score");
+			System.out.println(battleUnit.getID() +"-"+battleUnit.getType() + ", retreat - skip score");
 			return false;
 		}
 		for (Unit unit : targetUnits) {
@@ -232,7 +233,21 @@ public class BattleManager {
 				if (battleUnit.getUnit().isUnderAttack() && battleUnit.getUnit().getShields() + battleUnit.getUnit().getHitPoints() < 100) {
 					battleUnit.getUnit().move(selfFirstChokepoint.getCenter());
 				} else {
-					CommandUtil.patrolMove(battleUnit.getUnit(), position);
+					Unit primaryAttackTarget = null;
+					for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(battleUnit.getUnit().getPosition(), UnitType.Protoss_Dragoon.groundWeapon().maxRange())) {
+						if (unit.getPlayer() == MyBotModule.Broodwar.enemy() &&
+								(unit.getType() == UnitType.Terran_Siege_Tank_Tank_Mode ||
+								unit.getType() == UnitType.Protoss_Carrier)) {
+							primaryAttackTarget = unit;
+							break;
+						}
+					}
+					if (primaryAttackTarget != null) {
+						System.out.println("primary attack target detected : " + primaryAttackTarget.getType());
+						commandUtil.attackUnit(battleUnit.getUnit(), primaryAttackTarget);
+					} else {
+						CommandUtil.patrolMove(battleUnit.getUnit(), position);
+					}
 				}
 			}
 		}

@@ -38,7 +38,7 @@ public class BattleOrder {
 		if (enemyBaseLocation != null) {
 			for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(enemyBaseLocation.getPosition(), TOTAL_RADIUS)) {
 				if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
-					System.out.println(unit.getID() + ", enemy : " + unit.getType() + ", count : " + enemyCount);
+//					System.out.println(unit.getID() + ", enemy : " + unit.getType() + ", count : " + enemyCount);
 					enemyCount++;
 				}
 			}
@@ -77,6 +77,19 @@ public class BattleOrder {
 								shuttle.getUnit().load(unit);
 							} else {
 								break gateloop;
+							}
+						}
+					}
+				}
+				BuildingUnitGroup assimilatorGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Assimilator);
+				assimilatorloop : for (int unitId : assimilatorGroup.buildingUnitGroup.keySet()) {
+					BuildingUnit assimilator = assimilatorGroup.buildingUnitGroup.get(unitId);
+					for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(assimilator.getUnit().getPosition(), 80)) {
+						if (unit.getType() == UnitType.Protoss_Dragoon) {
+							if (shuttle.getUnit().getSpaceRemaining() != 0 && !shuttle.getUnit().isUpgrading()) {
+								shuttle.getUnit().load(unit);
+							} else {
+								break assimilatorloop;
 							}
 						}
 					}
