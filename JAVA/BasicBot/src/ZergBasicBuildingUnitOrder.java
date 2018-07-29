@@ -9,7 +9,7 @@ public class ZergBasicBuildingUnitOrder extends BuildingUnitOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Assimilator) == 0 &&
+				if (BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Assimilator) == 0 && 
 						MyBotModule.Broodwar.self().minerals() >= 100) {
 					return true;
 				}
@@ -104,7 +104,7 @@ public class ZergBasicBuildingUnitOrder extends BuildingUnitOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) == 2 &&
+				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 2 &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Cybernetics_Core) != null &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Cybernetics_Core).getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun) == null &&
@@ -119,8 +119,7 @@ public class ZergBasicBuildingUnitOrder extends BuildingUnitOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) == 2 &&
-						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun) != null &&
+				if (BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun) != null &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun).getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Robotics_Facility) == null &&
 						MyBotModule.Broodwar.self().minerals() >= 200 && MyBotModule.Broodwar.self().gas() >= 200) {
@@ -152,9 +151,9 @@ public class ZergBasicBuildingUnitOrder extends BuildingUnitOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 2 &&
-						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun) != null &&
+				if (BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun) != null &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun).getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
+						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Observatory) != null &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Templar_Archives) == null &&
 						MyBotModule.Broodwar.self().minerals() >= 150 && MyBotModule.Broodwar.self().gas() >= 200) {
 					return true;

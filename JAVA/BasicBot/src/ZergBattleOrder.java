@@ -1,6 +1,7 @@
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.WeaponType;
+import bwta.BaseLocation;
 
 public class ZergBattleOrder extends BattleOrder {
 	private static final int ENEMY_RADIUS = 50;
@@ -43,9 +44,18 @@ public class ZergBattleOrder extends BattleOrder {
 									enemy.getType() != UnitType.Zerg_Zergling &&
 									enemy.getType() != UnitType.Terran_Firebat &&
 									!enemy.getType().isBuilding())) {
-								int enemyUnitGapCount = enemy.getUnitsInRadius(ENEMY_RADIUS).size();
-								if (maxEnemyCount <= enemyUnitGapCount) {
-									maxEnemyCount= enemyUnitGapCount;
+								int enemyUnitCount = 0;
+								int selfUnitCount = 0;
+								for (Unit unit : enemy.getUnitsInRadius(ENEMY_RADIUS)) {
+									if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
+										enemyUnitCount++;
+									} else if (unit.getPlayer() == MyBotModule.Broodwar.self()) {
+										selfUnitCount++;
+									}
+								}
+								int gapCount = enemyUnitCount - selfUnitCount;
+								if (gapCount > 0 && maxEnemyCount <= gapCount) {
+									maxEnemyCount= gapCount;
 									targetEnemy = enemy;
 								}
 							}
@@ -53,8 +63,13 @@ public class ZergBattleOrder extends BattleOrder {
 					}
 					if (maxEnemyCount == 0) {
 						BattleUnit leader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getLeader();
-						super.unitFollow(highTemplar, leader);
-//						CommandUtil.rightClick(highTemplar.getUnit(), leader.getUnit().getPosition());
+						BattleUnit highTemplarLeader = BattleManager.changeReader(highTemplarGroup.getLeader(), highTemplarGroup);
+						if (highTemplar.getUnitId() == highTemplarLeader.getUnitId()) {
+							BaseLocation firstExpansionLocation = InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.self());
+							CommandUtil.move(highTemplarLeader.getUnit(), firstExpansionLocation.getPosition());
+						} else {
+							super.unitFollow(highTemplar, leader);
+						}
 					} else {
 						if (highTemplar.getUnit().getEnergy() < 75 && BattleManager.shouldRetreat(highTemplar.getUnit())) {
 							CommandUtil.move(highTemplar.getUnit(), ProtossBasicBuildPosition.mapInfo.get(ProtossBasicBuildPosition.START_BASE).toPosition());

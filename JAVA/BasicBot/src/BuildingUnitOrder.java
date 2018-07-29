@@ -109,14 +109,11 @@ public abstract class BuildingUnitOrder implements BuildOrder{
 		Iterator<Integer> iterator = nexusGroup.buildingUnitGroup.keySet().iterator();
 		while (iterator.hasNext()) {
 			BuildingUnit nexus = nexusGroup.buildingUnitGroup.get(iterator.next());
-//			if (nexus.getUnit().getTilePosition().equals(ProtossBasicBuildPosition.mapInfo.get(ProtossBasicBuildPosition.START_BASE))) {
-//				continue;
-//			}
 			int pylonCount = 0;
 			int photoCount = 0;
 			boolean isAssimilatorBuildable = true;
 			boolean isVespeneGeyserAvailable = false;
-			for (Unit unit : nexus.getUnit().getUnitsInRadius(250)) {
+			for (Unit unit : nexus.getUnit().getUnitsInRadius(UnitType.Protoss_Nexus.sightRange())) {
 				if (unit.getType() == UnitType.Protoss_Pylon) {
 					pylonCount++;
 				} else if (unit.getType() == UnitType.Protoss_Photon_Cannon) {
@@ -128,7 +125,7 @@ public abstract class BuildingUnitOrder implements BuildOrder{
 				}
 			}
 			if (pylonCount < 2) {
-				this.order(UnitType.Protoss_Pylon, nexus.getUnit().getTilePosition(), new OrderCondition() {
+				this.order(UnitType.Protoss_Pylon, nexus.getUnit().getRegion().getCenter().toTilePosition(), new OrderCondition() {
 					@Override
 					public boolean isActive() {
 						// TODO Auto-generated method stub
@@ -141,7 +138,7 @@ public abstract class BuildingUnitOrder implements BuildOrder{
 				});
 			}
 			if (pylonCount > 0 && photoCount < 4) {
-				this.order(UnitType.Protoss_Photon_Cannon, nexus.getUnit().getTilePosition(), new OrderCondition() {
+				this.order(UnitType.Protoss_Photon_Cannon, nexus.getUnit().getRegion().getCenter().toTilePosition(), new OrderCondition() {
 					@Override
 					public boolean isActive() {
 						// TODO Auto-generated method stub
@@ -174,26 +171,28 @@ public abstract class BuildingUnitOrder implements BuildOrder{
 	protected void orderPylonGateways() {
 		TilePosition pylonPosition = ProtossBasicBuildPosition.mapInfo.get("P"+ProtossBasicBuildPosition.START_BASE);
 		boolean isPylon = false;
-		for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(pylonPosition.toPosition(), 50)) {
+		int gatewayCount = 0;
+		for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(pylonPosition.toPosition(), UnitType.Protoss_Pylon.sightRange())) {
 			if (unit.getType() == UnitType.Protoss_Pylon) {
 				isPylon = true;
-				break;
+			} else if (unit.getType() == UnitType.Protoss_Gateway) {
+				gatewayCount++;
 			}
 		}
-		if (isPylon) {
+		if (isPylon &&
+				gatewayCount < 4) {
 			this.order(UnitType.Protoss_Gateway, pylonPosition, new OrderCondition() {
 				@Override
 				public boolean isActive() {
 					// TODO Auto-generated method stub
-					if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 &&						
-							BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) < 15 &&
+					if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 &&
 							MyBotModule.Broodwar.self().minerals() >= 150) {
 						return true;
 					}
 					return false;
 				}
 			});
-		} else {
+		} else if (!isPylon){
 			this.order(UnitType.Protoss_Pylon, pylonPosition, new OrderCondition() {
 				@Override
 				public boolean isActive() {

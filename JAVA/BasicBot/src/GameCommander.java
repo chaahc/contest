@@ -83,7 +83,7 @@ public class GameCommander {
 			UnitType unitType = unit.getType();
 			if (unitType == UnitType.Protoss_Nexus ||
 					unitType == UnitType.Protoss_Photon_Cannon || unitType == UnitType.Protoss_Gateway ||
-					unitType == UnitType.Protoss_Stargate) {
+					unitType == UnitType.Protoss_Stargate || unitType == UnitType.Protoss_Pylon) {
 				BuildingUnitManager.instance().addBuildingUnitIntoGroup(unitType, unit);
 				ConstructionManager.Instance().checkForStartedConstruction(unit);
 			}else if (unitType == UnitType.Protoss_Cybernetics_Core || unitType == UnitType.Protoss_Citadel_of_Adun ||
@@ -92,8 +92,6 @@ public class GameCommander {
 					unitType == UnitType.Protoss_Robotics_Support_Bay || unitType == UnitType.Protoss_Fleet_Beacon ||
 					unitType == UnitType.Protoss_Arbiter_Tribunal) {
 				BuildingUnitManager.instance().addBuildingUnit(unitType, unit);
-				ConstructionManager.Instance().checkForStartedConstruction(unit);
-			} else if (unitType == UnitType.Protoss_Pylon) {
 				ConstructionManager.Instance().checkForStartedConstruction(unit);
 			}
 		}
@@ -127,7 +125,7 @@ public class GameCommander {
 						unitType == UnitType.Protoss_Robotics_Support_Bay || unitType == UnitType.Protoss_Fleet_Beacon ||
 						unitType == UnitType.Protoss_Arbiter_Tribunal) {
 				BuildingUnitManager.instance().getBuildingUnit(unitType).complete();
-			} else if (unitType == UnitType.Protoss_Nexus || unitType == UnitType.Protoss_Assimilator) {
+			} else if (unitType == UnitType.Protoss_Nexus || unitType == UnitType.Protoss_Assimilator || unitType == UnitType.Protoss_Pylon) {
 				BuildingUnitManager.instance().completeBuildingUnitInGroup(unitType, unit.getID());
 			} else { 
 				BattleUnitGroupManager.instance().addUnit(unit);

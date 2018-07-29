@@ -42,7 +42,7 @@ public class ZergBasicUpgradeOrder extends UpgradeOrder {
 			public boolean isActive() {
 				// TODO Auto-generated method stub
 				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 2 && 
-						MyBotModule.Broodwar.self().minerals() >= 500 && MyBotModule.Broodwar.self().minerals() >= 500) {
+						MyBotModule.Broodwar.self().minerals() >= 200 && MyBotModule.Broodwar.self().minerals() >= 200) {
 					return true;
 				}
 				return true;
@@ -53,7 +53,7 @@ public class ZergBasicUpgradeOrder extends UpgradeOrder {
 			public boolean isActive() {
 				// TODO Auto-generated method stub
 				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 2 && 
-						MyBotModule.Broodwar.self().minerals() >= 500 && MyBotModule.Broodwar.self().minerals() >= 500) {
+						MyBotModule.Broodwar.self().minerals() >= 250 && MyBotModule.Broodwar.self().minerals() >= 250) {
 					return true;
 				}
 				return true;

@@ -231,6 +231,20 @@ public class ProtossBasicBuildPosition {
 		}
 	} 	
 	
+	public TilePosition getEnemyPosition(TilePosition enemy) {
+		TilePosition enemyPosition = null;
+		if (mapInfo.get(BASE1).equals(enemy)) {
+			enemyPosition = mapInfo.get(PYLON1);
+		} else if (mapInfo.get(BASE5).equals(enemy)) {
+			enemyPosition = mapInfo.get(PYLON5);
+		} else if (mapInfo.get(BASE7).equals(enemy)) {
+			enemyPosition = mapInfo.get(PYLON7);
+		} else if (mapInfo.get(BASE11).equals(enemy)){
+			enemyPosition = mapInfo.get(PYLON11);
+		}
+		return enemyPosition;
+	}
+	
 	public TilePosition getEnemyBase(TilePosition enemy) {
 		TilePosition enemyBaseLocation = null;
 		if (mapInfo.get(BASE1).equals(enemy)) {

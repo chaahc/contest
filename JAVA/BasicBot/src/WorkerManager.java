@@ -76,20 +76,7 @@ public class WorkerManager {
 			}
 			
 			if (worker.isUnderAttack()) {
-				int enemyCount = 0;
-				for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(worker.getPosition(), CommandUtil.UNIT_RADIUS)) {
-					if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
-						enemyCount++;
-					}
-				}
-				if (enemyCount > 3) {
-					BuildingUnit forge = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge);
-					if (forge != null) {
-						worker.move(forge.getUnit().getPosition());
-					}
-				} else {
-					this.setCombatWorker(worker);
-				}
+				this.setCombatWorker(worker);
 			}
 
 //			// if its job is repair
@@ -187,14 +174,27 @@ public class WorkerManager {
 
 			if (workerData.getWorkerJob(worker) == WorkerData.WorkerJob.Combat)
 			{
-				MyBotModule.Broodwar.drawCircleMap(worker.getPosition().getX(), worker.getPosition().getY(), 4, Color.Yellow, true);
+//				MyBotModule.Broodwar.drawCircleMap(worker.getPosition().getX(), worker.getPosition().getY(), 4, Color.Yellow, true);
 //				Unit target = getClosestEnemyUnitFromWorker(worker);
-				Unit target = CommandUtil.getClosestUnit(worker);
-				if (target != null)
-				{
-					commandUtil.attackUnit(worker, target);
+				int enemyCount = 0;
+				for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(worker.getPosition(), CommandUtil.UNIT_RADIUS)) {
+					if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
+						enemyCount++;
+					}
+				}
+				if (enemyCount > 3) {
+					BuildingUnit forge = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge);
+					if (forge != null) {
+						worker.move(forge.getUnit().getPosition());
+					}
 				} else {
-					this.setIdleWorker(worker);
+					Unit target = CommandUtil.getClosestUnit(worker);
+					if (target != null)
+					{
+						commandUtil.attackUnit(worker, target);
+					} else {
+						this.setIdleWorker(worker);
+					}
 				}
 			}
 		}

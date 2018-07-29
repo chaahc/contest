@@ -20,6 +20,7 @@ public class BuildingUnitManager {
 		this.buildingUnitGroups.put(UnitType.Protoss_Photon_Cannon, new BuildingUnitGroup(UnitType.Protoss_Photon_Cannon));
 		this.buildingUnitGroups.put(UnitType.Protoss_Gateway, new BuildingUnitGroup(UnitType.Protoss_Gateway));
 		this.buildingUnitGroups.put(UnitType.Protoss_Stargate, new BuildingUnitGroup(UnitType.Protoss_Stargate));
+		this.buildingUnitGroups.put(UnitType.Protoss_Pylon, new BuildingUnitGroup(UnitType.Protoss_Pylon));
 	}
 	
 	public void addBuildingUnit(UnitType unitType, Unit unit) {

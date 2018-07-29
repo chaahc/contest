@@ -11,7 +11,7 @@ public class Arbiter extends BattleUnit {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void recall(Position target) {
+	public void recall(Unit target) {
 		CommandUtil.useTech(super.unit, TechType.Recall, target);
 	}
 	

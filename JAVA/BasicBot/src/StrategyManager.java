@@ -67,8 +67,8 @@ public class StrategyManager {
 		if (MyBotModule.Broodwar.self().minerals() >= 50) {
 			// workerCount = 현재 일꾼 수 + 생산중인 일꾼 수
 			int workerCount = BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Probe).getUnitCount();
-//			int workerCount = MyBotModule.Broodwar.self().allUnitCount(InformationManager.Instance().getWorkerType());
 
+			int nexusCount = 0;
 			BuildingUnitGroup nexusGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Nexus);
 			for (int unitId : nexusGroup.buildingUnitGroup.keySet()) {
 				BuildingUnit nexus = nexusGroup.buildingUnitGroup.get(unitId);
@@ -76,17 +76,11 @@ public class StrategyManager {
 						nexus.getUnit().isTraining()) {
 					workerCount += nexus.getUnit().getTrainingQueue().size();
 				}
+				nexusCount++;
 			}
-			
-//			for (Unit unit : MyBotModule.Broodwar.self().getUnits()) {
-//				if (unit.getType().isResourceDepot()) {
-//					if (unit.isTraining()) {
-//						workerCount += unit.getTrainingQueue().size();
-//					}
-//				}
-//			}
 
-			if (workerCount < 50) {
+			int bestWorkerCount = (nexusCount < 4 ? nexusCount * 20 : 60);
+			if (workerCount < bestWorkerCount) {
 				BuildingUnitManager.instance().trainBuildingUnit(UnitType.Protoss_Nexus, UnitType.Protoss_Probe);
 			}
 		}
@@ -130,8 +124,8 @@ public class StrategyManager {
 				// 생산/건설 중인 Supply를 센다
 				int onBuildingSupplyCount = 0;
 				onBuildingSupplyCount += ConstructionManager.Instance().getConstructionQueueItemCount(
-						InformationManager.Instance().getBasicSupplyProviderUnitType(), null)
-						* InformationManager.Instance().getBasicSupplyProviderUnitType().supplyProvided();
+						UnitType.Protoss_Pylon, null)
+						* UnitType.Protoss_Pylon.supplyProvided();
 
 				if (currentSupplyShortage > onBuildingSupplyCount) {
 					// BuildQueue 최상단에 SupplyProvider 가 있지 않으면 enqueue 한다
