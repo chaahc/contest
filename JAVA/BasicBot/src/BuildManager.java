@@ -1,11 +1,7 @@
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import bwapi.Pair;
 import bwapi.Position;
-import bwapi.Race;
 import bwapi.TechType;
 import bwapi.TilePosition;
 import bwapi.Unit;
@@ -273,7 +269,7 @@ public class BuildManager {
 	/// @param t 빌드하려는 대상의 타입
 	/// @param closestTo 파라메타 입력 시 producer 후보들 중 해당 position 에서 가장 가까운 producer 를 리턴합니다
 	/// @param producerID 파라메타 입력 시 해당 ID의 unit 만 producer 후보가 될 수 있습니다
-	public Unit getProducer(MetaType t, Position closestTo, int producerID) {
+	public Unit getProducer(MetaType t, Position closestTo, int producerId) {
 		// get the type of unit that builds this
 //		UnitType producerType = t.whatBuilds();
 		

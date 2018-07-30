@@ -71,7 +71,8 @@ public class ScoutManager {
 						BattleUnit probe = battleUnitGroup.battleUnits.get(unitId);
 						if (probe != null && probe.getUnit().exists() &&
 								!probe.getUnit().isCarryingMinerals() &&
-								!probe.getUnit().isGatheringMinerals()) {
+								!probe.getUnit().isGatheringMinerals() &&
+								(WorkerManager.Instance().initialProbe != null && WorkerManager.Instance().initialProbe.getID() != probe.getUnitId())) {
 							// set unit as scout unit
 							currentScoutUnit = probe.getUnit();
 							WorkerManager.Instance().setScoutWorker(currentScoutUnit);

@@ -25,24 +25,28 @@ public class ZergBasicInitialBuildOrder extends InitialBuildOrder {
 		//7
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
-		//8
-		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
-				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Pylon,
 				firstPylonPos, true);
-		//9
-		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
-				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
-		//10
+		//8
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Forge,
 				forgePos, true);
+		// 2.16 complete
+		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Photon_Cannon,
+				firstPhotoPos, true);
+		// 2.29 complete
+		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Photon_Cannon,
+				secondPhotoPos, true);
+		//9
+		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
+				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);		
+		//10
+		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
+				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		//11
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
-		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Photon_Cannon,
-				firstPhotoPos, true);
 		//12
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);

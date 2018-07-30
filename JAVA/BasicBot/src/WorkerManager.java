@@ -16,6 +16,7 @@ public class WorkerManager {
 	
 	/// 일꾼 중 한명을 Repair Worker 로 정해서, 전체 수리 대상을 하나씩 순서대로 수리합니다
 	private Unit currentRepairWorker = null;
+	public Unit initialProbe = null;
 	
 	private static WorkerManager instance = new WorkerManager();
 	
@@ -136,8 +137,12 @@ public class WorkerManager {
 			// if worker's job is idle 
 			if (workerData.getWorkerJob(worker) == WorkerData.WorkerJob.Idle || workerData.getWorkerJob(worker) == WorkerData.WorkerJob.Default )
 			{
-				// send it to the nearest mineral patch
-				setMineralWorker(worker);
+				if (WorkerManager.Instance().initialProbe != null && WorkerManager.Instance().initialProbe.getID() == worker.getID()) {
+					continue;
+				} else {
+					// send it to the nearest mineral patch
+					setMineralWorker(worker);
+				}
 			}
 		}
 	}
@@ -473,44 +478,48 @@ public class WorkerManager {
 		double closestMiningWorkerDistance = 1000000000;
 
 		// BasicBot 1.1 Patch End //////////////////////////////////////////////////
-
-		// look through each worker that had moved there first
-		for (Unit unit : workerData.getWorkers())
-		{
-			if (unit == null) continue;
-			
-			// worker 가 2개 이상이면, avoidWorkerID 는 피한다
-			if (workerData.getWorkers().size() >= 2 && avoidWorkerID != 0 && unit.getID() == avoidWorkerID) continue;
-
-			if (workerData.getWorkerJob(unit) == WorkerData.WorkerJob.Scout) {
-				continue;
-			}
-			
-			// Move / Idle Worker
-			if (unit.isCompleted() && (workerData.getWorkerJob(unit) == WorkerData.WorkerJob.Move || workerData.getWorkerJob(unit) == WorkerData.WorkerJob.Idle))
+		
+		if (WorkerManager.Instance().initialProbe != null) {
+			closestMovingWorker = WorkerManager.Instance().initialProbe;
+		} else {
+			// look through each worker that had moved there first
+			for (Unit unit : workerData.getWorkers())
 			{
-				// if it is a new closest distance, set the pointer
-				double distance = unit.getDistance(buildingPosition.toPosition());
-				if (closestMovingWorker == null || (distance < closestMovingWorkerDistance && unit.isCarryingMinerals() == false && unit.isCarryingGas() == false ))
+				if (unit == null) continue;
+				
+				// worker 가 2개 이상이면, avoidWorkerID 는 피한다
+				if (workerData.getWorkers().size() >= 2 && avoidWorkerID != 0 && unit.getID() == avoidWorkerID) continue;
+	
+				if (workerData.getWorkerJob(unit) == WorkerData.WorkerJob.Scout) {
+					continue;
+				}
+				
+				// Move / Idle Worker
+				if (unit.isCompleted() && (workerData.getWorkerJob(unit) == WorkerData.WorkerJob.Move || workerData.getWorkerJob(unit) == WorkerData.WorkerJob.Idle))
 				{
-					if (BWTA.isConnected(unit.getTilePosition(), buildingPosition)) {
-						closestMovingWorker = unit;
-						closestMovingWorkerDistance = distance;
+					// if it is a new closest distance, set the pointer
+					double distance = unit.getDistance(buildingPosition.toPosition());
+					if (closestMovingWorker == null || (distance < closestMovingWorkerDistance && unit.isCarryingMinerals() == false && unit.isCarryingGas() == false ))
+					{
+						if (BWTA.isConnected(unit.getTilePosition(), buildingPosition)) {
+							closestMovingWorker = unit;
+							closestMovingWorkerDistance = distance;
+						}
 					}
 				}
-			}
-
-			// Move / Idle Worker 가 없을때, 다른 Worker 중에서 차출한다 
-			if (unit.isCompleted() 
-				&& (workerData.getWorkerJob(unit) != WorkerData.WorkerJob.Move && workerData.getWorkerJob(unit) != WorkerData.WorkerJob.Idle && workerData.getWorkerJob(unit) != WorkerData.WorkerJob.Build))
-			{
-				// if it is a new closest distance, set the pointer
-				double distance = unit.getDistance(buildingPosition.toPosition());
-				if (closestMiningWorker == null || (distance < closestMiningWorkerDistance && unit.isCarryingMinerals() == false && unit.isCarryingGas() == false ))
+	
+				// Move / Idle Worker 가 없을때, 다른 Worker 중에서 차출한다 
+				if (unit.isCompleted() 
+					&& (workerData.getWorkerJob(unit) != WorkerData.WorkerJob.Move && workerData.getWorkerJob(unit) != WorkerData.WorkerJob.Idle && workerData.getWorkerJob(unit) != WorkerData.WorkerJob.Build))
 				{
-					if (BWTA.isConnected(unit.getTilePosition(), buildingPosition)) {
-						closestMiningWorker = unit;
-						closestMiningWorkerDistance = distance;
+					// if it is a new closest distance, set the pointer
+					double distance = unit.getDistance(buildingPosition.toPosition());
+					if (closestMiningWorker == null || (distance < closestMiningWorkerDistance && unit.isCarryingMinerals() == false && unit.isCarryingGas() == false ))
+					{
+						if (BWTA.isConnected(unit.getTilePosition(), buildingPosition)) {
+							closestMiningWorker = unit;
+							closestMiningWorkerDistance = distance;
+						}
 					}
 				}
 			}

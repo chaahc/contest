@@ -193,7 +193,11 @@ public class ConstructionManager {
 				b.setStatus(ConstructionTask.ConstructionStatus.Assigned.ordinal());
 
 				// reserve this building's space
-				ConstructionPlaceFinder.Instance().reserveTiles(testLocation, b.getType().tileWidth(), b.getType().tileHeight());
+				if (b.getType() == UnitType.Protoss_Gateway) {
+					ConstructionPlaceFinder.Instance().reserveTiles(testLocation, b.getType().tileWidth()+1, b.getType().tileHeight()+1);
+				} else {
+					ConstructionPlaceFinder.Instance().reserveTiles(testLocation, b.getType().tileWidth(), b.getType().tileHeight());
+				}
 				b.setLastConstructionWorkerID(b.getConstructionWorker().getID());
 	        }
 	    }
@@ -318,6 +322,8 @@ public class ConstructionManager {
 	/// 저그 및 프로토스 종족의 경우 건설 일꾼을 해제합니다
 	public void checkForStartedConstruction(Unit buildingThatStartedConstruction)
 	{				
+		int pylonCount = BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Pylon);
+		int gatewayCount = BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway);
 		// for each building unit which is being constructed
 //	    for (Unit buildingThatStartedConstruction : MyBotModule.Broodwar.self().getUnits())
 //	    {
@@ -362,6 +368,12 @@ public class ConstructionManager {
 					if (MyBotModule.Broodwar.self().getRace() == Race.Protoss)
 	                {
 	                */
+	                	if (WorkerManager.Instance().initialProbe == null && pylonCount == 1) {
+	                		WorkerManager.Instance().initialProbe = b.getConstructionWorker();
+	                	}
+	            		if (gatewayCount > 0) {
+	            			WorkerManager.Instance().initialProbe = null;
+	            		}
 	                    WorkerManager.Instance().setIdleWorker(b.getConstructionWorker());
 	                    b.setConstructionWorker(null);
 //	                }
@@ -382,43 +394,43 @@ public class ConstructionManager {
 	/// 테란의 경우 건설 진행상태가 UnderConstruction 이지만 건설 일꾼이 죽은 경우, 다른 건설 일꾼을 지정해서 건설이 속행되도록 합니다<br>
 	/// 테란은 건설을 시작한 후, 건설 도중에 일꾼이 죽을 수 있습니다. 이 경우, 건물에 대해 다시 다른 SCV를 할당합니다<br>
 	/// 참고로, 프로토스 / 저그는 건설을 시작하면 일꾼 포인터를 null 로 만들기 때문에 (constructionWorker = null) 건설 도중에 죽은 일꾼을 신경쓸 필요 없습니다 
-	public void checkForDeadTerranBuilders()
-	{
-		if (MyBotModule.Broodwar.self().getRace() == Race.Terran) {
-
-			if (MyBotModule.Broodwar.self().completedUnitCount(UnitType.Terran_SCV) <= 0) return;
-				
-			// for each of our buildings under construction
-			for (ConstructionTask b : constructionQueue)
-			{
-				// if a terran building whose worker died mid construction, 
-				// send the right click command to the buildingUnit to resume construction			
-				if (b.getStatus() == ConstructionTask.ConstructionStatus.UnderConstruction.ordinal()) {
-
-					if (b.getBuildingUnit().isCompleted()) continue;
-					
-					if (b.getConstructionWorker() == null || b.getConstructionWorker().exists() == false || b.getConstructionWorker().getHitPoints() <= 0 ){
-				
-						//System.out.println("checkForDeadTerranBuilders - chooseConstuctionWorkerClosest for " + b.getType() + " to worker near " + b.getFinalPosition().getX() + "," + b.getFinalPosition().getY());
-	
-						// grab a worker unit from WorkerManager which is closest to this final position
-						Unit workerToAssign = WorkerManager.Instance().chooseConstuctionWorkerClosestTo(b.getType(), b.getFinalPosition(), true, b.getLastConstructionWorkerID());
-	
-						if (workerToAssign != null)
-						{
-							//System.out.println("set ConstuctionWorker " + workerToAssign.getID());
-
-							b.setConstructionWorker(workerToAssign);								
-							commandUtil.rightClick(b.getConstructionWorker(), b.getBuildingUnit());
-							b.setBuildCommandGiven(true);
-							b.setLastBuildCommandGivenFrame(MyBotModule.Broodwar.getFrameCount());
-							b.setLastConstructionWorkerID(b.getConstructionWorker().getID());
-						}
-					}
-				}
-			}
-		}
-	}
+//	public void checkForDeadTerranBuilders()
+//	{
+//		if (MyBotModule.Broodwar.self().getRace() == Race.Terran) {
+//
+//			if (MyBotModule.Broodwar.self().completedUnitCount(UnitType.Terran_SCV) <= 0) return;
+//				
+//			// for each of our buildings under construction
+//			for (ConstructionTask b : constructionQueue)
+//			{
+//				// if a terran building whose worker died mid construction, 
+//				// send the right click command to the buildingUnit to resume construction			
+//				if (b.getStatus() == ConstructionTask.ConstructionStatus.UnderConstruction.ordinal()) {
+//
+//					if (b.getBuildingUnit().isCompleted()) continue;
+//					
+//					if (b.getConstructionWorker() == null || b.getConstructionWorker().exists() == false || b.getConstructionWorker().getHitPoints() <= 0 ){
+//				
+//						//System.out.println("checkForDeadTerranBuilders - chooseConstuctionWorkerClosest for " + b.getType() + " to worker near " + b.getFinalPosition().getX() + "," + b.getFinalPosition().getY());
+//	
+//						// grab a worker unit from WorkerManager which is closest to this final position
+//						Unit workerToAssign = WorkerManager.Instance().chooseConstuctionWorkerClosestTo(b.getType(), b.getFinalPosition(), true, b.getLastConstructionWorkerID());
+//	
+//						if (workerToAssign != null)
+//						{
+//							//System.out.println("set ConstuctionWorker " + workerToAssign.getID());
+//
+//							b.setConstructionWorker(workerToAssign);								
+//							commandUtil.rightClick(b.getConstructionWorker(), b.getBuildingUnit());
+//							b.setBuildCommandGiven(true);
+//							b.setLastBuildCommandGivenFrame(MyBotModule.Broodwar.getFrameCount());
+//							b.setLastConstructionWorkerID(b.getConstructionWorker().getID());
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}
 
 	/// 건설이 완료된 ConstructionTask 를 삭제하고,<br>  
 	/// 테란 종족의 경우 건설 일꾼을 해제합니다
