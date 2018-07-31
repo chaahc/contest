@@ -45,9 +45,6 @@ public class ProtossBasicBuildPosition {
 	public static int secondPylonPosX = 0;
 	public static int secondPylonPosY = 0;	
 	
-	public static int pylonPosX = 0;
-	public static int pylonPosY = 0;
-	
 	public static int gatewayPosX = 0;
 	public static int gatewayPosY = 0;
 	
@@ -65,9 +62,6 @@ public class ProtossBasicBuildPosition {
 	
 	private static int[] secondPylonPosXX = null;
 	private static int[] secondPylonPosYY = null;
-	
-	private static int[] pylonPosXX = null;
-	private static int[] pylonPosYY = null;
 	
 	private static int[] gatewayPosXX = null;
 	private static int[] gatewayPosYY = null;
@@ -97,21 +91,19 @@ public class ProtossBasicBuildPosition {
 		//서킷브레이커
 		if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.CircuitBreaker) {
 			System.out.println("1");
-			firstPylonPosXX = new int[]{18,108,108,17};
-			firstPylonPosYY = new int[]{31,31,96,96};
-			secondPylonPosXX = new int[]{7,117,117,7};
-			secondPylonPosYY = new int[]{20,20,105,105};
+			firstPylonPosXX = new int[]{17,108,108,18};
+			firstPylonPosYY = new int[]{37,37,96,96};
+			secondPylonPosXX = new int[]{18,110,110,16};
+			secondPylonPosYY = new int[]{31,31,92,90};
 			
-			pylonPosXX = new int[]{17,108,108,18};
-			pylonPosYY = new int[]{37,37,96,96};
-			forgePosXX = new int[]{17,108,106,19};
-			forgePosYY = new int[]{35,35,91,92};
-			gatewayPosXX = new int[]{20,104,104,19};
-			gatewayPosYY = new int[]{30,30,95,95};
-			firstPhotonPosXX = new int[]{18,108,108,17};
-			firstPhotonPosYY = new int[]{33,33,94,94};
-			secondPhotonPosXX = new int[]{16,111,110,16};
-			secondPhotonPosYY = new int[]{33,35,94,92};
+			forgePosXX = new int[]{17,108,107,108};
+			forgePosYY = new int[]{35,35,94,94};
+			gatewayPosXX = new int[]{17,108,106,18};
+			gatewayPosYY = new int[]{32,32,91,91};
+			firstPhotonPosXX = new int[]{15,111,110,16};
+			firstPhotonPosYY = new int[]{33,33,96,94};
+			secondPhotonPosXX = new int[]{15,111,110,16};
+			secondPhotonPosYY = new int[]{35,35,94,92};
 			
 			mapInfo.put(BASE11, new TilePosition(7, 9));
 			mapInfo.put(BASE12, new TilePosition(63, 2));
@@ -128,8 +120,35 @@ public class ProtossBasicBuildPosition {
 			mapInfo.put(PYLON7, new TilePosition(28, 98));
 		} 
 		//투혼
-		else if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.OverWatch) {
+		else if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.Spirit) {
+			firstPylonPosXX = new int[]{22,94,105,38};
+			firstPylonPosYY = new int[]{40,19,93,106};
+			secondPylonPosXX = new int[]{18,110,110,16};
+			secondPylonPosYY = new int[]{31,31,92,90};
 			
+			forgePosXX = new int[]{22,89,104,33};
+			forgePosYY = new int[]{38,17,91,108};
+			gatewayPosXX = new int[]{22,91,104,35};
+			gatewayPosYY = new int[]{35,19,88,105};
+			firstPhotonPosXX = new int[]{20,92,107,36};
+			firstPhotonPosYY = new int[]{40,17,89,108};
+			secondPhotonPosXX = new int[]{20,94,107,38};
+			secondPhotonPosYY = new int[]{38,17,91,108};
+			
+			//required repositioning
+			mapInfo.put(BASE11, new TilePosition(7, 9));
+			mapInfo.put(BASE12, new TilePosition(63, 2));
+			mapInfo.put(BASE1, new TilePosition(117, 9));
+			mapInfo.put(BASE3, new TilePosition(116, 64));
+			mapInfo.put(BASE5, new TilePosition(117, 118));
+			mapInfo.put(BASE6, new TilePosition(63, 124));
+			mapInfo.put(BASE7, new TilePosition(7, 118));
+			mapInfo.put(BASE9, new TilePosition(12, 64));
+			mapInfo.put(CENTER, new TilePosition(64, 64));
+			mapInfo.put(PYLON11, new TilePosition(28, 28));
+			mapInfo.put(PYLON1, new TilePosition(98, 28));
+			mapInfo.put(PYLON5, new TilePosition(98, 98));
+			mapInfo.put(PYLON7, new TilePosition(28, 98));
 		}
 
 		
@@ -151,8 +170,6 @@ public class ProtossBasicBuildPosition {
 				secondPylonPosX = secondPylonPosXX[0];
 				secondPylonPosY = secondPylonPosYY[0];
 				
-				pylonPosX = pylonPosXX[0];
-				pylonPosY = pylonPosYY[0];
 				forgePosX = forgePosXX[0];
 				forgePosY = forgePosYY[0];
 				gatewayPosX = gatewayPosXX[0];
@@ -171,8 +188,6 @@ public class ProtossBasicBuildPosition {
 				secondPylonPosX = secondPylonPosXX[1];
 				secondPylonPosY = secondPylonPosYY[1];
 				
-				pylonPosX = pylonPosXX[1];
-				pylonPosY = pylonPosYY[1];
 				forgePosX = forgePosXX[1];
 				forgePosY = forgePosYY[1];
 				gatewayPosX = gatewayPosXX[1];
@@ -191,8 +206,6 @@ public class ProtossBasicBuildPosition {
 				secondPylonPosX = secondPylonPosXX[2];
 				secondPylonPosY = secondPylonPosYY[2];
 				
-				pylonPosX = pylonPosXX[2];
-				pylonPosY = pylonPosYY[2];
 				forgePosX = forgePosXX[2];
 				forgePosY = forgePosYY[2];
 				gatewayPosX = gatewayPosXX[2];
@@ -211,8 +224,6 @@ public class ProtossBasicBuildPosition {
 				secondPylonPosX = secondPylonPosXX[3];
 				secondPylonPosY = secondPylonPosYY[3];
 				
-				pylonPosX = pylonPosXX[3];
-				pylonPosY = pylonPosYY[3];
 				forgePosX = forgePosXX[3];
 				forgePosY = forgePosYY[3];
 				gatewayPosX = gatewayPosXX[3];
@@ -226,9 +237,81 @@ public class ProtossBasicBuildPosition {
 			}
 		} 
 		//오버워치
-		else if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.OverWatch) {
-			
+		else if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.Spirit) {
+			if(startingX == 7 && startingY ==9) {			
+//				return new TilePosition(secondPylonPosXX[0], secondPylonPosYY[0]);
+				firstPylonPosX = firstPylonPosXX[0];
+				firstPylonPosY = firstPylonPosYY[0];
+				secondPylonPosX = secondPylonPosXX[0];
+				secondPylonPosY = secondPylonPosYY[0];
+				
+				forgePosX = forgePosXX[0];
+				forgePosY = forgePosYY[0];
+				gatewayPosX = gatewayPosXX[0];
+				gatewayPosY = gatewayPosYY[0];
+				firstPhotonPosX = firstPhotonPosXX[0];
+				firstPhotonPosY = firstPhotonPosYY[0];
+				secondPhotonPosX = secondPhotonPosXX[0];
+				secondPhotonPosY = secondPhotonPosYY[0];
+				
+				START_BASE = BASE11;
+			}
+			else if(startingX == 117 && startingY ==9) {
+//				return new TilePosition(secondPylonPosXX[1], secondPylonPosYY[1]);
+				firstPylonPosX = firstPylonPosXX[1];
+				firstPylonPosY = firstPylonPosYY[1];
+				secondPylonPosX = secondPylonPosXX[1];
+				secondPylonPosY = secondPylonPosYY[1];
+				
+				forgePosX = forgePosXX[1];
+				forgePosY = forgePosYY[1];
+				gatewayPosX = gatewayPosXX[1];
+				gatewayPosY = gatewayPosYY[1];
+				firstPhotonPosX = firstPhotonPosXX[1];
+				firstPhotonPosY = firstPhotonPosYY[1];
+				secondPhotonPosX = secondPhotonPosXX[1];
+				secondPhotonPosY = secondPhotonPosYY[1];
+				
+				START_BASE = BASE1;
+			}
+			else if(startingX == 117 && startingY ==118) {
+//				return new TilePosition(secondPylonPosXX[2], secondPylonPosYY[2]);
+				firstPylonPosX = firstPylonPosXX[2];
+				firstPylonPosY = firstPylonPosYY[2];
+				secondPylonPosX = secondPylonPosXX[2];
+				secondPylonPosY = secondPylonPosYY[2];
+				
+				forgePosX = forgePosXX[2];
+				forgePosY = forgePosYY[2];
+				gatewayPosX = gatewayPosXX[2];
+				gatewayPosY = gatewayPosYY[2];
+				firstPhotonPosX = firstPhotonPosXX[2];
+				firstPhotonPosY = firstPhotonPosYY[2];
+				secondPhotonPosX = secondPhotonPosXX[2];
+				secondPhotonPosY = secondPhotonPosYY[2];
+				
+				START_BASE = BASE5;
+			}
+			else if(startingX == 7 && startingY ==118) {
+//				return new TilePosition(secondPylonPosXX[3], secondPylonPosYY[3]);
+				firstPylonPosX = firstPylonPosXX[3];
+				firstPylonPosY = firstPylonPosYY[3];
+				secondPylonPosX = secondPylonPosXX[3];
+				secondPylonPosY = secondPylonPosYY[3];
+				
+				forgePosX = forgePosXX[3];
+				forgePosY = forgePosYY[3];
+				gatewayPosX = gatewayPosXX[3];
+				gatewayPosY = gatewayPosYY[3];
+				firstPhotonPosX = firstPhotonPosXX[3];
+				firstPhotonPosY = firstPhotonPosYY[3];
+				secondPhotonPosX = secondPhotonPosXX[3];
+				secondPhotonPosY = secondPhotonPosYY[3];
+				
+				START_BASE = BASE7;
+			}
 		}
+		System.out.println("build position end");
 	} 	
 	
 	public TilePosition getEnemyPosition(TilePosition enemy) {

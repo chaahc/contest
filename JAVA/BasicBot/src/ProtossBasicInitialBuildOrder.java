@@ -60,5 +60,7 @@ public class ProtossBasicInitialBuildOrder extends InitialBuildOrder {
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Pylon,
 				secondPylonPos, true);
+		
+		StrategyManager.Instance().isInitialBuildOrderStarted = true;
 	}
 }

@@ -17,7 +17,8 @@ public class StrategyManager {
 	}
 	
 	private BuildOrderSet buildOrderSet;
-	private boolean isInitialBuildOrderFinished;
+	public boolean isInitialBuildOrderFinished;
+	public boolean isInitialBuildOrderStarted;
 
 	public StrategyManager() {
 		isInitialBuildOrderFinished = false;

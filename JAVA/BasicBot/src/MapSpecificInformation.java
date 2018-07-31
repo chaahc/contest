@@ -28,5 +28,5 @@ public class MapSpecificInformation {
 }
 
 enum MAP {
-	CircuitBreaker, OverWatch, Unknown
+	CircuitBreaker, Spirit, Unknown
 };
