@@ -311,6 +311,73 @@ public class ProtossBasicBuildPosition {
 				START_BASE = BASE7;
 			}
 		}
+		//투혼
+		else if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.Spirit) {
+			if(startingX == 7 && startingY ==6) {			
+//				return new TilePosition(secondPylonPosXX[0], secondPylonPosYY[0]);
+				firstPylonPosX = firstPylonPosXX[0];
+				firstPylonPosY = firstPylonPosYY[0];
+				secondPylonPosX = secondPylonPosXX[0];
+				secondPylonPosY = secondPylonPosYY[0];
+				
+				forgePosX = forgePosXX[0];
+				forgePosY = forgePosYY[0];
+				gatewayPosX = gatewayPosXX[0];
+				gatewayPosY = gatewayPosYY[0];
+				firstPhotonPosX = firstPhotonPosXX[0];
+				firstPhotonPosY = firstPhotonPosYY[0];
+				secondPhotonPosX = secondPhotonPosXX[0];
+				secondPhotonPosY = secondPhotonPosYY[0];
+			}
+			else if(startingX == 117 && startingY ==7) {
+//				return new TilePosition(secondPylonPosXX[1], secondPylonPosYY[1]);
+				firstPylonPosX = firstPylonPosXX[1];
+				firstPylonPosY = firstPylonPosYY[1];
+				secondPylonPosX = secondPylonPosXX[1];
+				secondPylonPosY = secondPylonPosYY[1];
+				
+				forgePosX = forgePosXX[1];
+				forgePosY = forgePosYY[1];
+				gatewayPosX = gatewayPosXX[1];
+				gatewayPosY = gatewayPosYY[1];
+				firstPhotonPosX = firstPhotonPosXX[1];
+				firstPhotonPosY = firstPhotonPosYY[1];
+				secondPhotonPosX = secondPhotonPosXX[1];
+				secondPhotonPosY = secondPhotonPosYY[1];
+			}
+			else if(startingX == 117 && startingY ==117) {
+//				return new TilePosition(secondPylonPosXX[2], secondPylonPosYY[2]);
+				firstPylonPosX = firstPylonPosXX[2];
+				firstPylonPosY = firstPylonPosYY[2];
+				secondPylonPosX = secondPylonPosXX[2];
+				secondPylonPosY = secondPylonPosYY[2];
+				
+				forgePosX = forgePosXX[2];
+				forgePosY = forgePosYY[2];
+				gatewayPosX = gatewayPosXX[2];
+				gatewayPosY = gatewayPosYY[2];
+				firstPhotonPosX = firstPhotonPosXX[2];
+				firstPhotonPosY = firstPhotonPosYY[2];
+				secondPhotonPosX = secondPhotonPosXX[2];
+				secondPhotonPosY = secondPhotonPosYY[2];
+			}
+			else if(startingX == 7 && startingY ==116) {
+//				return new TilePosition(secondPylonPosXX[3], secondPylonPosYY[3]);
+				firstPylonPosX = firstPylonPosXX[3];
+				firstPylonPosY = firstPylonPosYY[3];
+				secondPylonPosX = secondPylonPosXX[3];
+				secondPylonPosY = secondPylonPosYY[3];
+				
+				forgePosX = forgePosXX[3];
+				forgePosY = forgePosYY[3];
+				gatewayPosX = gatewayPosXX[3];
+				gatewayPosY = gatewayPosYY[3];
+				firstPhotonPosX = firstPhotonPosXX[3];
+				firstPhotonPosY = firstPhotonPosYY[3];
+				secondPhotonPosX = secondPhotonPosXX[3];
+				secondPhotonPosY = secondPhotonPosYY[3];
+			}
+		}
 		System.out.println("build position end");
 	} 	
 	
