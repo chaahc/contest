@@ -801,8 +801,8 @@ public class InformationManager {
                 String mapName = MyBotModule.Broodwar.mapFileName().toUpperCase();
                 if (mapName.matches(".*CIRCUIT.*")){
                         candiMapByName = MAP.CircuitBreaker;
-                } else if (mapName.matches(".*OVER.*")){
-                        candiMapByName = MAP.OverWatch;
+                } else if (mapName.matches(".*SPIRIT.*")){
+                        candiMapByName = MAP.Spirit;
                 } else {
                         candiMapByName = MAP.Unknown;
                 }
