@@ -17,6 +17,7 @@ public class BuildOrderSetManager {
 	public BuildOrderSetManager() {
 		this.loadProtossBasic();
 		this.loadZergBasic();
+		this.loadTerranBasic();
 	}
 	
 	public void loadProtossBasic() {
@@ -47,5 +48,20 @@ public class BuildOrderSetManager {
 		
 		BuildOrderSet buildOrderSet = new BuildOrderSet(StrategyType.ZERG_BASIC, initialBuildOrder, buildUnitOrder, battleUnitOrder, upgradeOrder, battleOrder);
 		this.buildOrderSets.put(StrategyType.ZERG_BASIC, buildOrderSet);
+	}
+	
+	public void loadTerranBasic() {
+		InitialBuildOrder initialBuildOrder = new TerranBasicInitialBuildOrder();
+		
+		BuildingUnitOrder buildUnitOrder = new TerrranBasicBuildingUnitOrder();
+		
+		BattleUnitOrder battleUnitOrder = new TerranBasicBattleUnitOrder();
+		
+		UpgradeOrder upgradeOrder = new TerranBasicUpgradeOrder();
+		
+		BattleOrder battleOrder = new TerranBattleOrder();
+		
+		BuildOrderSet buildOrderSet = new BuildOrderSet(StrategyType.TERRAN_BASIC, initialBuildOrder, buildUnitOrder, battleUnitOrder, upgradeOrder, battleOrder);
+		this.buildOrderSets.put(StrategyType.TERRAN_BASIC, buildOrderSet);
 	}
 }

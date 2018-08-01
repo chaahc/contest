@@ -1,15 +1,6 @@
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import bwapi.Region;
-import bwapi.TilePosition;
-import bwapi.Unit;
 import bwapi.UnitType;
-import bwta.BWTA;
-import bwta.BaseLocation;
 
-public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
+public class TerrranBasicBuildingUnitOrder extends BuildingUnitOrder {
 
 	@Override
 	public void execute() {
@@ -32,7 +23,7 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 				// TODO Auto-generated method stub
 				if (BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge) != null &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge).getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
-						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Photon_Cannon) < 4 &&
+						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Photon_Cannon) < 3 &&
 						MyBotModule.Broodwar.self().minerals() >= 150) {
 					return true;
 				}
@@ -230,4 +221,5 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 //			}
 //		});
 	}
+
 }

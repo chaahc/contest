@@ -29,8 +29,10 @@ public class StrategyManager {
 //		required to choose strategy
 		if (MyBotModule.Broodwar.enemy().getRace() == Race.Zerg) {
 			return StrategyType.ZERG_BASIC;
+		} else if (MyBotModule.Broodwar.enemy().getRace() == Race.Terran){
+			return StrategyType.TERRAN_BASIC;			
 		} else {
-			return StrategyType.PROTOSS_BASIC;			
+			return StrategyType.PROTOSS_BASIC;
 		}
 	}
 
