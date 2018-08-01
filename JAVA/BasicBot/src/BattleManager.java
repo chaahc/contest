@@ -38,7 +38,7 @@ public class BattleManager {
 		unitScore.put(UnitType.Terran_Medic, 2);
 		unitScore.put(UnitType.Terran_Vulture, 2);
 		unitScore.put(UnitType.Terran_Siege_Tank_Tank_Mode, 4);
-		unitScore.put(UnitType.Terran_Siege_Tank_Siege_Mode, 6);
+		unitScore.put(UnitType.Terran_Siege_Tank_Siege_Mode, 2);
 		unitScore.put(UnitType.Terran_Goliath, 3);
 		unitScore.put(UnitType.Terran_Wraith, 2);
 		unitScore.put(UnitType.Terran_Battlecruiser, 8);

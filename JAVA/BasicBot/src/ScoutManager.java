@@ -81,7 +81,19 @@ public class ScoutManager {
 							//WorkerManager::Instance().setIdleWorker(currentScoutUnit);
 						}
 					}
-				} 
+				} else if (unitType == UnitType.Protoss_Zealot) {
+					BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(BattleGroupType.FRONT_GROUP.getValue());
+					Iterator<Integer> iterator = battleUnitGroup.battleUnits.keySet().iterator();
+					while (iterator.hasNext()) {
+						BattleUnit zealot = battleUnitGroup.battleUnits.get(iterator.next());
+						BattleUnit leader = battleUnitGroup.getLeader();
+						if (leader != null && zealot != null && leader.getUnitId() != zealot.getUnitId()) {
+							currentScoutUnit = zealot.getUnit();
+							battleUnitGroup.removeBattleUnit(zealot.getUnitId());
+							break;
+						}
+					}
+				}
 			}
 		} else {
 			if (currentScoutUnit == null || currentScoutUnit.exists() == false || currentScoutUnit.getHitPoints() <= 0) {
@@ -200,8 +212,9 @@ public class ScoutManager {
 	
 	public void scout(boolean isRunAway) {
 		for (String base : ProtossBasicBuildPosition.Instance().getScoutPositions().keySet()) {
-			TilePosition tilePosition = ProtossBasicBuildPosition.Instance().getScoutPositions().get(base); 
-			if (tilePosition.equals(InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy()).getTilePosition())) {
+			TilePosition tilePosition = ProtossBasicBuildPosition.Instance().getScoutPositions().get(base);
+			BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
+			if (tilePosition.equals(enemyBaseLocation.getTilePosition())) {
 				continue;
 			}
 			if (currentScoutUnit.getDistance(tilePosition.toPosition()) > 50 && !currentScoutUnit.isMoving()) {

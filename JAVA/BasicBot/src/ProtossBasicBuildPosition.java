@@ -136,19 +136,19 @@ public class ProtossBasicBuildPosition {
 			secondPhotonPosYY = new int[]{38,17,91,108};
 			
 			//required repositioning
-			mapInfo.put(BASE11, new TilePosition(7, 9));
-			mapInfo.put(BASE12, new TilePosition(63, 2));
-			mapInfo.put(BASE1, new TilePosition(117, 9));
-			mapInfo.put(BASE3, new TilePosition(116, 64));
-			mapInfo.put(BASE5, new TilePosition(117, 118));
-			mapInfo.put(BASE6, new TilePosition(63, 124));
-			mapInfo.put(BASE7, new TilePosition(7, 118));
-			mapInfo.put(BASE9, new TilePosition(12, 64));
+			mapInfo.put(BASE11, new TilePosition(7, 6));
+			mapInfo.put(BASE12, new TilePosition(51, 7));
+			mapInfo.put(BASE1, new TilePosition(117, 7));
+			mapInfo.put(BASE3, new TilePosition(118, 53));
+			mapInfo.put(BASE5, new TilePosition(117, 117));
+			mapInfo.put(BASE6, new TilePosition(76, 119));
+			mapInfo.put(BASE7, new TilePosition(7, 116));
+			mapInfo.put(BASE9, new TilePosition(8, 73));
 			mapInfo.put(CENTER, new TilePosition(64, 64));
-			mapInfo.put(PYLON11, new TilePosition(28, 28));
-			mapInfo.put(PYLON1, new TilePosition(98, 28));
-			mapInfo.put(PYLON5, new TilePosition(98, 98));
-			mapInfo.put(PYLON7, new TilePosition(28, 98));
+			mapInfo.put(PYLON11, new TilePosition(32, 22));
+			mapInfo.put(PYLON1, new TilePosition(11, 32));
+			mapInfo.put(PYLON5, new TilePosition(94, 105));
+			mapInfo.put(PYLON7, new TilePosition(17, 94));
 		}
 
 		
@@ -238,7 +238,7 @@ public class ProtossBasicBuildPosition {
 		} 
 		//오버워치
 		else if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.Spirit) {
-			if(startingX == 7 && startingY ==9) {			
+			if(startingX == 7 && startingY ==6) {			
 //				return new TilePosition(secondPylonPosXX[0], secondPylonPosYY[0]);
 				firstPylonPosX = firstPylonPosXX[0];
 				firstPylonPosY = firstPylonPosYY[0];
@@ -256,7 +256,7 @@ public class ProtossBasicBuildPosition {
 				
 				START_BASE = BASE11;
 			}
-			else if(startingX == 117 && startingY ==9) {
+			else if(startingX == 117 && startingY ==7) {
 //				return new TilePosition(secondPylonPosXX[1], secondPylonPosYY[1]);
 				firstPylonPosX = firstPylonPosXX[1];
 				firstPylonPosY = firstPylonPosYY[1];
@@ -274,7 +274,7 @@ public class ProtossBasicBuildPosition {
 				
 				START_BASE = BASE1;
 			}
-			else if(startingX == 117 && startingY ==118) {
+			else if(startingX == 117 && startingY ==117) {
 //				return new TilePosition(secondPylonPosXX[2], secondPylonPosYY[2]);
 				firstPylonPosX = firstPylonPosXX[2];
 				firstPylonPosY = firstPylonPosYY[2];
@@ -292,7 +292,7 @@ public class ProtossBasicBuildPosition {
 				
 				START_BASE = BASE5;
 			}
-			else if(startingX == 7 && startingY ==118) {
+			else if(startingX == 7 && startingY ==116) {
 //				return new TilePosition(secondPylonPosXX[3], secondPylonPosYY[3]);
 				firstPylonPosX = firstPylonPosXX[3];
 				firstPylonPosY = firstPylonPosYY[3];
@@ -397,14 +397,27 @@ public class ProtossBasicBuildPosition {
 	
 	public TilePosition getEnemyBase(TilePosition enemy) {
 		TilePosition enemyBaseLocation = null;
-		if (mapInfo.get(BASE1).equals(enemy)) {
-			enemyBaseLocation = new TilePosition(107, 3);
-		} else if (mapInfo.get(BASE5).equals(enemy)) {
-			enemyBaseLocation = new TilePosition(107, 123);
-		} else if (mapInfo.get(BASE7).equals(enemy)) {
-			enemyBaseLocation = new TilePosition(22, 123);
-		} else if (mapInfo.get(BASE11).equals(enemy)){
-			enemyBaseLocation = new TilePosition(22, 3);
+		if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.CircuitBreaker) {
+			if (mapInfo.get(BASE1).equals(enemy)) {
+				enemyBaseLocation = new TilePosition(107, 3);
+			} else if (mapInfo.get(BASE5).equals(enemy)) {
+				enemyBaseLocation = new TilePosition(107, 123);
+			} else if (mapInfo.get(BASE7).equals(enemy)) {
+				enemyBaseLocation = new TilePosition(22, 123);
+			} else if (mapInfo.get(BASE11).equals(enemy)){
+				enemyBaseLocation = new TilePosition(22, 3);
+			}
+		}
+		else if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.Spirit) {
+			if (mapInfo.get(BASE1).equals(enemy)) {
+				enemyBaseLocation = new TilePosition(123, 24);
+			} else if (mapInfo.get(BASE5).equals(enemy)) {
+				enemyBaseLocation = new TilePosition(110, 122);
+			} else if (mapInfo.get(BASE7).equals(enemy)) {
+				enemyBaseLocation = new TilePosition(7, 104);
+			} else if (mapInfo.get(BASE11).equals(enemy)){
+				enemyBaseLocation = new TilePosition(15, 4);
+			}
 		}
 		return enemyBaseLocation;
 	}

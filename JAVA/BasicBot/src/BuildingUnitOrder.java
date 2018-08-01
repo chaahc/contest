@@ -39,67 +39,69 @@ public abstract class BuildingUnitOrder implements BuildOrder{
 		BuildingUnitGroup nexusGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Nexus);
 		List<TilePosition> centerExpansionNearSelf = ProtossBasicBuildPosition.Instance().getCenterExpansionNearSelf();
 		BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
-		List<TilePosition> centerExpansionNearEnemy = ProtossBasicBuildPosition.Instance().getCenterExpansionNearEnemy(enemyBaseLocation.getTilePosition());
-		int nexusCountInCenterExpansion = 0;
-		int enemyCloseCenterExpansion = 3;
-		for (TilePosition centerExpansion : centerExpansionNearSelf) {
-			boolean isNexusInCenterExpansion = false;
-			Iterator<Integer> iterator = nexusGroup.buildingUnitGroup.keySet().iterator();
-			while (iterator.hasNext()) {
-				BuildingUnit nexus = nexusGroup.buildingUnitGroup.get(iterator.next());
-				if (nexus.getUnit().getTilePosition().getDistance(centerExpansion) < 10) {
-					isNexusInCenterExpansion = true;
-					nexusCountInCenterExpansion++;
-				}
-			}
-			boolean isEnemyClose = false;
-			if (centerExpansion.equals(centerExpansionNearEnemy.get(0))) {
-				isEnemyClose = true;
-				enemyCloseCenterExpansion = 0;
-			} else if (centerExpansion.equals(centerExpansionNearEnemy.get(1))) {
-				isEnemyClose = true;
-				enemyCloseCenterExpansion = 1;
-			}
-			
-			if (!isNexusInCenterExpansion && 
-					!isEnemyClose) {
-				this.order(UnitType.Protoss_Nexus, centerExpansion, new OrderCondition() {
-					@Override
-					public boolean isActive() {
-						// TODO Auto-generated method stub
-						if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 && 
-								BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 5 &&
-								MyBotModule.Broodwar.self().minerals() >= 1000) {
-								
-							return true;
-						}
-						return false;
+		if (enemyBaseLocation != null) {
+			List<TilePosition> centerExpansionNearEnemy = ProtossBasicBuildPosition.Instance().getCenterExpansionNearEnemy(enemyBaseLocation.getTilePosition());
+			int nexusCountInCenterExpansion = 0;
+			int enemyCloseCenterExpansion = 3;
+			for (TilePosition centerExpansion : centerExpansionNearSelf) {
+				boolean isNexusInCenterExpansion = false;
+				Iterator<Integer> iterator = nexusGroup.buildingUnitGroup.keySet().iterator();
+				while (iterator.hasNext()) {
+					BuildingUnit nexus = nexusGroup.buildingUnitGroup.get(iterator.next());
+					if (nexus.getUnit().getTilePosition().getDistance(centerExpansion) < 10) {
+						isNexusInCenterExpansion = true;
+						nexusCountInCenterExpansion++;
 					}
-				});
-			} 
-		}
-		if (nexusCountInCenterExpansion == 1 && enemyCloseCenterExpansion != 3) {
-			boolean isEnemyInCenterExpansion = false;
-			for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(centerExpansionNearEnemy.get(enemyCloseCenterExpansion).toPosition(), 50)) {
-				if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
-					isEnemyInCenterExpansion = true;
-					break;
 				}
-			}
-			if (!isEnemyInCenterExpansion) {
-				this.order(UnitType.Protoss_Nexus, centerExpansionNearEnemy.get(enemyCloseCenterExpansion), new OrderCondition() {
-					@Override
-					public boolean isActive() {
-						// TODO Auto-generated method stub
-						if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 && 
-								BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 5 &&
-								MyBotModule.Broodwar.self().minerals() >= 1000) {
-								
-							return true;
+				boolean isEnemyClose = false;
+				if (centerExpansion.equals(centerExpansionNearEnemy.get(0))) {
+					isEnemyClose = true;
+					enemyCloseCenterExpansion = 0;
+				} else if (centerExpansion.equals(centerExpansionNearEnemy.get(1))) {
+					isEnemyClose = true;
+					enemyCloseCenterExpansion = 1;
+				}
+				
+				if (!isNexusInCenterExpansion && 
+						!isEnemyClose) {
+					this.order(UnitType.Protoss_Nexus, centerExpansion, new OrderCondition() {
+						@Override
+						public boolean isActive() {
+							// TODO Auto-generated method stub
+							if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 && 
+									BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 5 &&
+									MyBotModule.Broodwar.self().minerals() >= 500) {
+									
+								return true;
+							}
+							return false;
 						}
-						return false;
+					});
+				} 
+			}
+			if (nexusCountInCenterExpansion == 1 && enemyCloseCenterExpansion != 3) {
+				boolean isEnemyInCenterExpansion = false;
+				for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(centerExpansionNearEnemy.get(enemyCloseCenterExpansion).toPosition(), 50)) {
+					if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
+						isEnemyInCenterExpansion = true;
+						break;
 					}
-				});
+				}
+				if (!isEnemyInCenterExpansion) {
+					this.order(UnitType.Protoss_Nexus, centerExpansionNearEnemy.get(enemyCloseCenterExpansion), new OrderCondition() {
+						@Override
+						public boolean isActive() {
+							// TODO Auto-generated method stub
+							if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 3 && 
+									BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 5 &&
+									MyBotModule.Broodwar.self().minerals() >= 500) {
+									
+								return true;
+							}
+							return false;
+						}
+					});
+				}
 			}
 		}
 	}
