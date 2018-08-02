@@ -284,7 +284,8 @@ public class BattleOrder {
 		int enemyCount = 0;
 		int selfCount = 0;
 		for (Unit unit : list) {
-			if (unit.getPlayer() == InformationManager.Instance().enemyPlayer) {
+			if (unit.getPlayer() == InformationManager.Instance().enemyPlayer &&
+				!unit.getType().isWorker()) {
 				BattleManager.instance().setBattleMode(BattleManager.BattleMode.DEFENCE);
 				isEnemyAttack = true;
 				enemyPosition = unit.getPosition();
