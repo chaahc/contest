@@ -13,6 +13,25 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 
 	@Override
 	public void execute() {
+		int enemyNexusCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Nexus, MyBotModule.Broodwar.enemy());
+		int enemyCyberneticsCoreCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Cybernetics_Core, MyBotModule.Broodwar.enemy());
+		int enemyAssimilatorCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Assimilator, MyBotModule.Broodwar.enemy());
+		int enemyPhotonCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Photon_Cannon, MyBotModule.Broodwar.enemy());
+		int enemyGatewayCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Gateway, MyBotModule.Broodwar.enemy());
+		int enemyZealotCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Zealot, MyBotModule.Broodwar.enemy());
+		int enemyDragoonCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Dragoon, MyBotModule.Broodwar.enemy());
+		
+		if (MyBotModule.Broodwar.getFrameCount() % 24 == 0) {
+			System.out.println("[Scout Info] : " + MyBotModule.Broodwar.getFrameCount());
+			System.out.print("Nexus : " + enemyNexusCount);
+			System.out.print(",CyberneticsCore : " + enemyCyberneticsCoreCount);
+			System.out.print(",Assimilator : " + enemyAssimilatorCount);
+			System.out.print(",Photon : " + enemyPhotonCount);
+			System.out.print(",Gateway : " + enemyGatewayCount);
+			System.out.print(",Zealot : " + enemyZealotCount);
+			System.out.println(",Dragoon : " + enemyDragoonCount);
+		}
+		
 		// TODO Auto-generated method stub
 		super.order(UnitType.Protoss_Assimilator, BuildOrderItem.SeedPositionStrategy.MainBaseLocation, new OrderCondition() {
 			@Override

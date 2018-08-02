@@ -134,7 +134,23 @@ public class UXManager {
 			int mouseY = MyBotModule.Broodwar.getMousePosition().getY() + MyBotModule.Broodwar.getScreenPosition().getY();
 			MyBotModule.Broodwar.drawTextMap(mouseX + 20, mouseY, "(" + (int)(mouseX/Config.TILE_SIZE) + ", " +  (int)(mouseY/Config.TILE_SIZE) + ")");
 		}
-
+		
+		if (ScoutManager.Instance().getScoutUnit() != null) {
+			MyBotModule.Broodwar.drawCircleMap(ScoutManager.Instance().getScoutUnit().getPosition(), 10, Color.Yellow, true);
+		}
+		this.drawLeader(UnitType.Protoss_Zealot, BattleGroupType.FRONT_GROUP);
+		this.drawLeader(UnitType.Protoss_Zealot, BattleGroupType.SUB_GROUP);
+		this.drawLeader(UnitType.Protoss_Zealot, BattleGroupType.DEFENCE_GROUP);
+		this.drawLeader(UnitType.Protoss_Dragoon, BattleGroupType.FRONT_GROUP);
+		this.drawLeader(UnitType.Protoss_Dragoon, BattleGroupType.SUB_GROUP);
+		this.drawLeader(UnitType.Protoss_Dragoon, BattleGroupType.DEFENCE_GROUP);
+	}
+	
+	public void drawLeader(UnitType unitType, BattleGroupType battleGroupType) {
+		BattleUnit leader = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(battleGroupType.getValue()).getLeader();
+		if (leader != null) {
+			MyBotModule.Broodwar.drawCircleMap(leader.getUnit().getPosition(), 10, Color.Red, true);
+		}
 	}
 
 	// 게임 개요 정보를 Screen 에 표시합니다

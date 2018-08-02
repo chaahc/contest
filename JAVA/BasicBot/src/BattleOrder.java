@@ -35,28 +35,30 @@ public class BattleOrder {
 	
 	protected void changeBattleMode() {
 		System.out.println("battle mode : " + BattleManager.instance().getBattleMode());
-		int enemyCount = 0;
-		BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
-		if (enemyBaseLocation != null) {
-			for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(enemyBaseLocation.getPosition(), TOTAL_RADIUS)) {
-				if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
-//					System.out.println(unit.getID() + ", enemy : " + unit.getType() + ", count : " + enemyCount);
-					enemyCount++;
+		if (BattleManager.instance().getBattleMode() != BattleManager.BattleMode.DEFENCE) {
+			int enemyCount = 0;
+			BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
+			if (enemyBaseLocation != null) {
+				for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(enemyBaseLocation.getPosition(), TOTAL_RADIUS)) {
+					if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
+	//					System.out.println(unit.getID() + ", enemy : " + unit.getType() + ", count : " + enemyCount);
+						enemyCount++;
+					}
 				}
-			}
-			if (enemyCount > 0) {
-				if (InformationManager.Instance().selfPlayer.supplyUsed() > 350) { 
-					BattleManager.instance().setBattleMode(BattleManager.BattleMode.ONEWAY_ATTACK);
-				} else if (InformationManager.Instance().selfPlayer.supplyUsed() > 300) {
-					BattleManager.instance().setBattleMode(BattleManager.BattleMode.TOTAL_ATTACK);
+				if (enemyCount > 0) {
+					if (InformationManager.Instance().selfPlayer.supplyUsed() > 350) { 
+						BattleManager.instance().setBattleMode(BattleManager.BattleMode.ONEWAY_ATTACK);
+					} else if (InformationManager.Instance().selfPlayer.supplyUsed() > 300) {
+						BattleManager.instance().setBattleMode(BattleManager.BattleMode.TOTAL_ATTACK);
+					} else {
+						BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
+					}
 				} else {
-					BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
-				}
-			} else {
-				BattleUnit leader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getLeader();
-				if (leader != null && leader.getUnit().getDistance(enemyBaseLocation.getPosition()) < 50) {
-					System.out.println("in enemy base");
-					BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
+					BattleUnit leader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getLeader();
+					if (leader != null && leader.getUnit().getDistance(enemyBaseLocation.getPosition()) < 50) {
+	//					System.out.println("in enemy base");
+						BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
+					}
 				}
 			}
 		}
@@ -220,21 +222,21 @@ public class BattleOrder {
 				BaseLocation enemySecondExpansionLocation = InformationManager.Instance().getSecondExpansionLocation(MyBotModule.Broodwar.enemy());
 				BattleUnit subLeader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.SUB_GROUP.getValue()).getLeader();
 				if (subLeader != null && subLeader.getUnit().isUnderAttack() && subLeader.getUnit().isAttacking()) {
-					System.out.println("[enemyExpantionAttack] sub dangerous");
+//					System.out.println("[enemyExpantionAttack] sub dangerous");
 					BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, subLeader.getUnit().getPosition(), BattleGroupType.FRONT_GROUP);
 					BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, subLeader.getUnit().getPosition(), BattleGroupType.FRONT_GROUP);
 				} else {
-					System.out.println("[enemyExpantionAttack] front enemy second");
+//					System.out.println("[enemyExpantionAttack] front enemy second");
 					BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, enemySecondExpansionLocation.getPosition(), BattleGroupType.FRONT_GROUP);
 					BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, enemySecondExpansionLocation.getPosition(), BattleGroupType.FRONT_GROUP);
 				}
 				BattleUnit frontLeader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getLeader();
 				if (frontLeader != null && frontLeader.getUnit().isUnderAttack() && subLeader.getUnit().isAttacking()) {
-					System.out.println("[enemyExpantionAttack] front dangerous");
+//					System.out.println("[enemyExpantionAttack] front dangerous");
 					BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, frontLeader.getUnit().getPosition(), BattleGroupType.SUB_GROUP);
 					BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, frontLeader.getUnit().getPosition(), BattleGroupType.SUB_GROUP);
 				} else if (!this.centerExpansionAttack(BattleGroupType.SUB_GROUP)) {
-					System.out.println("[enemyExpantionAttack] sub center");
+//					System.out.println("[enemyExpantionAttack] sub center");
 					BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, ProtossBasicBuildPosition.mapInfo.get(ProtossBasicBuildPosition.CENTER).toPosition(), BattleGroupType.SUB_GROUP);
 					BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, ProtossBasicBuildPosition.mapInfo.get(ProtossBasicBuildPosition.CENTER).toPosition(), BattleGroupType.SUB_GROUP);	
 				}
@@ -249,12 +251,12 @@ public class BattleOrder {
 			Position centerExpansionBefore = centerExpansionNearEnemy.get(0).toPosition();
 			Position centerExpansionAtfer = centerExpansionNearEnemy.get(1).toPosition();
 			if (isEnemyInCenterExpansion(centerExpansionBefore)) {
-				System.out.println("[centerExpantionAttack] before");
+//				System.out.println("[centerExpantionAttack] before");
 				BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, centerExpansionBefore, battleGroupType);
 				BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, centerExpansionBefore, battleGroupType);
 				return true;
 			} else if (isEnemyInCenterExpansion(centerExpansionAtfer)) {
-				System.out.println("[centerExpantionAttack] after");
+//				System.out.println("[centerExpantionAttack] after");
 				BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, centerExpansionAtfer, battleGroupType);
 				BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, centerExpansionAtfer, battleGroupType);
 				return true;
@@ -302,13 +304,13 @@ public class BattleOrder {
 			BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, enemyPosition, BattleGroupType.SUB_GROUP);
 			BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, enemyPosition, BattleGroupType.SUB_GROUP);
 			if (selfCount <= enemyCount) {
-				System.out.println("[dangerous] front back");
+//				System.out.println("[dangerous] front back");
 				BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, enemyPosition, BattleGroupType.FRONT_GROUP);
 				BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, enemyPosition, BattleGroupType.FRONT_GROUP);
 			}
 		} else {
 			BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
-			this.changeBattleMode();
+//			this.changeBattleMode();
 		}
 	}
 	

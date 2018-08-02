@@ -96,14 +96,14 @@ public class ProtossBasicBuildPosition {
 			secondPylonPosXX = new int[]{18,110,110,16};
 			secondPylonPosYY = new int[]{31,31,92,90};
 			
-			forgePosXX = new int[]{17,108,107,108};
+			forgePosXX = new int[]{17,108,107,18};
 			forgePosYY = new int[]{35,35,94,94};
-			gatewayPosXX = new int[]{17,108,106,18};
+			gatewayPosXX = new int[]{17,108,107,18};
 			gatewayPosYY = new int[]{32,32,91,91};
-			firstPhotonPosXX = new int[]{15,111,110,16};
-			firstPhotonPosYY = new int[]{33,33,96,94};
-			secondPhotonPosXX = new int[]{15,111,110,16};
-			secondPhotonPosYY = new int[]{35,35,94,92};
+			firstPhotonPosXX = new int[]{15,110,110,16};
+			firstPhotonPosYY = new int[]{33,35,96,94};
+			secondPhotonPosXX = new int[]{15,110,110,16};
+			secondPhotonPosYY = new int[]{35,37,94,96};
 			
 			mapInfo.put(BASE11, new TilePosition(7, 9));
 			mapInfo.put(BASE12, new TilePosition(63, 2));

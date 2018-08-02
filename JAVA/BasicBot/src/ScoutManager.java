@@ -2,9 +2,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import bwapi.Color;
 import bwapi.Position;
+import bwapi.Region;
 import bwapi.TilePosition;
 import bwapi.Unit;
+import bwapi.UnitCommand;
 import bwapi.UnitType;
 import bwta.BWTA;
 import bwta.BaseLocation;
@@ -129,7 +132,7 @@ public class ScoutManager {
 			currentScoutStatus = ScoutStatus.NoScout.ordinal();
 			return;
 		}
-
+		
 		BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
 		
 		if (enemyBaseLocation == null)
@@ -183,26 +186,30 @@ public class ScoutManager {
 				else {
 					currentScoutStatus = ScoutStatus.MoveAroundEnemyBaseLocation.ordinal();
 					
-					if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
-						this.scout(true);
+					if (MyBotModule.Broodwar.getFrameCount() % 2880 == 0) {
+						currentScoutUnit.rightClick(currentScoutTargetPosition);
 					} else {
-						boolean isWorkerInRange = false;
-						for (Unit unit : currentScoutUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS)) {
-							if (unit.getPlayer() == MyBotModule.Broodwar.enemy() &&
-									unit.getType().isWorker()) {
-								if (currentScoutUnit.getType() == UnitType.Protoss_Probe && 
-										unit.getOrderTarget() != null && unit.getOrderTarget().getID() == currentScoutUnit.getID()) {
-									this.scout(true);
-									break;
-								} else {
-									commandUtil.attackMove(currentScoutUnit, unit.getPosition());
-									isWorkerInRange = true;
-									break;
+						if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
+							this.scout(true);
+						} else {
+							boolean isWorkerInRange = false;
+							for (Unit unit : currentScoutUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS)) {
+								if (unit.getPlayer() == MyBotModule.Broodwar.enemy() &&
+										unit.getType().isWorker()) {
+									if (currentScoutUnit.getType() == UnitType.Protoss_Probe && 
+											unit.getOrderTarget() != null && unit.getOrderTarget().getID() == currentScoutUnit.getID()) {
+										this.scout(true);
+										break;
+									} else {
+										commandUtil.attackMove(currentScoutUnit, unit.getPosition());
+										isWorkerInRange = true;
+										break;
+									}
 								}
 							}
-						}
-						if (!isWorkerInRange) {
-							this.scout(false);
+							if (!isWorkerInRange) {
+								this.scout(false);
+							}
 						}
 					}
 				}
@@ -214,14 +221,16 @@ public class ScoutManager {
 		for (String base : ProtossBasicBuildPosition.Instance().getScoutPositions().keySet()) {
 			TilePosition tilePosition = ProtossBasicBuildPosition.Instance().getScoutPositions().get(base);
 			BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
-			if (tilePosition.equals(enemyBaseLocation.getTilePosition())) {
-				continue;
-			}
-			if (currentScoutUnit.getDistance(tilePosition.toPosition()) > 50 && !currentScoutUnit.isMoving()) {
-				if (isRunAway) {
-					currentScoutUnit.move(tilePosition.toPosition(), true);
-				} else {
-					currentScoutUnit.attack(tilePosition.toPosition(), true);
+			if (enemyBaseLocation != null) {
+				if (tilePosition.equals(enemyBaseLocation.getTilePosition())) {
+					continue;
+				}
+				if (currentScoutUnit.getDistance(tilePosition.toPosition()) > 50 && !currentScoutUnit.isMoving()) {
+					if (isRunAway) {
+						currentScoutUnit.move(tilePosition.toPosition(), true);
+					} else {
+						currentScoutUnit.attack(tilePosition.toPosition(), true);
+					}
 				}
 			}
 		}
