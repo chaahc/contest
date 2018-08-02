@@ -149,7 +149,13 @@ public class UXManager {
 	public void drawLeader(UnitType unitType, BattleGroupType battleGroupType) {
 		BattleUnit leader = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(battleGroupType.getValue()).getLeader();
 		if (leader != null) {
-			MyBotModule.Broodwar.drawCircleMap(leader.getUnit().getPosition(), 10, Color.Red, true);
+			if (battleGroupType == BattleGroupType.FRONT_GROUP) {
+				MyBotModule.Broodwar.drawCircleMap(leader.getUnit().getPosition(), 10, Color.Red, true);
+			} else if (battleGroupType == BattleGroupType.SUB_GROUP) {
+				MyBotModule.Broodwar.drawCircleMap(leader.getUnit().getPosition(), 10, Color.Blue, true);
+			}else if (battleGroupType == BattleGroupType.DEFENCE_GROUP) {
+				MyBotModule.Broodwar.drawCircleMap(leader.getUnit().getPosition(), 10, Color.Green, true);
+			}
 		}
 	}
 

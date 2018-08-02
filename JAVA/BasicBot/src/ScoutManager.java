@@ -187,7 +187,10 @@ public class ScoutManager {
 					currentScoutStatus = ScoutStatus.MoveAroundEnemyBaseLocation.ordinal();
 					
 					if (MyBotModule.Broodwar.getFrameCount() % 2880 == 0) {
-						currentScoutUnit.rightClick(currentScoutTargetPosition);
+						if (currentScoutTargetPosition != null && currentScoutTargetPosition.isValid() &&
+								currentScoutUnit.canRightClick()) {
+							currentScoutUnit.rightClick(currentScoutTargetPosition);
+						}
 					} else {
 						if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
 							this.scout(true);

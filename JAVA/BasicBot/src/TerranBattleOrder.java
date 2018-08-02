@@ -8,9 +8,7 @@ public class TerranBattleOrder extends BattleOrder {
 		this.changeBattleMode();
 		
 		super.formationAttack();
-		super.detectEnemyAttack(InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self()).getPosition());
-		super.detectEnemyAttack(InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.self()).getPosition());
-		super.detectEnemyAttack(InformationManager.Instance().getSecondExpansionLocation(MyBotModule.Broodwar.self()).getPosition());
+		super.detectEnemyInSelf();
 		super.observing();
 		super.defenceExpansion();
 		this.enemyExpansionAttack();

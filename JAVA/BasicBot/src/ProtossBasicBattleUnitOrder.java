@@ -55,7 +55,7 @@ public class ProtossBasicBattleUnitOrder extends BattleUnitOrder {
 				BuildingUnit arbiterTribunal = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Arbiter_Tribunal);
 				BuildingUnit cyberneticsCore = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Cybernetics_Core);
 				if (cyberneticsCore != null && cyberneticsCore.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
-						BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) >= 2 &&
+						BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) >= 2 &&
 						MyBotModule.Broodwar.self().minerals() >= 125 && MyBotModule.Broodwar.self().gas() >= 50) {
 					if (arbiterTribunal != null &&
 							BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Arbiter).getUnitCount() < 2) {

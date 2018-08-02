@@ -21,16 +21,16 @@ public class ProtossBasicBuildingUnitOrder extends BuildingUnitOrder {
 		int enemyZealotCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Zealot, MyBotModule.Broodwar.enemy());
 		int enemyDragoonCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Dragoon, MyBotModule.Broodwar.enemy());
 		
-		if (MyBotModule.Broodwar.getFrameCount() % 24 == 0) {
-			System.out.println("[Scout Info] : " + MyBotModule.Broodwar.getFrameCount());
-			System.out.print("Nexus : " + enemyNexusCount);
-			System.out.print(",CyberneticsCore : " + enemyCyberneticsCoreCount);
-			System.out.print(",Assimilator : " + enemyAssimilatorCount);
-			System.out.print(",Photon : " + enemyPhotonCount);
-			System.out.print(",Gateway : " + enemyGatewayCount);
-			System.out.print(",Zealot : " + enemyZealotCount);
-			System.out.println(",Dragoon : " + enemyDragoonCount);
-		}
+//		if (MyBotModule.Broodwar.getFrameCount() % 24 == 0) {
+//			System.out.println("[Scout Info] : " + MyBotModule.Broodwar.getFrameCount());
+//			System.out.print("Nexus : " + enemyNexusCount);
+//			System.out.print(",CyberneticsCore : " + enemyCyberneticsCoreCount);
+//			System.out.print(",Assimilator : " + enemyAssimilatorCount);
+//			System.out.print(",Photon : " + enemyPhotonCount);
+//			System.out.print(",Gateway : " + enemyGatewayCount);
+//			System.out.print(",Zealot : " + enemyZealotCount);
+//			System.out.println(",Dragoon : " + enemyDragoonCount);
+//		}
 		
 		// TODO Auto-generated method stub
 		super.order(UnitType.Protoss_Assimilator, BuildOrderItem.SeedPositionStrategy.MainBaseLocation, new OrderCondition() {

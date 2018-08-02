@@ -93,8 +93,8 @@ public class ProtossBasicBuildPosition {
 			System.out.println("1");
 			firstPylonPosXX = new int[]{17,108,108,18};
 			firstPylonPosYY = new int[]{37,37,96,96};
-			secondPylonPosXX = new int[]{18,110,110,16};
-			secondPylonPosYY = new int[]{31,31,92,90};
+			secondPylonPosXX = new int[]{11,114,114,11};
+			secondPylonPosYY = new int[]{37,37,89,89};
 			
 			forgePosXX = new int[]{17,108,107,18};
 			forgePosYY = new int[]{35,35,94,94};
