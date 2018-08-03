@@ -42,10 +42,10 @@ public class ZergBasicUpgradeOrder extends UpgradeOrder {
 			public boolean isActive() {
 				// TODO Auto-generated method stub
 				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 2 && 
-						MyBotModule.Broodwar.self().minerals() >= 200 && MyBotModule.Broodwar.self().minerals() >= 200) {
+						MyBotModule.Broodwar.self().minerals() >= 200 && MyBotModule.Broodwar.self().gas() >= 200) {
 					return true;
 				}
-				return true;
+				return false;
 			}
 		});
 		super.order(UnitType.Protoss_Forge, UpgradeType.Protoss_Ground_Armor, new OrderCondition() {
@@ -53,17 +53,17 @@ public class ZergBasicUpgradeOrder extends UpgradeOrder {
 			public boolean isActive() {
 				// TODO Auto-generated method stub
 				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 2 && 
-						MyBotModule.Broodwar.self().minerals() >= 250 && MyBotModule.Broodwar.self().minerals() >= 250) {
+						MyBotModule.Broodwar.self().minerals() >= 250 && MyBotModule.Broodwar.self().gas() >= 250) {
 					return true;
 				}
-				return true;
+				return false;
 			}
 		});
 		super.order(UnitType.Protoss_Templar_Archives, TechType.Psionic_Storm, new OrderCondition() {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				return true;
+				return false;
 			}
 		});
 //		super.order(UnitType.Protoss_Forge, UpgradeType.Protoss_Plasma_Shields, new OrderCondition() {
