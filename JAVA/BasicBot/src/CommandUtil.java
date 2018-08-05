@@ -281,10 +281,10 @@ public class CommandUtil {
 		return count;
 	}
 	*/
-	public static Unit getClosestUnit(Unit unit) {
+	public static Unit getClosestUnit(Unit unit, int detectRadius) {
 		double closestDistance = DEFENCE_RADIUS;
 		Unit closestUnit = null;
-		List<Unit> targetUnits = unit.getUnitsInRadius(DEFENCE_RADIUS);
+		List<Unit> targetUnits = unit.getUnitsInRadius(detectRadius);
 		for (Unit targetUnit : targetUnits) {
 			if (targetUnit.getPlayer() == InformationManager.Instance().enemyPlayer) {
 				if (targetUnit.isTargetable()) {

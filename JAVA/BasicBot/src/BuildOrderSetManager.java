@@ -18,6 +18,22 @@ public class BuildOrderSetManager {
 		this.loadProtossBasic();
 		this.loadZergBasic();
 		this.loadTerranBasic();
+		this.loadProtossDragoon();
+	}
+	
+	public void loadProtossDragoon() {
+		InitialBuildOrder initialBuildOrder = new ProtossBasicInitialBuildOrder();
+		
+		BuildingUnitOrder buildUnitOrder = new ProtossDragoonBuildingUnitOrder();
+		
+		BattleUnitOrder battleUnitOrder = new ProtossDragoonBattleUnitOrder();
+		
+		UpgradeOrder upgradeOrder = new ProtossDragoonUpgradeOrder();
+		
+		BattleOrder battleOrder = new ProtossDragoonBattleOrder();
+		
+		BuildOrderSet buildOrderSet = new BuildOrderSet(StrategyType.PROTOSS_DRAGOON, initialBuildOrder, buildUnitOrder, battleUnitOrder, upgradeOrder, battleOrder);
+		this.buildOrderSets.put(StrategyType.PROTOSS_DRAGOON, buildOrderSet);
 	}
 	
 	public void loadProtossBasic() {

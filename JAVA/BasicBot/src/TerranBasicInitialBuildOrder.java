@@ -59,7 +59,6 @@ public class TerranBasicInitialBuildOrder extends InitialBuildOrder {
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Pylon,
 				secondPylonPos, true);
 		
-		StrategyManager.Instance().isInitialBuildOrderStarted = true;
 	}
 
 }

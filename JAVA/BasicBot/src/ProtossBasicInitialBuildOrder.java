@@ -1,7 +1,6 @@
 import bwapi.TilePosition;
-import bwapi.Unit;
 import bwapi.UnitType;
-import bwta.BWTA;
+import bwta.Chokepoint;
 
 public class ProtossBasicInitialBuildOrder extends InitialBuildOrder {
 	@Override
@@ -60,7 +59,8 @@ public class ProtossBasicInitialBuildOrder extends InitialBuildOrder {
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Pylon,
 				secondPylonPos, true);
+		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Assimilator,
+				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		
-		StrategyManager.Instance().isInitialBuildOrderStarted = true;
 	}
 }

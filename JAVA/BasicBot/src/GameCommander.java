@@ -108,15 +108,13 @@ public class GameCommander {
 			UnitType unitType = unit.getType();
 			if (unitType == UnitType.Protoss_Gateway || unitType == UnitType.Protoss_Stargate) {
 				if (unit.canSetRallyPoint()) {
-//					Position center = MapGrid.Instance().getCellCenter(MapGrid.Instance().getRows()>>1, MapGrid.Instance().getCols()>>1);
-					Chokepoint firstChokePoint = InformationManager.Instance().getFirstChokePoint(InformationManager.Instance().selfPlayer);
+					Chokepoint secondChokePoint = InformationManager.Instance().getSecondChokePoint(InformationManager.Instance().selfPlayer);
 					BuildingUnit forge = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge);
 					if (forge != null ) {
 						unit.setRallyPoint(forge.getUnit().getPosition());	
 					} else {
-						unit.setRallyPoint(MyBotModule.Broodwar.getRegionAt(firstChokePoint.getCenter()).getClosestAccessibleRegion().getCenter());
+						unit.setRallyPoint(secondChokePoint.getSides().second);
 					}
-					
 				}
 				BuildingUnitManager.instance().completeBuildingUnitInGroup(unitType, unit.getID());
 			} else if (unitType == UnitType.Protoss_Cybernetics_Core || unitType == UnitType.Protoss_Citadel_of_Adun ||
@@ -124,6 +122,12 @@ public class GameCommander {
 						unitType == UnitType.Protoss_Robotics_Facility || unitType == UnitType.Protoss_Observatory ||
 						unitType == UnitType.Protoss_Robotics_Support_Bay || unitType == UnitType.Protoss_Fleet_Beacon ||
 						unitType == UnitType.Protoss_Arbiter_Tribunal) {
+				if (unitType == UnitType.Protoss_Robotics_Facility) {
+					BuildingUnit forge = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge);
+					if (forge != null ) {
+						unit.setRallyPoint(forge.getUnit().getPosition());	
+					}
+				}
 				BuildingUnitManager.instance().getBuildingUnit(unitType).complete();
 			} else if (unitType == UnitType.Protoss_Nexus || unitType == UnitType.Protoss_Assimilator || unitType == UnitType.Protoss_Pylon) {
 				BuildingUnitManager.instance().completeBuildingUnitInGroup(unitType, unit.getID());

@@ -93,13 +93,13 @@ public class ProtossBasicBuildPosition {
 			System.out.println("1");
 			firstPylonPosXX = new int[]{17,108,108,18};
 			firstPylonPosYY = new int[]{37,37,96,96};
-			secondPylonPosXX = new int[]{11,114,114,11};
+			secondPylonPosXX = new int[]{11,114,114,13};
 			secondPylonPosYY = new int[]{37,37,89,89};
 			
-			forgePosXX = new int[]{17,108,107,18};
+			forgePosXX = new int[]{17,107,107,18};
 			forgePosYY = new int[]{35,35,94,94};
-			gatewayPosXX = new int[]{17,108,107,18};
-			gatewayPosYY = new int[]{32,32,91,91};
+			gatewayPosXX = new int[]{17,106,107,18};
+			gatewayPosYY = new int[]{32,32,90,90};
 			firstPhotonPosXX = new int[]{15,110,110,16};
 			firstPhotonPosYY = new int[]{33,35,96,94};
 			secondPhotonPosXX = new int[]{15,110,110,16};
@@ -399,13 +399,13 @@ public class ProtossBasicBuildPosition {
 		TilePosition enemyBaseLocation = null;
 		if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.CircuitBreaker) {
 			if (mapInfo.get(BASE1).equals(enemy)) {
-				enemyBaseLocation = new TilePosition(107, 3);
+				enemyBaseLocation = new TilePosition(110, 3);
 			} else if (mapInfo.get(BASE5).equals(enemy)) {
-				enemyBaseLocation = new TilePosition(107, 123);
+				enemyBaseLocation = new TilePosition(110, 123);
 			} else if (mapInfo.get(BASE7).equals(enemy)) {
-				enemyBaseLocation = new TilePosition(22, 123);
+				enemyBaseLocation = new TilePosition(18, 123);
 			} else if (mapInfo.get(BASE11).equals(enemy)){
-				enemyBaseLocation = new TilePosition(22, 3);
+				enemyBaseLocation = new TilePosition(18, 3);
 			}
 		}
 		else if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.Spirit) {

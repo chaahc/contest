@@ -195,23 +195,14 @@ public class ScoutManager {
 						if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
 							this.scout(true);
 						} else {
-							boolean isWorkerInRange = false;
 							for (Unit unit : currentScoutUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS)) {
 								if (unit.getPlayer() == MyBotModule.Broodwar.enemy() &&
-										unit.getType().isWorker()) {
-									if (currentScoutUnit.getType() == UnitType.Protoss_Probe && 
-											unit.getOrderTarget() != null && unit.getOrderTarget().getID() == currentScoutUnit.getID()) {
-										this.scout(true);
-										break;
-									} else {
-										commandUtil.attackMove(currentScoutUnit, unit.getPosition());
-										isWorkerInRange = true;
-										break;
-									}
+										unit.getType().isBuilding()) {
+									currentScoutUnit.move(unit.getPosition(), true);
 								}
 							}
-							if (!isWorkerInRange) {
-								this.scout(false);
+							for (Region region : currentScoutUnit.getRegion().getNeighbors()) {
+								currentScoutUnit.move(region.getCenter(), true);
 							}
 						}
 					}

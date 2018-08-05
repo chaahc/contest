@@ -15,6 +15,7 @@ import bwta.Chokepoint;
 
 public class BattleManager {
 	private static final int UNIT_GAP = 80;
+	private static final int DRAGOON_GAP = 160;
 	private static BattleManager instance = new BattleManager();
 
 	public static BattleManager instance() {
@@ -59,11 +60,25 @@ public class BattleManager {
 	public void closestAttack(UnitType unitType, BattleGroupType battleGroupType) {
 		BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType)
 				.get(battleGroupType.getValue());
+		BattleUnit leader = battleUnitGroup.getLeader();
 		for (int unitId : battleUnitGroup.battleUnits.keySet()) {
-			Unit enemyUnit = CommandUtil.getClosestUnit(battleUnitGroup.battleUnits.get(unitId).getUnit());
-			if (enemyUnit != null) {
-				commandUtil.attackMove(battleUnitGroup.battleUnits.get(unitId).getUnit(), enemyUnit.getPosition());
+			BattleUnit battleUnit = battleUnitGroup.battleUnits.get(unitId);
+			if (leader != null && leader.getUnitId() == battleUnit.getUnitId()) {
+				continue;
 			}
+			Unit enemyUnit = CommandUtil.getClosestUnit(battleUnit.getUnit(), CommandUtil.DEFENCE_RADIUS);
+			if (enemyUnit != null) {
+				BaseLocation selfMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
+				if (battleUnit.getUnit().getDistance(selfMainBaseLocation.getPosition())< 10) {
+					commandUtil.attackMove(battleUnit.getUnit(), enemyUnit.getPosition());
+				} else {
+					if (battleUnit.getUnit().isUnderAttack() && battleUnit.getUnit().getShields() + battleUnit.getUnit().getHitPoints() < 100) {
+						battleUnit.getUnit().rightClick(selfMainBaseLocation.getPosition());
+					} else {
+						CommandUtil.patrolMove(battleUnit.getUnit(), enemyUnit.getPosition());
+					}
+				}
+			} 
 		}
 	}
 	
@@ -80,12 +95,13 @@ public class BattleManager {
 		BattleUnit leader = battleUnitGroup.getLeader();
 		
 		if (leader != null) {
-			if (shouldRetreat(leader.getUnit())) {
-				BaseLocation selfFirstExpansionLocation = InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.self());
-				CommandUtil.rightClick(leader.getUnit(), selfFirstExpansionLocation.getPosition());
+			BaseLocation selfMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
+			if (BattleManager.instance().getBattleMode() == BattleManager.BattleMode.DEFENCE &&
+					leader.getUnit().getDistance(selfMainBaseLocation.getPosition())< 10) {
+				commandUtil.attackMove(leader.getUnit(), position);
 			} else {
-				if (battleGroupType == BattleGroupType.DEFENCE_GROUP) {
-					CommandUtil.patrolMove(leader.getUnit(), position);
+				if (leader.getUnit().isUnderAttack() && leader.getUnit().getShields() + leader.getUnit().getHitPoints() < 100) {
+					leader.getUnit().rightClick(selfMainBaseLocation.getPosition());
 				} else {
 					if (unitType == UnitType.Protoss_Zealot) {
 						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(battleGroupType.getValue());
@@ -108,12 +124,7 @@ public class BattleManager {
 		int selfUnitScore = 0;
 		boolean isEnemyUnitInvisible = false;
 		
-		List<Unit> targetUnits = battleUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS);
-		BaseLocation selfFirstExpansionLocation = InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.self());
-		if (battleUnit.getPosition().toTilePosition().getDistance(selfFirstExpansionLocation.getTilePosition())<10) {
-			System.out.println(battleUnit.getID() +"-"+battleUnit.getType() + ", retreat - skip score");
-			return false;
-		}
+		List<Unit> targetUnits = battleUnit.getUnitsInRadius(UnitType.Protoss_Dragoon.groundWeapon().maxRange());
 		for (Unit unit : targetUnits) {
 			if (unit.getType() == UnitType.Protoss_Dark_Templar || 
 					unit.getType() == UnitType.Zerg_Lurker) {
@@ -167,14 +178,22 @@ public class BattleManager {
 				right = new Position(leader.getUnit().getRight()+UNIT_GAP, leader.getUnit().getY());
 				bottom = new Position(leader.getUnit().getX(), leader.getUnit().getBottom()+UNIT_GAP);	
 			} else if (unitType == UnitType.Protoss_Dragoon){
-				leftTop = new Position(leaderRegion.getBoundsLeft(), leaderRegion.getBoundsTop());
-				rightTop = new Position(leaderRegion.getBoundsRight(), leaderRegion.getBoundsTop());
-				leftBottom = new Position(leaderRegion.getBoundsLeft(), leaderRegion.getBoundsBottom());
-				rightBottom = new Position(leaderRegion.getBoundsRight(), leaderRegion.getBoundsBottom());
-				top = new Position(leaderRegion.getX(), leaderRegion.getBoundsTop());
-				left = new Position(leaderRegion.getBoundsLeft(), leaderRegion.getY());
-				right = new Position(leaderRegion.getBoundsRight(), leaderRegion.getY());
-				bottom = new Position(leaderRegion.getX(), leaderRegion.getBoundsBottom());	
+//				leftTop = new Position(leaderRegion.getBoundsLeft(), leaderRegion.getBoundsTop());
+//				rightTop = new Position(leaderRegion.getBoundsRight(), leaderRegion.getBoundsTop());
+//				leftBottom = new Position(leaderRegion.getBoundsLeft(), leaderRegion.getBoundsBottom());
+//				rightBottom = new Position(leaderRegion.getBoundsRight(), leaderRegion.getBoundsBottom());
+//				top = new Position(leaderRegion.getX(), leaderRegion.getBoundsTop());
+//				left = new Position(leaderRegion.getBoundsLeft(), leaderRegion.getY());
+//				right = new Position(leaderRegion.getBoundsRight(), leaderRegion.getY());
+//				bottom = new Position(leaderRegion.getX(), leaderRegion.getBoundsBottom());	
+				leftTop = new Position(leader.getUnit().getLeft()-DRAGOON_GAP, leader.getUnit().getTop()-DRAGOON_GAP);
+				rightTop = new Position(leader.getUnit().getRight()+DRAGOON_GAP, leader.getUnit().getTop()-DRAGOON_GAP);
+				leftBottom = new Position(leader.getUnit().getLeft()-DRAGOON_GAP, leader.getUnit().getBottom()+DRAGOON_GAP);
+				rightBottom = new Position(leader.getUnit().getRight()+DRAGOON_GAP, leader.getUnit().getBottom()+DRAGOON_GAP);
+				top = new Position(leader.getUnit().getX(), leader.getUnit().getTop()-DRAGOON_GAP);
+				left = new Position(leader.getUnit().getLeft()-DRAGOON_GAP, leader.getUnit().getY());
+				right = new Position(leader.getUnit().getRight()+DRAGOON_GAP, leader.getUnit().getY());
+				bottom = new Position(leader.getUnit().getX(), leader.getUnit().getBottom()+DRAGOON_GAP);	
 			}
 			
 			while (unitIds.hasNext()) {
@@ -226,12 +245,12 @@ public class BattleManager {
 		}
 		BattleUnit battleUnit = battleUnitGroup.battleUnits.get(unitId);
 		if (battleUnit.getUnit().exists()) {
-			Chokepoint selfFirstChokepoint = InformationManager.Instance().getFirstChokePoint(MyBotModule.Broodwar.self());
+			BaseLocation selfMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
 			if (shouldRetreat(battleUnit.getUnit())) {
-				CommandUtil.rightClick(battleUnit.getUnit(), selfFirstChokepoint.getCenter());
+				CommandUtil.rightClick(battleUnit.getUnit(), selfMainBaseLocation.getPosition());
 			} else {
 				if (battleUnit.getUnit().isUnderAttack() && battleUnit.getUnit().getShields() + battleUnit.getUnit().getHitPoints() < 100) {
-					battleUnit.getUnit().move(selfFirstChokepoint.getCenter());
+					battleUnit.getUnit().rightClick(selfMainBaseLocation.getPosition());
 				} else {
 					Unit primaryAttackTarget = null;
 					for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(battleUnit.getUnit().getPosition(), UnitType.Protoss_Dragoon.groundWeapon().maxRange())) {

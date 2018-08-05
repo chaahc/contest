@@ -18,7 +18,6 @@ public class StrategyManager {
 	
 	private BuildOrderSet buildOrderSet;
 	public boolean isInitialBuildOrderFinished;
-	public boolean isInitialBuildOrderStarted;
 
 	public StrategyManager() {
 		isInitialBuildOrderFinished = false;
@@ -32,7 +31,7 @@ public class StrategyManager {
 		} else if (MyBotModule.Broodwar.enemy().getRace() == Race.Terran){
 			return StrategyType.TERRAN_BASIC;			
 		} else {
-			return StrategyType.PROTOSS_BASIC;
+			return StrategyType.PROTOSS_DRAGOON;
 		}
 	}
 

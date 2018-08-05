@@ -55,7 +55,7 @@ public class BuildingUnitGroup {
 			if (this.buildingUnitGroup.get(unitId).getUnit().isTraining()) {
 				continue;
 			}
-			if (unitType == UnitType.Protoss_High_Templar) {
+			if (unitType == UnitType.Protoss_High_Templar || unitType == UnitType.Hero_Dark_Templar) {
 				this.buildingUnitGroup.get(unitId).getUnit().train(unitType);
 				break;
 			} else {

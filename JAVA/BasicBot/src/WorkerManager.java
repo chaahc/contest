@@ -193,7 +193,7 @@ public class WorkerManager {
 						worker.move(forge.getUnit().getPosition());
 					}
 				} else {
-					Unit target = CommandUtil.getClosestUnit(worker);
+					Unit target = CommandUtil.getClosestUnit(worker, CommandUtil.UNIT_RADIUS);
 					if (target != null)
 					{
 						commandUtil.attackUnit(worker, target);
@@ -499,7 +499,7 @@ public class WorkerManager {
 				{
 					// if it is a new closest distance, set the pointer
 					double distance = unit.getDistance(buildingPosition.toPosition());
-					if (closestMovingWorker == null || (distance < closestMovingWorkerDistance && unit.isCarryingMinerals() == false && unit.isCarryingGas() == false ))
+					if (closestMovingWorker == null || (distance < closestMovingWorkerDistance && (unit.isCarryingMinerals() == false || unit.isCarryingGas() == false)))
 					{
 						if (BWTA.isConnected(unit.getTilePosition(), buildingPosition)) {
 							closestMovingWorker = unit;
@@ -514,7 +514,7 @@ public class WorkerManager {
 				{
 					// if it is a new closest distance, set the pointer
 					double distance = unit.getDistance(buildingPosition.toPosition());
-					if (closestMiningWorker == null || (distance < closestMiningWorkerDistance && unit.isCarryingMinerals() == false && unit.isCarryingGas() == false ))
+					if (closestMiningWorker == null || (distance < closestMiningWorkerDistance && (unit.isCarryingMinerals() == false || unit.isCarryingGas() == false)))
 					{
 						if (BWTA.isConnected(unit.getTilePosition(), buildingPosition)) {
 							closestMiningWorker = unit;

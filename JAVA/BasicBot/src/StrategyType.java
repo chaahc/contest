@@ -1,5 +1,6 @@
 public enum StrategyType {
 	PROTOSS_BASIC,
+	PROTOSS_DRAGOON,
 	ZERG_BASIC,
 	TERRAN_BASIC
 }
