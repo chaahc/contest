@@ -1,6 +1,7 @@
 import java.util.Iterator;
 import java.util.List;
 
+import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
@@ -115,6 +116,7 @@ public abstract class BuildingUnitOrder implements BuildOrder{
 			int photoCount = 0;
 			boolean isAssimilatorBuildable = true;
 			boolean isVespeneGeyserAvailable = false;
+			TilePosition assimilatorPosition = null;
 			for (Unit unit : nexus.getUnit().getUnitsInRadius(UnitType.Protoss_Nexus.sightRange())) {
 				if (unit.getType() == UnitType.Protoss_Pylon) {
 					pylonCount++;
@@ -122,6 +124,7 @@ public abstract class BuildingUnitOrder implements BuildOrder{
 					photoCount++;
 				} else if (unit.getType() == UnitType.Resource_Vespene_Geyser) {
 					isVespeneGeyserAvailable = true;
+					assimilatorPosition = unit.getPosition().toTilePosition();
 				} else if (unit.getType() == UnitType.Protoss_Assimilator) {
 					isAssimilatorBuildable = false;
 				}
@@ -155,7 +158,7 @@ public abstract class BuildingUnitOrder implements BuildOrder{
 				});
 			}
 			if (isVespeneGeyserAvailable && isAssimilatorBuildable) {
-				this.order(UnitType.Protoss_Assimilator, nexus.getUnit().getTilePosition(), new OrderCondition() {
+				this.order(UnitType.Protoss_Assimilator, assimilatorPosition, new OrderCondition() {
 					@Override
 					public boolean isActive() {
 						// TODO Auto-generated method stub

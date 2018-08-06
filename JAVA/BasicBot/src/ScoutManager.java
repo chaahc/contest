@@ -1,13 +1,8 @@
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
-import bwapi.Color;
 import bwapi.Position;
-import bwapi.Region;
 import bwapi.TilePosition;
 import bwapi.Unit;
-import bwapi.UnitCommand;
 import bwapi.UnitType;
 import bwta.BWTA;
 import bwta.BaseLocation;
@@ -28,8 +23,6 @@ public class ScoutManager {
 	private BaseLocation currentScoutTargetBaseLocation = null;
 	private Position currentScoutTargetPosition = Position.None;
 
-	private CommandUtil commandUtil = new CommandUtil();
-	
 	private static ScoutManager instance = new ScoutManager();
 	
 	/// static singleton 객체를 리턴합니다
@@ -43,18 +36,25 @@ public class ScoutManager {
 		// 1초에 4번만 실행합니다
 		if (MyBotModule.Broodwar.getFrameCount() % 6 != 0) return;
 		
-		// scoutUnit 을 지정하고, scoutUnit 의 이동을 컨트롤함. 
-		if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Probe).getUnitCount() > 7) {
-			BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue());
-			if (battleUnitGroup.getUnitCount() > 1) {
-				assignScoutIfNeeded(UnitType.Protoss_Zealot);
-			} else {
-				assignScoutIfNeeded(UnitType.Protoss_Probe);	
+		if (BattleManager.instance().getBattleMode() == BattleManager.BattleMode.ELEMINATE) {
+			this.eleminateMove(UnitType.Protoss_Zealot, BattleGroupType.FRONT_GROUP);
+			this.eleminateMove(UnitType.Protoss_Dragoon, BattleGroupType.FRONT_GROUP);
+			this.eleminateMove(UnitType.Protoss_Zealot, BattleGroupType.SUB_GROUP);
+			this.eleminateMove(UnitType.Protoss_Dragoon, BattleGroupType.SUB_GROUP);
+			this.eleminateMove(UnitType.Protoss_Zealot, BattleGroupType.DEFENCE_GROUP);
+			this.eleminateMove(UnitType.Protoss_Dragoon, BattleGroupType.DEFENCE_GROUP);
+		} else {
+			// scoutUnit 을 지정하고, scoutUnit 의 이동을 컨트롤함. 
+			if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Probe).getUnitCount() > 7) {
+				BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue());
+				if (battleUnitGroup.getUnitCount() > 1) {
+					assignScoutIfNeeded(UnitType.Protoss_Zealot);
+				} else {
+					assignScoutIfNeeded(UnitType.Protoss_Probe);	
+				}
 			}
+			moveScoutUnit();
 		}
-		
-		moveScoutUnit();
-
 		// 참고로, scoutUnit 의 이동에 의해 발견된 정보를 처리하는 것은 InformationManager.update() 에서 수행함
 	}
 
@@ -195,17 +195,21 @@ public class ScoutManager {
 						if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
 							this.scout(true);
 						} else {
-							for (Unit unit : currentScoutUnit.getUnitsInRadius(CommandUtil.UNIT_RADIUS)) {
-								if (unit.getPlayer() == MyBotModule.Broodwar.enemy() &&
-										unit.getType().isBuilding()) {
-									currentScoutUnit.move(unit.getPosition(), true);
-								}
-							}
-							for (Region region : currentScoutUnit.getRegion().getNeighbors()) {
-								currentScoutUnit.move(region.getCenter(), true);
-							}
+							this.scout(false);
 						}
 					}
+				}
+			}
+		}
+	}
+	
+	public void eleminateMove(UnitType unitType, BattleGroupType battleGroupType) {
+		BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(battleGroupType.getValue());
+		BattleUnit leader = battleUnitGroup.getLeader();
+		if (leader != null) {
+			for (BaseLocation baseLocation : BWTA.getBaseLocations()) {
+				if (!leader.getUnit().isAttacking() && !leader.getUnit().isAttackFrame()) {
+					leader.getUnit().attack(baseLocation.getPosition(), true);
 				}
 			}
 		}
@@ -221,7 +225,7 @@ public class ScoutManager {
 				}
 				if (currentScoutUnit.getDistance(tilePosition.toPosition()) > 50 && !currentScoutUnit.isMoving()) {
 					if (isRunAway) {
-						currentScoutUnit.move(tilePosition.toPosition(), true);
+						currentScoutUnit.rightClick(tilePosition.toPosition(), true);
 					} else {
 						currentScoutUnit.attack(tilePosition.toPosition(), true);
 					}

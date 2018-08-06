@@ -5,7 +5,6 @@ public class TerranBasicInitialBuildOrder extends InitialBuildOrder {
 	@Override
 	public void execute() {
 		// TODO Auto-generated method stub
-		
 		ProtossBasicBuildPosition.Instance().setPosition();
 		TilePosition firstPylonPos = new TilePosition(ProtossBasicBuildPosition.firstPylonPosX, ProtossBasicBuildPosition.firstPylonPosY);
 		TilePosition secondPylonPos = new TilePosition(ProtossBasicBuildPosition.secondPylonPosX, ProtossBasicBuildPosition.secondPylonPosY);
@@ -58,7 +57,7 @@ public class TerranBasicInitialBuildOrder extends InitialBuildOrder {
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Pylon,
 				secondPylonPos, true);
-		
+		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Assimilator,
+				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 	}
-
 }

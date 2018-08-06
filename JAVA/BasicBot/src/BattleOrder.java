@@ -344,10 +344,25 @@ public class BattleOrder {
 				if (enemyBasePosition == null) {
 					enemyBasePosition = enemyLocation.getTilePosition();
 				}
-				BattleManager.instance().onewayAttack(UnitType.Protoss_Zealot, BattleGroupType.FRONT_GROUP, enemyBasePosition.toPosition());
-				BattleManager.instance().onewayAttack(UnitType.Protoss_Dragoon, BattleGroupType.FRONT_GROUP, enemyBasePosition.toPosition());
-				BattleManager.instance().onewayAttack(UnitType.Protoss_Zealot, BattleGroupType.SUB_GROUP, enemyBasePosition.toPosition());
-				BattleManager.instance().onewayAttack(UnitType.Protoss_Dragoon, BattleGroupType.SUB_GROUP, enemyBasePosition.toPosition());
+				Position targetUnit = null;
+				for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(enemyBasePosition.toPosition(), TOTAL_RADIUS)) {
+					if (unit.getPlayer() == MyBotModule.Broodwar.enemy() &&
+							unit.getType().isBuilding()) {
+						targetUnit = unit.getPosition();
+						break;
+					}
+				}
+				if (targetUnit == null) {
+					BattleManager.instance().onewayAttack(UnitType.Protoss_Zealot, BattleGroupType.FRONT_GROUP, enemyBasePosition.toPosition());
+					BattleManager.instance().onewayAttack(UnitType.Protoss_Dragoon, BattleGroupType.FRONT_GROUP, enemyBasePosition.toPosition());
+					BattleManager.instance().onewayAttack(UnitType.Protoss_Zealot, BattleGroupType.SUB_GROUP, enemyBasePosition.toPosition());
+					BattleManager.instance().onewayAttack(UnitType.Protoss_Dragoon, BattleGroupType.SUB_GROUP, enemyBasePosition.toPosition());
+				} else {
+					BattleManager.instance().onewayAttack(UnitType.Protoss_Zealot, BattleGroupType.FRONT_GROUP, targetUnit);
+					BattleManager.instance().onewayAttack(UnitType.Protoss_Dragoon, BattleGroupType.FRONT_GROUP, targetUnit);
+					BattleManager.instance().onewayAttack(UnitType.Protoss_Zealot, BattleGroupType.SUB_GROUP, targetUnit);
+					BattleManager.instance().onewayAttack(UnitType.Protoss_Dragoon, BattleGroupType.SUB_GROUP, targetUnit);
+				}
 			}
 		}
 	}
@@ -393,7 +408,10 @@ public class BattleOrder {
 						if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
 							if (unit.getType() == UnitType.Protoss_Robotics_Facility ||
 								unit.getType() == UnitType.Protoss_Observatory ||
-								unit.getType() == UnitType.Protoss_Probe) {
+								unit.getType() == UnitType.Protoss_Probe ||
+								unit.getType() == UnitType.Terran_Missile_Turret ||
+								unit.getType() == UnitType.Terran_Comsat_Station ||
+								unit.getType() == UnitType.Terran_SCV) {
 								targetUnit = unit;
 								break;
 							} else if (unit.getType() == UnitType.Protoss_Photon_Cannon) {
@@ -434,13 +452,28 @@ public class BattleOrder {
 				BattleUnit battleUnit = battleUnitGroup.battleUnits.get(unitId);
 				((WeaponTrainable) battleUnit).train();
 				
-				Unit enemy = CommandUtil.getClosestUnit(battleUnit.getUnit(), CommandUtil.DEFENCE_RADIUS);
+				Unit enemy = null;
+				for (Unit unit : battleUnit.getUnit().getUnitsInRadius(CommandUtil.DEFENCE_RADIUS)) {
+					if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
+						if (unit.getType() == UnitType.Terran_Siege_Tank_Siege_Mode ||
+								unit.getType() == UnitType.Terran_Siege_Tank_Tank_Mode ||
+								unit.getType() == UnitType.Terran_SCV) {
+							enemy = unit;
+							break;
+						}
+					}
+				}
 				if (enemy != null) {
 					if (unitType == UnitType.Protoss_Reaver && battleUnit.getUnit().getScarabCount() > 0) {
 						battleUnit.getUnit().attack(enemy);
 					} else if (unitType == UnitType.Protoss_Carrier && battleUnit.getUnit().getInterceptorCount() > 0) {
-						battleUnit.getUnit().attack(enemy);
+						if (!battleUnit.getUnit().isAttacking() && !battleUnit.getUnit().isAttackFrame()) {
+							battleUnit.getUnit().attack(enemy);
+						}
 					}
+				} else {
+					BaseLocation enemyMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
+					battleUnit.getUnit().attack(enemyMainBaseLocation.getPosition());
 				}
 			}
 		}

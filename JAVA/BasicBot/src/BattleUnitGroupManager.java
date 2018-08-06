@@ -90,6 +90,7 @@ public class BattleUnitGroupManager {
 		} else if (UnitType.Protoss_Dark_Templar == unitType) {
 			BattleUnit battleUnit = new DarkTemplar(unitId, unit, unitType);
 			singleGroups.get(unitType).addBattleUnit(battleUnit);
+			BattleManager.createdDarkTemplarCount++;
 		} else if (UnitType.Protoss_Observer == unitType) {
 			BattleUnit battleUnit = new Observer(unitId, unit, unitType);
 			singleGroups.get(unitType).addBattleUnit(battleUnit);

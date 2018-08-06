@@ -54,7 +54,7 @@ public class BattleManager {
 	}
 	
 	private BattleMode battleMode = BattleMode.WAIT;
-	
+	protected static int createdDarkTemplarCount = 0;
 	private static Queue<HighTemplar> archonCandidates = new LinkedList<HighTemplar>();
 	
 	public void closestAttack(UnitType unitType, BattleGroupType battleGroupType) {
@@ -281,7 +281,7 @@ public class BattleManager {
 	}
 	
 	public enum BattleMode {
-		WAIT, DEFENCE, TOTAL_ATTACK, ONEWAY_ATTACK;
+		WAIT, DEFENCE, TOTAL_ATTACK, ONEWAY_ATTACK, ELEMINATE;
 	}
 	
 	public int getArchonCandidatesCount() {

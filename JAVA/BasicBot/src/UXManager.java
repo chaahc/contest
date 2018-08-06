@@ -135,7 +135,7 @@ public class UXManager {
 			MyBotModule.Broodwar.drawTextMap(mouseX + 20, mouseY, "(" + (int)(mouseX/Config.TILE_SIZE) + ", " +  (int)(mouseY/Config.TILE_SIZE) + ")");
 		}
 		
-		if (ScoutManager.Instance().getScoutUnit() != null) {
+		if (ScoutManager.Instance().getScoutUnit() != null && ScoutManager.Instance().getScoutUnit().exists()) {
 			MyBotModule.Broodwar.drawCircleMap(ScoutManager.Instance().getScoutUnit().getPosition(), 10, Color.Yellow, true);
 		}
 		this.drawLeader(UnitType.Protoss_Zealot, BattleGroupType.FRONT_GROUP);
@@ -148,7 +148,7 @@ public class UXManager {
 	
 	public void drawLeader(UnitType unitType, BattleGroupType battleGroupType) {
 		BattleUnit leader = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(battleGroupType.getValue()).getLeader();
-		if (leader != null) {
+		if (leader != null && leader.getUnit().exists()) {
 			if (battleGroupType == BattleGroupType.FRONT_GROUP) {
 				MyBotModule.Broodwar.drawCircleMap(leader.getUnit().getPosition(), 10, Color.Red, true);
 			} else if (battleGroupType == BattleGroupType.SUB_GROUP) {

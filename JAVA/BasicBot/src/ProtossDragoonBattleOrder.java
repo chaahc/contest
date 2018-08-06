@@ -46,27 +46,33 @@ public class ProtossDragoonBattleOrder extends BattleOrder {
 		
 		int selfZealotCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Zealot, MyBotModule.Broodwar.self());
 		int selfDragoonCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Dragoon, MyBotModule.Broodwar.self());
-		
-		BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
-		if (enemyBaseLocation != null) {
-			int enemyCount = 0;
-			for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(enemyBaseLocation.getPosition(), TOTAL_RADIUS)) {
-				if (unit.getPlayer() == MyBotModule.Broodwar.enemy() &&
-						unit.getType().isBuilding()) {
-					enemyCount++;
+
+		if (MyBotModule.Broodwar.self().supplyUsed() == MyBotModule.Broodwar.self().supplyTotal()) {
+			BattleManager.instance().setBattleMode(BattleManager.BattleMode.ELEMINATE);
+		} else {
+			BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
+			if (enemyBaseLocation != null) {
+				int enemyCount = 0;
+				Position target = null;
+				for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(enemyBaseLocation.getPosition(), TOTAL_RADIUS)) {
+					if (unit.getPlayer() == MyBotModule.Broodwar.enemy() &&
+							unit.getType().isBuilding()) {
+						enemyCount++;
+						target = unit.getPosition();
+					}
 				}
-			}
-			int gap = (selfZealotCount + selfDragoonCount) - (enemyZealotCount + enemyDragoonCount);
-			if (gap > 0 && enemyCount > 0) {
-				if (InformationManager.Instance().selfPlayer.supplyUsed() > 300) { 
-					BattleManager.instance().setBattleMode(BattleManager.BattleMode.ONEWAY_ATTACK);
-				} else if (InformationManager.Instance().selfPlayer.supplyUsed() > 200) {
-					BattleManager.instance().setBattleMode(BattleManager.BattleMode.TOTAL_ATTACK);
+				int gap = (selfZealotCount + selfDragoonCount) - (enemyZealotCount + enemyDragoonCount);
+				if (gap > 0 && enemyCount > 0) {
+					if (InformationManager.Instance().selfPlayer.supplyUsed() > 300) { 
+						BattleManager.instance().setBattleMode(BattleManager.BattleMode.ONEWAY_ATTACK);
+					} else if (InformationManager.Instance().selfPlayer.supplyUsed() > 200) {
+						BattleManager.instance().setBattleMode(BattleManager.BattleMode.TOTAL_ATTACK);
+					} else {
+						BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
+					}
 				} else {
 					BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
 				}
-			} else {
-				BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
 			}
 		}
 	}
