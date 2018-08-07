@@ -10,6 +10,7 @@ public class ProtossDragoonBattleUnitOrder extends BattleUnitOrder {
 			public boolean isActive() {
 				// TODO Auto-generated method stub
 				if (BattleManager.createdDarkTemplarCount < 7) {
+					System.out.println("[dark templar] : " + BattleManager.createdDarkTemplarCount);
 					int darkTemplarCount = 0;
 					BuildingUnitGroup gatewayGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Gateway);
 					for (int unitId : gatewayGroup.buildingUnitGroup.keySet()) {

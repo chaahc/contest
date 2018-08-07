@@ -62,7 +62,7 @@ public class ProtossDragoonBattleOrder extends BattleOrder {
 					}
 				}
 				int gap = (selfZealotCount + selfDragoonCount) - (enemyZealotCount + enemyDragoonCount);
-				if (gap > 0 && enemyCount > 0) {
+				if (gap > 0 || enemyCount > 0) {
 					if (InformationManager.Instance().selfPlayer.supplyUsed() > 300) { 
 						BattleManager.instance().setBattleMode(BattleManager.BattleMode.ONEWAY_ATTACK);
 					} else if (InformationManager.Instance().selfPlayer.supplyUsed() > 200) {

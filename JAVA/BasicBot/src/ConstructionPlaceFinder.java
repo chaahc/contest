@@ -322,8 +322,12 @@ public class ConstructionPlaceFinder {
 			{
 				if (currentX >= 0 && currentX < MyBotModule.Broodwar.mapWidth() && currentY >= 0 && currentY < MyBotModule.Broodwar.mapHeight()) {
 
-					isPossiblePlace = canBuildHereWithSpace(new TilePosition(currentX, currentY), b, buildingGapSpace);
-
+					for (int i =0 ;i <5;i++) {
+						isPossiblePlace = canBuildHereWithSpace(new TilePosition(currentX, currentY), b, buildingGapSpace);
+						if (isPossiblePlace) {
+							break;
+						}
+					}
 					if (isPossiblePlace) {
 						resultPosition = new TilePosition(currentX, currentY);
 						break;

@@ -452,30 +452,52 @@ public class BattleOrder {
 				BattleUnit battleUnit = battleUnitGroup.battleUnits.get(unitId);
 				((WeaponTrainable) battleUnit).train();
 				
-				Unit enemy = null;
-				for (Unit unit : battleUnit.getUnit().getUnitsInRadius(CommandUtil.DEFENCE_RADIUS)) {
-					if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
-						if (unit.getType() == UnitType.Terran_Siege_Tank_Siege_Mode ||
-								unit.getType() == UnitType.Terran_Siege_Tank_Tank_Mode ||
-								unit.getType() == UnitType.Terran_SCV) {
-							enemy = unit;
-							break;
-						}
-					}
-				}
-				if (enemy != null) {
-					if (unitType == UnitType.Protoss_Reaver && battleUnit.getUnit().getScarabCount() > 0) {
-						battleUnit.getUnit().attack(enemy);
-					} else if (unitType == UnitType.Protoss_Carrier && battleUnit.getUnit().getInterceptorCount() > 0) {
-						if (!battleUnit.getUnit().isAttacking() && !battleUnit.getUnit().isAttackFrame()) {
-							battleUnit.getUnit().attack(enemy);
-						}
-					}
+				if (battleUnit.getUnit().isUnderAttack()) {
+					BaseLocation selfMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
+					battleUnit.getUnit().rightClick(selfMainBaseLocation.getPosition());
 				} else {
-					BaseLocation enemyMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
-					battleUnit.getUnit().attack(enemyMainBaseLocation.getPosition());
+					Unit enemy = null;
+					for (Unit unit : battleUnit.getUnit().getUnitsInRadius(UnitType.Protoss_Carrier.groundWeapon().maxRange())) {
+						if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
+							if (unit.getType() == UnitType.Terran_Siege_Tank_Siege_Mode ||
+									unit.getType() == UnitType.Terran_Siege_Tank_Tank_Mode ||
+									unit.getType() == UnitType.Terran_SCV) {
+								enemy = unit;
+								break;
+							}
+						}
+					}
+					if (enemy != null) {
+						if (unitType == UnitType.Protoss_Reaver && battleUnit.getUnit().getScarabCount() > 0) {
+							battleUnit.getUnit().attack(enemy);
+						} else if (unitType == UnitType.Protoss_Carrier && battleUnit.getUnit().getInterceptorCount() > 5) {
+							BattleManager.instance().setBattleMode(BattleManager.BattleMode.CARRIER_ATTACK);
+							if (!battleUnit.getUnit().isAttacking() && !battleUnit.getUnit().isAttackFrame()) {
+								battleUnit.getUnit().patrol(enemy.getPosition());
+								for (Unit interceptor : battleUnit.getUnit().getInterceptors()) {
+									interceptor.attack(enemy);
+								}
+							}
+						}
+					} else {
+						if (unitType == UnitType.Protoss_Carrier && battleUnit.getUnit().getInterceptorCount() > 5) {
+							BattleManager.instance().setBattleMode(BattleManager.BattleMode.CARRIER_ATTACK);
+							BattleUnitGroup frontDragoonGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue());
+							BattleUnit frontDragoon = frontDragoonGroup.getLeader();
+							if (frontDragoon != null) {
+								CommandUtil.patrolMove(battleUnit.getUnit(), frontDragoon.getUnit().getPosition());
+							} else {
+								if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier).getUnitCount() > 5) {
+									BaseLocation enemyMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
+									CommandUtil.patrolMove(battleUnit.getUnit(), enemyMainBaseLocation.getPosition());
+								}
+							}
+						}
+					}
 				}
 			}
+		} else {
+			BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
 		}
 	}
 	

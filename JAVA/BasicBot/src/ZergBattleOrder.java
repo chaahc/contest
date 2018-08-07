@@ -26,13 +26,13 @@ public class ZergBattleOrder extends BattleOrder {
 	
 	@Override
 	protected void changeBattleMode() {
-		int enemyNexusCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Nexus, MyBotModule.Broodwar.enemy());
+		int enemyHatcheryCount = InformationManager.Instance().getNumUnits(UnitType.Zerg_Hatchery, MyBotModule.Broodwar.enemy());
 //		int enemyCyberneticsCoreCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Cybernetics_Core, MyBotModule.Broodwar.enemy());
 //		int enemyAssimilatorCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Assimilator, MyBotModule.Broodwar.enemy());
 //		int enemyPhotonCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Photon_Cannon, MyBotModule.Broodwar.enemy());
 //		int enemyGatewayCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Gateway, MyBotModule.Broodwar.enemy());
-		int enemyZealotCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Zealot, MyBotModule.Broodwar.enemy());
-		int enemyDragoonCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Dragoon, MyBotModule.Broodwar.enemy());
+		int enemyHydraliskCount = InformationManager.Instance().getNumUnits(UnitType.Zerg_Hydralisk, MyBotModule.Broodwar.enemy());
+		int enemyMutaliskCount = InformationManager.Instance().getNumUnits(UnitType.Zerg_Mutalisk, MyBotModule.Broodwar.enemy());
 		
 		int selfZealotCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Zealot, MyBotModule.Broodwar.self());
 		int selfDragoonCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Dragoon, MyBotModule.Broodwar.self());
@@ -51,8 +51,8 @@ public class ZergBattleOrder extends BattleOrder {
 						target = unit.getPosition();
 					}
 				}
-				int gap = (selfZealotCount + selfDragoonCount) - (enemyZealotCount + enemyDragoonCount);
-				if (gap > 0 && enemyCount > 0) {
+				int gap = (selfZealotCount + selfDragoonCount) - (enemyHydraliskCount + enemyMutaliskCount);
+				if (gap > 0 || enemyCount > 0) {
 					if (InformationManager.Instance().selfPlayer.supplyUsed() > 300) { 
 						BattleManager.instance().setBattleMode(BattleManager.BattleMode.ONEWAY_ATTACK);
 					} else if (InformationManager.Instance().selfPlayer.supplyUsed() > 200) {

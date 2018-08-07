@@ -26,20 +26,20 @@ public class TerranBasicInitialBuildOrder extends InitialBuildOrder {
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Pylon,
-				firstPylonPos, true);
+				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		//9
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
+				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
+		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Assimilator,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		//10
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Gateway,
-				firstGatewayPos, true);
+				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		//11
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
-		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Forge,
-				forgePos, true);
 		//12
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
@@ -47,17 +47,8 @@ public class TerranBasicInitialBuildOrder extends InitialBuildOrder {
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Zealot);
-		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Photon_Cannon,
-				firstPhotoPos, true);
 		//14
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
-				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
-		//15
-		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
-				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
-		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Pylon,
-				secondPylonPos, true);
-		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Assimilator,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);
 	}
 }

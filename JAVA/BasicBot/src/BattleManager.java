@@ -69,7 +69,7 @@ public class BattleManager {
 			Unit enemyUnit = CommandUtil.getClosestUnit(battleUnit.getUnit(), CommandUtil.DEFENCE_RADIUS);
 			if (enemyUnit != null) {
 				BaseLocation selfMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
-				if (battleUnit.getUnit().getDistance(selfMainBaseLocation.getPosition())< 10) {
+				if (battleUnit.getUnit().getDistance(selfMainBaseLocation.getPosition())< 50) {
 					commandUtil.attackMove(battleUnit.getUnit(), enemyUnit.getPosition());
 				} else {
 					if (battleUnit.getUnit().isUnderAttack() && battleUnit.getUnit().getShields() + battleUnit.getUnit().getHitPoints() < 100) {
@@ -97,7 +97,7 @@ public class BattleManager {
 		if (leader != null) {
 			BaseLocation selfMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
 			if (BattleManager.instance().getBattleMode() == BattleManager.BattleMode.DEFENCE &&
-					leader.getUnit().getDistance(selfMainBaseLocation.getPosition())< 10) {
+					leader.getUnit().getDistance(selfMainBaseLocation.getPosition())< 50) {
 				commandUtil.attackMove(leader.getUnit(), position);
 			} else {
 				if (leader.getUnit().isUnderAttack() && leader.getUnit().getShields() + leader.getUnit().getHitPoints() < 100) {
@@ -281,7 +281,7 @@ public class BattleManager {
 	}
 	
 	public enum BattleMode {
-		WAIT, DEFENCE, TOTAL_ATTACK, ONEWAY_ATTACK, ELEMINATE;
+		WAIT, DEFENCE, TOTAL_ATTACK, ONEWAY_ATTACK, ELEMINATE, CARRIER_ATTACK;
 	}
 	
 	public int getArchonCandidatesCount() {

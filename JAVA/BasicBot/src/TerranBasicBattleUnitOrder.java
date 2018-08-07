@@ -1,3 +1,4 @@
+import bwapi.Unit;
 import bwapi.UnitType;
 
 public class TerranBasicBattleUnitOrder extends BattleUnitOrder {
@@ -8,7 +9,7 @@ public class TerranBasicBattleUnitOrder extends BattleUnitOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BattleManager.createdDarkTemplarCount < 7) {
+				if (BattleManager.createdDarkTemplarCount < 6) {
 					int darkTemplarCount = 0;
 					BuildingUnitGroup gatewayGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Gateway);
 					for (int unitId : gatewayGroup.buildingUnitGroup.keySet()) {
@@ -77,14 +78,23 @@ public class TerranBasicBattleUnitOrder extends BattleUnitOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				BuildingUnit templarArchives = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Templar_Archives);
+				boolean isTraining = false;
+				BuildingUnitGroup stargateGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Stargate);
+				for (int unitId : stargateGroup.buildingUnitGroup.keySet()) {
+					BuildingUnit stargate = stargateGroup.buildingUnitGroup.get(unitId);
+					isTraining = stargate.getUnit().isTraining();
+					if (isTraining) {
+						break;
+					}
+				}
 				BuildingUnit cyberneticsCore = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Cybernetics_Core);
 				if (cyberneticsCore != null && cyberneticsCore.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
-						(BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() == 0 ||
-							templarArchives != null &&
-							templarArchives.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
-							BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Dark_Templar).getUnitCount() >= 4) &&
-						MyBotModule.Broodwar.self().minerals() >= 125 && MyBotModule.Broodwar.self().gas() >= 50) {
+						(BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier).getUnitCount() > 0 &&
+						isTraining &&
+						MyBotModule.Broodwar.self().minerals() >= 350 && MyBotModule.Broodwar.self().gas() >= 250) ||
+						(BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier).getUnitCount() == 0 &&
+						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 6 &&
+						MyBotModule.Broodwar.self().minerals() >= 125 && MyBotModule.Broodwar.self().gas() >= 50)) {
 					return true;
 				}
 				return false;
@@ -97,7 +107,7 @@ public class TerranBasicBattleUnitOrder extends BattleUnitOrder {
 				// TODO Auto-generated method stub
 				if (BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.DEFENCE_GROUP.getValue()).getUnitCount() == 0 ||
 						(BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 5 && 
-						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 3) &&
+						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 6) &&
 						MyBotModule.Broodwar.self().minerals() >= 100) {
 					return true;
 				}

@@ -17,24 +17,24 @@ public class TerranBasicUpgradeOrder extends UpgradeOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Dark_Templar).getUnitCount() > 3 &&
+				if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier).getUnitCount() > 2 &&
 						MyBotModule.Broodwar.self().minerals() >= 150 && MyBotModule.Broodwar.self().gas() >= 150) {
 					return true;
 				}
 				return false;
 			}
 		});
-		super.order(UnitType.Protoss_Templar_Archives, TechType.Psionic_Storm, new OrderCondition() {
-			@Override
-			public boolean isActive() {
-				// TODO Auto-generated method stub
-				if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Dark_Templar).getUnitCount() > 3 &&
-						MyBotModule.Broodwar.self().minerals() >= 200 && MyBotModule.Broodwar.self().gas() >= 200) {
-					return true;
-				}
-				return false;
-			}
-		});
+//		super.order(UnitType.Protoss_Templar_Archives, TechType.Psionic_Storm, new OrderCondition() {
+//			@Override
+//			public boolean isActive() {
+//				// TODO Auto-generated method stub
+//				if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Dark_Templar).getUnitCount() > 3 &&
+//						MyBotModule.Broodwar.self().minerals() >= 200 && MyBotModule.Broodwar.self().gas() >= 200) {
+//					return true;
+//				}
+//				return false;
+//			}
+//		});
 		super.order(UnitType.Protoss_Observatory, UpgradeType.Gravitic_Boosters, new OrderCondition() {
 			@Override
 			public boolean isActive() {
