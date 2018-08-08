@@ -47,7 +47,8 @@ public class ZergBasicBattleUnitOrder extends BattleUnitOrder {
 					for (int unitId : gatewayGroup.buildingUnitGroup.keySet()) {
 						BuildingUnit gateway = gatewayGroup.buildingUnitGroup.get(unitId);
 						if (gateway.getUnit().isTraining()) {
-							if (gateway.getUnit().getTrainingQueue().get(0) == UnitType.Protoss_High_Templar) {
+							if (!gateway.getUnit().getTrainingQueue().isEmpty() &&
+									gateway.getUnit().getTrainingQueue().get(0) == UnitType.Protoss_High_Templar) {
 								highTemplarCount++;
 							} else {
 								attackUnitCount++;

@@ -90,7 +90,7 @@ public class TerranBattleOrder extends BattleOrder {
 		}
 		int dragoonCount = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount();
 		if (BattleManager.instance().getBattleMode() == BattleManager.BattleMode.WAIT) {
-			if (dragoonCount > 8) {
+			if (dragoonCount > 0) {
 				BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
 				if (enemyBaseLocation != null) {
 					BaseLocation enemyFirstExpansionLocation = InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.enemy());
