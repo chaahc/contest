@@ -80,4 +80,19 @@ public class BuildOrderSetManager {
 		BuildOrderSet buildOrderSet = new BuildOrderSet(StrategyType.TERRAN_BASIC, initialBuildOrder, buildUnitOrder, battleUnitOrder, upgradeOrder, battleOrder);
 		this.buildOrderSets.put(StrategyType.TERRAN_BASIC, buildOrderSet);
 	}
+	
+	public void loadFastCarrier() {
+		InitialBuildOrder initialBuildOrder = new FastCarrierInitialBuildOrder();
+		
+		BuildingUnitOrder buildUnitOrder = new FastCarrierBuildingUnitOrder();
+		
+		BattleUnitOrder battleUnitOrder = new FastCarrierBattleUnitOrder();
+		
+		UpgradeOrder upgradeOrder = new FastCarrierUpgradeOrder();
+		
+		BattleOrder battleOrder = new FastCarrierBattleOrder();
+		
+		BuildOrderSet buildOrderSet = new BuildOrderSet(StrategyType.FAST_CARRIER, initialBuildOrder, buildUnitOrder, battleUnitOrder, upgradeOrder, battleOrder);
+		this.buildOrderSets.put(StrategyType.FAST_CARRIER, buildOrderSet);
+	}
 }
