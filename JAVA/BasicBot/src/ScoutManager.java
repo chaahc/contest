@@ -193,7 +193,12 @@ public class ScoutManager {
 						}
 					} else {
 						if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
-							this.scout(true);
+							if (currentScoutUnit.getDistance(InformationManager.Instance().getSecondChokePoint(MyBotModule.Broodwar.self())) < 50) {
+								BaseLocation selfMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
+								currentScoutUnit.rightClick(selfMainBaseLocation.getPosition());
+							} else {
+								this.scout(true);
+							}
 						} else {
 							this.scout(false);
 						}
@@ -208,8 +213,21 @@ public class ScoutManager {
 		BattleUnit leader = battleUnitGroup.getLeader();
 		if (leader != null) {
 			for (BaseLocation baseLocation : BWTA.getBaseLocations()) {
-				if (!leader.getUnit().isAttacking() && !leader.getUnit().isAttackFrame()) {
-					leader.getUnit().attack(baseLocation.getPosition(), true);
+				if (baseLocation.getTilePosition().equals(MyBotModule.Broodwar.self().getStartLocation())) {
+					continue;					
+				}
+				if (baseLocation.isStartLocation()) {
+					if (battleGroupType == BattleGroupType.FRONT_GROUP) {
+						if (!leader.getUnit().isAttacking() && !leader.getUnit().isAttackFrame()) {
+							leader.getUnit().attack(baseLocation.getPosition(), true);
+						}
+					}
+				} else {
+					if (battleGroupType == BattleGroupType.SUB_GROUP) {
+						if (!leader.getUnit().isAttacking() && !leader.getUnit().isAttackFrame()) {
+							leader.getUnit().attack(baseLocation.getPosition(), true);
+						}
+					}
 				}
 			}
 		}

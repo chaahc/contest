@@ -32,7 +32,7 @@ public class TerrranBasicBuildingUnitOrder extends BuildingUnitOrder {
 //			}
 //		});
 		
-		super.order(UnitType.Protoss_Cybernetics_Core, BuildOrderItem.SeedPositionStrategy.MainBaseBackYard, new OrderCondition() {
+		super.order(UnitType.Protoss_Cybernetics_Core, BuildOrderItem.SeedPositionStrategy.MainBaseLocation, new OrderCondition() {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
@@ -45,7 +45,7 @@ public class TerrranBasicBuildingUnitOrder extends BuildingUnitOrder {
 			}
 		});
 		
-		super.order(UnitType.Protoss_Citadel_of_Adun, BuildOrderItem.SeedPositionStrategy.MainBaseBackYard, new OrderCondition() {
+		super.order(UnitType.Protoss_Citadel_of_Adun, BuildOrderItem.SeedPositionStrategy.MainBaseLocation, new OrderCondition() {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
@@ -127,7 +127,7 @@ public class TerrranBasicBuildingUnitOrder extends BuildingUnitOrder {
 			}
 		});
 		
-		super.order(UnitType.Protoss_Observatory, BuildOrderItem.SeedPositionStrategy.MainBaseBackYard, new OrderCondition() {
+		super.order(UnitType.Protoss_Observatory, BuildOrderItem.SeedPositionStrategy.MainBaseLocation, new OrderCondition() {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
@@ -147,7 +147,7 @@ public class TerrranBasicBuildingUnitOrder extends BuildingUnitOrder {
 		
 		this.orderPylonGateways();
 		
-		super.order(UnitType.Protoss_Stargate, BuildOrderItem.SeedPositionStrategy.MainBaseBackYard, new OrderCondition() {
+		super.order(UnitType.Protoss_Stargate, BuildOrderItem.SeedPositionStrategy.MainBaseLocation, new OrderCondition() {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
@@ -174,7 +174,7 @@ public class TerrranBasicBuildingUnitOrder extends BuildingUnitOrder {
 			}
 		});
 		
-		super.order(UnitType.Protoss_Arbiter_Tribunal, BuildOrderItem.SeedPositionStrategy.MainBaseBackYard, new OrderCondition() {
+		super.order(UnitType.Protoss_Arbiter_Tribunal, BuildOrderItem.SeedPositionStrategy.MainBaseLocation, new OrderCondition() {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub

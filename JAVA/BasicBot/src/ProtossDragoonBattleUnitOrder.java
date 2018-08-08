@@ -10,7 +10,6 @@ public class ProtossDragoonBattleUnitOrder extends BattleUnitOrder {
 			public boolean isActive() {
 				// TODO Auto-generated method stub
 				if (BattleManager.createdDarkTemplarCount < 7) {
-					System.out.println("[dark templar] : " + BattleManager.createdDarkTemplarCount);
 					int darkTemplarCount = 0;
 					BuildingUnitGroup gatewayGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Gateway);
 					for (int unitId : gatewayGroup.buildingUnitGroup.keySet()) {
@@ -99,7 +98,8 @@ public class ProtossDragoonBattleUnitOrder extends BattleUnitOrder {
 						(BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() == 0 ||
 							templarArchives != null &&
 							templarArchives.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
-							BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Dark_Templar).getUnitCount() >= 4) &&
+							(BattleManager.createdDarkTemplarCount > 6 ||
+							BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Dark_Templar).getUnitCount() >= 4)) &&
 						MyBotModule.Broodwar.self().minerals() >= 125 && MyBotModule.Broodwar.self().gas() >= 50) {
 					return true;
 				}
@@ -142,7 +142,7 @@ public class ProtossDragoonBattleUnitOrder extends BattleUnitOrder {
 							}
 						}
 					}
-					if ((highTemplarCount == 0 || attackUnitCount >= highTemplarCount * 8) &&
+					if ((attackUnitCount > 7 && (highTemplarCount == 0 || attackUnitCount >= highTemplarCount * 8)) &&
 							MyBotModule.Broodwar.self().minerals() >= 50 && MyBotModule.Broodwar.self().gas() >= 150) {
 						return true;
 					}

@@ -54,7 +54,7 @@ public class ZergBasicBattleUnitOrder extends BattleUnitOrder {
 							}
 						}
 					}
-					if ((highTemplarCount == 0 || attackUnitCount >= highTemplarCount * 8) &&
+					if ((attackUnitCount > 7 && (highTemplarCount == 0 || attackUnitCount >= highTemplarCount * 8)) &&
 							MyBotModule.Broodwar.self().minerals() >= 50 && MyBotModule.Broodwar.self().gas() >= 150) {
 						return true;
 					}
@@ -67,7 +67,7 @@ public class ZergBasicBattleUnitOrder extends BattleUnitOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 8 ||
+				if (BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 4 ||
 						(BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 5 && 
 						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 12) &&
 						MyBotModule.Broodwar.self().minerals() >= 100) {

@@ -48,7 +48,8 @@ public class TerranBattleOrder extends BattleOrder {
 		int selfDragoonCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Dragoon, MyBotModule.Broodwar.self());
 		int selfCarrierCount = InformationManager.Instance().getNumUnits(UnitType.Protoss_Carrier, MyBotModule.Broodwar.self());
 		
-		if (MyBotModule.Broodwar.self().supplyUsed() == MyBotModule.Broodwar.self().supplyTotal()) {
+		if (MyBotModule.Broodwar.self().supplyTotal() > 350 &&
+				MyBotModule.Broodwar.self().supplyUsed()+2 >= MyBotModule.Broodwar.self().supplyTotal()) {
 			BattleManager.instance().setBattleMode(BattleManager.BattleMode.ELEMINATE);
 		} else {
 			BaseLocation enemyBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.enemy());
