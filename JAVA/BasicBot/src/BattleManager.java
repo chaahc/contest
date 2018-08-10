@@ -31,18 +31,16 @@ public class BattleManager {
 		unitScore.put(UnitType.Protoss_High_Templar, 3);
 		unitScore.put(UnitType.Protoss_Dark_Templar, 3);
 		unitScore.put(UnitType.Protoss_Archon, 6);
-		unitScore.put(UnitType.Protoss_Carrier, 8);
 		unitScore.put(UnitType.Protoss_Reaver, 6);
 		unitScore.put(UnitType.Protoss_Photon_Cannon, 4);
 		unitScore.put(UnitType.Terran_Marine, 1);
 		unitScore.put(UnitType.Terran_Firebat, 2);
 		unitScore.put(UnitType.Terran_Medic, 2);
 		unitScore.put(UnitType.Terran_Vulture, 2);
-		unitScore.put(UnitType.Terran_Siege_Tank_Tank_Mode, 4);
-		unitScore.put(UnitType.Terran_Siege_Tank_Siege_Mode, 2);
+		unitScore.put(UnitType.Terran_Siege_Tank_Tank_Mode, 3);
+		unitScore.put(UnitType.Terran_Siege_Tank_Siege_Mode, 1);
 		unitScore.put(UnitType.Terran_Goliath, 3);
 		unitScore.put(UnitType.Terran_Wraith, 2);
-		unitScore.put(UnitType.Terran_Battlecruiser, 8);
 		unitScore.put(UnitType.Terran_Bunker, 6);
 		unitScore.put(UnitType.Zerg_Zergling, 1);
 		unitScore.put(UnitType.Zerg_Hydralisk, 2);
@@ -104,15 +102,15 @@ public class BattleManager {
 					leader.getUnit().rightClick(selfMainBaseLocation.getPosition());
 				} else {
 					if (unitType == UnitType.Protoss_Zealot) {
-						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(battleGroupType.getValue());
-						BattleUnit dragoon = battleUnitGroup.getLeader();
-						if (dragoon != null && dragoon.getUnit().exists() && ((dragoon.getUnit().isUnderAttack() && dragoon.getUnit().isAttacking()) || dragoon.getUnit().getDistance(leader.getUnit()) > 10)) {
-							commandUtil.attackMove(leader.getUnit(), dragoon.getUnit().getRegion().getCenter());
+						commandUtil.attackMove(leader.getUnit(), position);
+					} else if (unitType == UnitType.Protoss_Dragoon) {
+						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(battleGroupType.getValue());
+						BattleUnit zealotLeader = battleUnitGroup.getLeader();
+						if (zealotLeader != null && zealotLeader.getUnit().exists() && ((zealotLeader.getUnit().isUnderAttack() && zealotLeader.getUnit().isAttacking()) || zealotLeader.getUnit().getDistance(leader.getUnit()) > 10)) {
+							commandUtil.attackMove(leader.getUnit(), zealotLeader.getUnit().getRegion().getCenter());
 						} else {
 							commandUtil.attackMove(leader.getUnit(), position);
 						}
-					} else if (unitType == UnitType.Protoss_Dragoon) {
-						commandUtil.attackMove(leader.getUnit(), position);
 					}
 				}
 			}
@@ -253,7 +251,7 @@ public class BattleManager {
 					battleUnit.getUnit().rightClick(selfMainBaseLocation.getPosition());
 				} else {
 					Unit primaryAttackTarget = null;
-					for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(battleUnit.getUnit().getPosition(), UnitType.Protoss_Dragoon.groundWeapon().maxRange())) {
+					for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(battleUnit.getUnit().getPosition(), CommandUtil.UNIT_RADIUS)) {
 						if (unit.getPlayer() == MyBotModule.Broodwar.enemy() &&
 								(unit.getType() == UnitType.Terran_Siege_Tank_Tank_Mode ||
 								unit.getType() == UnitType.Protoss_Carrier)) {

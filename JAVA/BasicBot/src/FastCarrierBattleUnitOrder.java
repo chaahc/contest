@@ -160,17 +160,5 @@ public class FastCarrierBattleUnitOrder extends BattleUnitOrder {
 				return false;
 			}
 		});
-		
-//		super.bulkOrder(UnitType.Protoss_Stargate, UnitType.Protoss_Corsair, new OrderCondition() {
-//			@Override
-//			public boolean isActive() {
-//				// TODO Auto-generated method stub
-//				if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Corsair).getUnitCount() < 2 &&
-//						MyBotModule.Broodwar.self().minerals() >= 150 && MyBotModule.Broodwar.self().gas() >= 100) {
-//					return true;
-//				}
-//				return false;
-//			}
-//		});
 	}
 }

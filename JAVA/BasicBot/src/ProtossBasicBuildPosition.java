@@ -379,7 +379,51 @@ public class ProtossBasicBuildPosition {
 			}
 		}
 		System.out.println("build position end");
-	} 	
+	}
+	
+	public boolean isEnemyOpposite(TilePosition enemyMainBasePosition) {
+		if (mapInfo.get(BASE1).equals(enemyMainBasePosition) &&
+				START_BASE == BASE7) {
+			return true;
+		} else if (mapInfo.get(BASE5).equals(enemyMainBasePosition) &&
+				START_BASE == BASE11) {
+			return true;
+		} else if (mapInfo.get(BASE7).equals(enemyMainBasePosition) &&
+				START_BASE == BASE1) {
+			return true;
+		} else if (mapInfo.get(BASE11).equals(enemyMainBasePosition) &&
+				START_BASE == BASE5){
+			return true;
+		}
+		return false;
+	}
+	
+	public TilePosition getEnemyMineralPosition(TilePosition enemyMainBasePosition) {
+		TilePosition enemyMineralPosition = null;
+		if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.CircuitBreaker) {
+			if (mapInfo.get(BASE1).equals(enemyMainBasePosition)) {
+				enemyMineralPosition = new TilePosition(126, 6);
+			} else if (mapInfo.get(BASE5).equals(enemyMainBasePosition)) {
+				enemyMineralPosition = new TilePosition(126, 122);
+			} else if (mapInfo.get(BASE7).equals(enemyMainBasePosition)) {
+				enemyMineralPosition = new TilePosition(1, 123);
+			} else if (mapInfo.get(BASE11).equals(enemyMainBasePosition)){
+				enemyMineralPosition = new TilePosition(1, 7);
+			}
+		}
+		else if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.Spirit) {
+			if (mapInfo.get(BASE1).equals(enemyMainBasePosition)) {
+				enemyMineralPosition = new TilePosition(126, 5);
+			} else if (mapInfo.get(BASE5).equals(enemyMainBasePosition)) {
+				enemyMineralPosition = new TilePosition(126, 121);
+			} else if (mapInfo.get(BASE7).equals(enemyMainBasePosition)) {
+				enemyMineralPosition = new TilePosition(1, 121);
+			} else if (mapInfo.get(BASE11).equals(enemyMainBasePosition)){
+				enemyMineralPosition = new TilePosition(1, 3);
+			}
+		}
+		return enemyMineralPosition;
+	}
 	
 	public TilePosition getEnemyPosition(TilePosition enemy) {
 		TilePosition enemyPosition = null;

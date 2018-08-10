@@ -19,6 +19,7 @@ public class BuildOrderSetManager {
 		this.loadZergBasic();
 		this.loadTerranBasic();
 		this.loadProtossDragoon();
+		this.loadFastCarrier();
 	}
 	
 	public void loadProtossDragoon() {
