@@ -70,7 +70,7 @@ public class FastCarrierBattleUnitOrder extends BattleUnitOrder {
 			public boolean isActive() {
 				// TODO Auto-generated method stub
 				if (BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.DEFENCE_GROUP.getValue()).getUnitCount() == 0 ||
-						(BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 2 && 
+						(BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 3 && 
 						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 6 &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun) != null &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun).isUpgradeCompleted(UpgradeType.Leg_Enhancements) &&
@@ -97,12 +97,17 @@ public class FastCarrierBattleUnitOrder extends BattleUnitOrder {
 				}
 				BuildingUnit cyberneticsCore = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Cybernetics_Core);
 				if (cyberneticsCore != null && cyberneticsCore.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
-						(BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier).getUnitCount() > 0 &&
+						(BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier).getUnitCount() > 1 &&
 						isTraining &&
-						MyBotModule.Broodwar.self().minerals() >= 350 && MyBotModule.Broodwar.self().gas() >= 250) ||
+						MyBotModule.Broodwar.self().minerals() >= 500 && MyBotModule.Broodwar.self().gas() >= 350) ||
 						(BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier).getUnitCount() == 0 &&
+						!isTraining &&
 						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 6 &&
-						MyBotModule.Broodwar.self().minerals() >= 125 && MyBotModule.Broodwar.self().gas() >= 50)) {
+						MyBotModule.Broodwar.self().minerals() >= 125 && MyBotModule.Broodwar.self().gas() >= 50) ||
+						(BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier).getUnitCount() == 0 &&
+						isTraining &&
+						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 6 &&
+						MyBotModule.Broodwar.self().minerals() >= 700 && MyBotModule.Broodwar.self().gas() >= 400)) {
 					return true;
 				}
 				return false;

@@ -18,7 +18,16 @@ public class FastCarrierUpgradeOrder extends UpgradeOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				return true;
+				boolean isTraining = false;
+				BuildingUnitGroup stargateGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Stargate);
+				for (int unitId : stargateGroup.buildingUnitGroup.keySet()) {
+					BuildingUnit stargate = stargateGroup.buildingUnitGroup.get(unitId);
+					if (stargate.getUnit().isTraining()) {
+						isTraining = true;
+						break;
+					}
+				}
+				return isTraining;
 			}
 		});
 		

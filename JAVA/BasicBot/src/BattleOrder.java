@@ -112,10 +112,8 @@ public class BattleOrder {
 						}
 					}
 				}
-				BuildingUnit forge = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Forge);
-				if (forge != null) {
-					shuttle.getUnit().unloadAll(forge.getUnit().getPosition(), true);
-				} 
+				Chokepoint secondChokepoint = InformationManager.Instance().getSecondChokePoint(MyBotModule.Broodwar.self());
+				shuttle.getUnit().unloadAll(secondChokepoint.getCenter(), true);
 			} else {
 				BattleManager.changeReader(shuttle, BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Shuttle));
 			}

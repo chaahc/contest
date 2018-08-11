@@ -157,7 +157,7 @@ public class ProtossBasicBuildPosition {
 			mapInfo.put(BASE9, new TilePosition(8, 73));
 			mapInfo.put(CENTER, new TilePosition(64, 64));
 			mapInfo.put(PYLON11, new TilePosition(32, 22));
-			mapInfo.put(PYLON1, new TilePosition(11, 32));
+			mapInfo.put(PYLON1, new TilePosition(111, 32));
 			mapInfo.put(PYLON5, new TilePosition(94, 105));
 			mapInfo.put(PYLON7, new TilePosition(17, 94));
 			
