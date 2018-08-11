@@ -104,13 +104,13 @@ public class BattleManager {
 					if (unitType == UnitType.Protoss_Zealot) {
 						commandUtil.attackMove(leader.getUnit(), position);
 					} else if (unitType == UnitType.Protoss_Dragoon) {
-						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(battleGroupType.getValue());
-						BattleUnit zealotLeader = battleUnitGroup.getLeader();
-						if (zealotLeader != null && zealotLeader.getUnit().exists() && ((zealotLeader.getUnit().isUnderAttack() && zealotLeader.getUnit().isAttacking()) || zealotLeader.getUnit().getDistance(leader.getUnit()) > 10)) {
-							commandUtil.attackMove(leader.getUnit(), zealotLeader.getUnit().getRegion().getCenter());
-						} else {
+//						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(battleGroupType.getValue());
+//						BattleUnit zealotLeader = battleUnitGroup.getLeader();
+//						if (zealotLeader != null && zealotLeader.getUnit().exists() && ((zealotLeader.getUnit().isUnderAttack() && zealotLeader.getUnit().isAttacking()) || zealotLeader.getUnit().getDistance(leader.getUnit()) > 10)) {
+//							commandUtil.attackMove(leader.getUnit(), zealotLeader.getUnit().getRegion().getCenter());
+//						} else {
 							commandUtil.attackMove(leader.getUnit(), position);
-						}
+//						}
 					}
 				}
 			}

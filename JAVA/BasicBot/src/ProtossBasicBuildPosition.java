@@ -30,6 +30,12 @@ public class ProtossBasicBuildPosition {
 	public static final String PYLON1 = "P1";
 	public static final String PYLON5 = "P5";
 	public static final String PYLON7 = "P7";
+	
+	public static final String DEFENCE11 = "D11";
+	public static final String DEFENCE1 = "D1";
+	public static final String DEFENCE5 = "D5";
+	public static final String DEFENCE7 = "D7";
+	
 	private static List<TilePosition> centerExpansionNearSelf = new ArrayList<TilePosition>();
 	private static List<TilePosition> centerExpansionNearEnemy = new ArrayList<TilePosition>();
 	private static Map<String, TilePosition> scoutPositions = new HashMap<String, TilePosition>();
@@ -118,6 +124,11 @@ public class ProtossBasicBuildPosition {
 			mapInfo.put(PYLON1, new TilePosition(98, 28));
 			mapInfo.put(PYLON5, new TilePosition(98, 98));
 			mapInfo.put(PYLON7, new TilePosition(28, 98));
+			
+			mapInfo.put(DEFENCE11, new TilePosition(41, 44));
+			mapInfo.put(DEFENCE1, new TilePosition(86, 45));
+			mapInfo.put(DEFENCE5, new TilePosition(86, 82));
+			mapInfo.put(DEFENCE7, new TilePosition(41, 81));
 		} 
 		//투혼
 		else if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.Spirit) {
@@ -149,6 +160,11 @@ public class ProtossBasicBuildPosition {
 			mapInfo.put(PYLON1, new TilePosition(11, 32));
 			mapInfo.put(PYLON5, new TilePosition(94, 105));
 			mapInfo.put(PYLON7, new TilePosition(17, 94));
+			
+			mapInfo.put(DEFENCE11, new TilePosition(40, 46));
+			mapInfo.put(DEFENCE1, new TilePosition(83, 32));
+			mapInfo.put(DEFENCE5, new TilePosition(87, 80));
+			mapInfo.put(DEFENCE7, new TilePosition(44, 94));
 		}
 
 		
@@ -423,6 +439,20 @@ public class ProtossBasicBuildPosition {
 			}
 		}
 		return enemyMineralPosition;
+	}
+	
+	public TilePosition getEnemyDefencePosition(TilePosition enemy) {
+		TilePosition enemyPosition = null;
+		if (mapInfo.get(BASE1).equals(enemy)) {
+			enemyPosition = mapInfo.get(DEFENCE1);
+		} else if (mapInfo.get(BASE5).equals(enemy)) {
+			enemyPosition = mapInfo.get(DEFENCE5);
+		} else if (mapInfo.get(BASE7).equals(enemy)) {
+			enemyPosition = mapInfo.get(DEFENCE7);
+		} else if (mapInfo.get(BASE11).equals(enemy)){
+			enemyPosition = mapInfo.get(DEFENCE11);
+		}
+		return enemyPosition;
 	}
 	
 	public TilePosition getEnemyPosition(TilePosition enemy) {
