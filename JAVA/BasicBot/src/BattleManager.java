@@ -49,7 +49,7 @@ public class BattleManager {
 		unitScore.put(UnitType.Zerg_Guardian, 8);
 		unitScore.put(UnitType.Zerg_Sunken_Colony, 4);
 	}
-	
+	private TerranType terranType = TerranType.MECHANIC;
 	private BattleMode battleMode = BattleMode.WAIT;
 	protected static int createdDarkTemplarCount = 0;
 	private static Queue<HighTemplar> archonCandidates = new LinkedList<HighTemplar>();
@@ -224,14 +224,19 @@ public class BattleManager {
 	
 	public static BattleUnit changeReader(BattleUnit leader, BattleUnitGroup battleUnitGroup) {
 		if (!leader.getUnit().exists()) {
-			Iterator<Integer> iterator = battleUnitGroup.battleUnits.keySet().iterator();
-			while (iterator.hasNext()) {
-				BattleUnit battleUnit = battleUnitGroup.battleUnits.get(iterator.next());
-				if (battleUnit.getUnit().exists()) {
-					battleUnitGroup.setLeader(battleUnit);
-					return battleUnit;
+			int closestDistance = Integer.MAX_VALUE;
+			BattleUnit newLeader = null;
+			for (int unitId : battleUnitGroup.battleUnits.keySet()) {
+				BattleUnit battleUnit = battleUnitGroup.battleUnits.get(unitId);
+				if (battleUnit.getUnit().exists() &&
+						battleUnit.getUnitId() != leader.getUnitId()) {
+					int distance = leader.getUnit().getDistance(battleUnit.getUnit());
+					if (newLeader == null || closestDistance > distance) {
+						newLeader = battleUnit;
+					}
 				}
 			}
+			battleUnitGroup.setLeader(newLeader);
 		}
 		return leader;
 	}
@@ -279,6 +284,18 @@ public class BattleManager {
 	
 	public enum BattleMode {
 		WAIT, DEFENCE, TOTAL_ATTACK, ONEWAY_ATTACK, ELEMINATE, CARRIER_ATTACK;
+	}
+	
+	public TerranType getTerranType() {
+		return this.terranType;
+	}
+	
+	public void setTerranType(TerranType terranType) {
+		this.terranType = terranType;
+	}
+	
+	public enum TerranType {
+		BIONIC, MECHANIC
 	}
 	
 	public int getArchonCandidatesCount() {

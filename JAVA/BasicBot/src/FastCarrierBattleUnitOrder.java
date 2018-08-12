@@ -6,6 +6,33 @@ public class FastCarrierBattleUnitOrder extends BattleUnitOrder {
 	@Override
 	public void execute() {
 		// TODO Auto-generated method stub
+		super.bulkOrder(UnitType.Protoss_Gateway, UnitType.Protoss_Dark_Templar, new OrderCondition() {
+			@Override
+			public boolean isActive() {
+				// TODO Auto-generated method stub
+				if (BattleManager.createdDarkTemplarCount < 6) {
+					int darkTemplarCount = 0;
+					BuildingUnitGroup gatewayGroup = BuildingUnitManager.instance().getBuildingUnitGroup(UnitType.Protoss_Gateway);
+					for (int unitId : gatewayGroup.buildingUnitGroup.keySet()) {
+						BuildingUnit gateway = gatewayGroup.buildingUnitGroup.get(unitId);
+						if (gateway.getUnit().isTraining()) {
+							if (!gateway.getUnit().getTrainingQueue().isEmpty() &&
+									gateway.getUnit().getTrainingQueue().get(0) == UnitType.Protoss_Dark_Templar) {
+								darkTemplarCount++;
+							} 
+						}
+					}
+					BuildingUnit templarArchives = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Templar_Archives);
+					if (templarArchives != null && templarArchives.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
+							(BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Dark_Templar).getUnitCount() + darkTemplarCount < 4) &&
+							MyBotModule.Broodwar.self().minerals() >= 125 && MyBotModule.Broodwar.self().gas() >= 100) {
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+		
 		super.bulkOrder(UnitType.Protoss_Stargate, UnitType.Protoss_Carrier, new OrderCondition() {
 			@Override
 			public boolean isActive() {

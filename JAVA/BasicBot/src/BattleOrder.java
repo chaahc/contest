@@ -411,6 +411,7 @@ public class BattleOrder {
 							}
 						}
 					}
+					
 					if (isDetector) {
 						BattleUnit leader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getLeader();
 						if (leader != null) {
@@ -420,11 +421,19 @@ public class BattleOrder {
 							darkTemplar.getUnit().rightClick(selfSecondChokePoint.getCenter());
 						}
 					} else {
-						if (targetUnit == null) {
-							darkTemplar.getUnit().attack(enemyBaseLocation.getPosition());
+						if (darkTemplar.getUnit().isUnderAttack()) {
+							BattleUnit leader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getLeader();
+							if (leader != null) {
+								darkTemplar.getUnit().rightClick(leader.getUnit().getPosition());
+							} else {
+								Chokepoint selfSecondChokePoint = InformationManager.Instance().getSecondChokePoint(MyBotModule.Broodwar.self());
+								darkTemplar.getUnit().rightClick(selfSecondChokePoint.getCenter());
+							}
 						} else {
-							if (!darkTemplar.getUnit().isAttacking() && !darkTemplar.getUnit().isAttackFrame()) {
-								darkTemplar.getUnit().attack(targetUnit);
+							if (targetUnit == null) {
+								CommandUtil.attackMove(darkTemplar.getUnit(), enemyBaseLocation.getPosition());
+							} else {
+								CommandUtil.attackUnit(darkTemplar.getUnit(), targetUnit);
 							}
 						}
 					}
@@ -645,9 +654,9 @@ public class BattleOrder {
 		if (archonGroup.getUnitCount() > 0) {
 			for (int unitId : archonGroup.battleUnits.keySet()) {
 				BattleUnit archon = archonGroup.battleUnits.get(unitId);
-				BattleUnit zealot = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getLeader();
-				if (zealot != null && zealot.getUnit().exists()) {
-					CommandUtil.patrolMove(archon.getUnit(), zealot.getUnit().getRegion().getCenter());
+				BattleUnit dragoon = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getLeader();
+				if (dragoon != null && dragoon.getUnit().exists()) {
+					CommandUtil.patrolMove(archon.getUnit(), dragoon.getUnit().getRegion().getCenter());
 				}
 			}
 		}

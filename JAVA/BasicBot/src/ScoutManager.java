@@ -6,6 +6,7 @@ import bwapi.Unit;
 import bwapi.UnitType;
 import bwta.BWTA;
 import bwta.BaseLocation;
+import bwta.Region;
 
 /// 게임 초반에 일꾼 유닛 중에서 정찰 유닛을 하나 지정하고, 정찰 유닛을 이동시켜 정찰을 수행하는 class<br>
 /// 적군의 BaseLocation 위치를 알아내는 것까지만 개발되어있습니다
@@ -212,24 +213,27 @@ public class ScoutManager {
 		BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(battleGroupType.getValue());
 		BattleUnit leader = battleUnitGroup.getLeader();
 		if (leader != null) {
+			if (battleGroupType == BattleGroupType.FRONT_GROUP) {
+				for (Region region : InformationManager.Instance().getOccupiedRegions(MyBotModule.Broodwar.enemy())) {
+					if (region != null) {
+						if (!leader.getUnit().isAttacking() && !leader.getUnit().isAttackFrame()) {
+							leader.getUnit().attack(region.getCenter(), true);
+						}
+					}
+				}
+				
+			}
 			for (BaseLocation baseLocation : BWTA.getBaseLocations()) {
 				if (baseLocation.getTilePosition().equals(MyBotModule.Broodwar.self().getStartLocation())) {
 					continue;					
 				}
-				if (baseLocation.isStartLocation()) {
-					if (battleGroupType == BattleGroupType.FRONT_GROUP) {
-						if (!leader.getUnit().isAttacking() && !leader.getUnit().isAttackFrame()) {
-							leader.getUnit().attack(baseLocation.getPosition(), true);
-						}
-					}
-				} else {
-					if (battleGroupType == BattleGroupType.SUB_GROUP) {
-						if (!leader.getUnit().isAttacking() && !leader.getUnit().isAttackFrame()) {
-							leader.getUnit().attack(baseLocation.getPosition(), true);
-						}
+				if (battleGroupType == BattleGroupType.SUB_GROUP) {
+					if (!leader.getUnit().isAttacking() && !leader.getUnit().isAttackFrame()) {
+						leader.getUnit().attack(baseLocation.getPosition(), true);
 					}
 				}
 			}
+			BattleManager.instance().makeFormation(unitType, battleGroupType);
 		}
 	}
 	
