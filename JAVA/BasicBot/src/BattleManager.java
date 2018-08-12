@@ -21,9 +21,8 @@ public class BattleManager {
 	public static BattleManager instance() {
 		return instance;
 	}
-	private CommandUtil commandUtil = new CommandUtil();
 	
-	private static Map<UnitType, Integer> unitScore = new HashMap<UnitType, Integer>();
+	public static Map<UnitType, Integer> unitScore = new HashMap<UnitType, Integer>();
 	
 	static {
 		unitScore.put(UnitType.Protoss_Zealot, 2);
@@ -68,7 +67,7 @@ public class BattleManager {
 			if (enemyUnit != null) {
 				BaseLocation selfMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
 				if (battleUnit.getUnit().getDistance(selfMainBaseLocation.getPosition())< 50) {
-					commandUtil.attackMove(battleUnit.getUnit(), enemyUnit.getPosition());
+					CommandUtil.attackMove(battleUnit.getUnit(), enemyUnit.getPosition());
 				} else {
 					if (battleUnit.getUnit().isUnderAttack() && battleUnit.getUnit().getShields() + battleUnit.getUnit().getHitPoints() < 100) {
 						battleUnit.getUnit().rightClick(selfMainBaseLocation.getPosition());
@@ -84,7 +83,7 @@ public class BattleManager {
 		BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType)
 				.get(battleGroupType.getValue());
 		for (int unitId : battleUnitGroup.battleUnits.keySet()) {
-			commandUtil.attackMove(battleUnitGroup.battleUnits.get(unitId).getUnit(), position);
+			CommandUtil.attackMove(battleUnitGroup.battleUnits.get(unitId).getUnit(), position);
 		}
 	}
 	
@@ -96,20 +95,20 @@ public class BattleManager {
 			BaseLocation selfMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
 			if (BattleManager.instance().getBattleMode() == BattleManager.BattleMode.DEFENCE &&
 					leader.getUnit().getDistance(selfMainBaseLocation.getPosition())< 50) {
-				commandUtil.attackMove(leader.getUnit(), position);
+				CommandUtil.attackMove(leader.getUnit(), position);
 			} else {
 				if (leader.getUnit().isUnderAttack() && leader.getUnit().getShields() + leader.getUnit().getHitPoints() < 100) {
 					leader.getUnit().rightClick(selfMainBaseLocation.getPosition());
 				} else {
 					if (unitType == UnitType.Protoss_Zealot) {
-						commandUtil.attackMove(leader.getUnit(), position);
+						CommandUtil.attackMove(leader.getUnit(), position);
 					} else if (unitType == UnitType.Protoss_Dragoon) {
 //						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(battleGroupType.getValue());
 //						BattleUnit zealotLeader = battleUnitGroup.getLeader();
 //						if (zealotLeader != null && zealotLeader.getUnit().exists() && ((zealotLeader.getUnit().isUnderAttack() && zealotLeader.getUnit().isAttacking()) || zealotLeader.getUnit().getDistance(leader.getUnit()) > 10)) {
 //							commandUtil.attackMove(leader.getUnit(), zealotLeader.getUnit().getRegion().getCenter());
 //						} else {
-							commandUtil.attackMove(leader.getUnit(), position);
+							CommandUtil.attackMove(leader.getUnit(), position);
 //						}
 					}
 				}
@@ -261,7 +260,7 @@ public class BattleManager {
 					}
 					if (primaryAttackTarget != null) {
 						System.out.println("primary attack target detected : " + primaryAttackTarget.getType());
-						commandUtil.attackUnit(battleUnit.getUnit(), primaryAttackTarget);
+						CommandUtil.attackUnit(battleUnit.getUnit(), primaryAttackTarget);
 					} else {
 						CommandUtil.patrolMove(battleUnit.getUnit(), position);
 					}

@@ -13,7 +13,7 @@ public class CommandUtil {
 	public static final int UNIT_RADIUS = 400;
 	public static final int DEFENCE_RADIUS = 500;
 
-	public void attackUnit(Unit attacker, Unit target)
+	public static void attackUnit(Unit attacker, Unit target)
 	{
 		if (attacker == null || target == null)
 		{
@@ -39,7 +39,7 @@ public class CommandUtil {
 		attacker.attack(target);
 	}
 
-	public void attackMove(Unit attacker, final Position targetPosition)
+	public static void attackMove(Unit attacker, final Position targetPosition)
 	{
 		// Position 객체에 대해서는 == 가 아니라 equals() 로 비교해야 합니다		
 		if (attacker == null || !targetPosition.isValid())

@@ -12,8 +12,6 @@ public class WorkerManager {
 	/// 각 Worker 에 대한 WorkerJob 상황을 저장하는 자료구조 객체
 	private WorkerData workerData = new WorkerData();
 	
-	private CommandUtil commandUtil = new CommandUtil();
-	
 	/// 일꾼 중 한명을 Repair Worker 로 정해서, 전체 수리 대상을 하나씩 순서대로 수리합니다
 	private Unit currentRepairWorker = null;
 	public Unit initialProbe = null;
@@ -196,7 +194,7 @@ public class WorkerManager {
 					Unit target = CommandUtil.getClosestUnit(worker, CommandUtil.UNIT_RADIUS);
 					if (target != null)
 					{
-						commandUtil.attackUnit(worker, target);
+						CommandUtil.attackUnit(worker, target);
 					} else {
 						this.setIdleWorker(worker);
 					}

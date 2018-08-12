@@ -1,19 +1,21 @@
 
 import bwapi.Position;
 import bwapi.Unit;
-import bwapi.UnitCommand;
-import bwapi.UnitCommandType;
 import bwapi.UnitType;
 
 public class BattleUnit {
 	protected int unitId;
 	protected Unit unit;
 	protected UnitType unitType;
+	protected BattleUnitStatus battleUnitStatus;
+	protected Position lastTargetPosition;
+	protected Unit lastTargetUnit;
 	
 	protected BattleUnit(int unitId, Unit unit, UnitType unitType) {
 		this.unitId = unitId;
 		this.unit = unit;
 		this.unitType = unitType;
+		this.battleUnitStatus = BattleUnitStatus.MOVE;
 	}
 	
 	public int getUnitId() {
@@ -42,5 +44,29 @@ public class BattleUnit {
 
 	public void move(Position position) {
 		CommandUtil.move(this.unit, position);
+	}
+	
+	public void setBattleUnitStatus(BattleUnitStatus battleUnitStatus) {
+		this.battleUnitStatus = battleUnitStatus;
+	}
+	
+	public BattleUnitStatus getBattleUnitStatus() {
+		return this.battleUnitStatus;
+	}
+	
+	public void setLastTargetPosition(Position lastTargetPosition) {
+		this.lastTargetPosition = lastTargetPosition;
+	}
+	
+	public Position getLastTargetPosition() {
+		return this.lastTargetPosition;
+	}
+	
+	public void setLastTargetUnit(Unit lastTargetUnit) {
+		this.lastTargetUnit = lastTargetUnit;
+	}
+	
+	public Unit getLastTargetUnit() {
+		return this.lastTargetUnit;
 	}
 }
