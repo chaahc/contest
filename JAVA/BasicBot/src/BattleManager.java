@@ -223,7 +223,7 @@ public class BattleManager {
 	}
 	
 	public static BattleUnit changeReader(BattleUnit leader, BattleUnitGroup battleUnitGroup) {
-		if (!leader.getUnit().exists()) {
+		if (leader != null && !leader.getUnit().exists()) {
 			int closestDistance = Integer.MAX_VALUE;
 			BattleUnit newLeader = null;
 			for (int unitId : battleUnitGroup.battleUnits.keySet()) {

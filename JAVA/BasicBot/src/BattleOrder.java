@@ -283,11 +283,15 @@ public class BattleOrder {
 		if (MyBotModule.Broodwar.getFrameCount() % 24 != 0) {
 			return;
 		}
-		boolean isEnemyAttackInMain = this.detectEnemyAttack(InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self()).getPosition());
-		boolean isEnemyAttackInFirst = this.detectEnemyAttack(InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.self()).getPosition());
-		boolean isEnemyAttackInSecond = this.detectEnemyAttack(InformationManager.Instance().getSecondExpansionLocation(MyBotModule.Broodwar.self()).getPosition());
 		
-		if (isEnemyAttackInMain || isEnemyAttackInFirst || isEnemyAttackInSecond) {
+		boolean isEnemyAttack = false;
+		for (BaseLocation baseLocation : InformationManager.Instance().getOccupiedBaseLocations(MyBotModule.Broodwar.self())) {
+			if (baseLocation != null && this.detectEnemyAttack(baseLocation.getPosition())) {
+				isEnemyAttack = true;
+			}
+		}
+		
+		if (isEnemyAttack) {
 			BattleManager.instance().setBattleMode(BattleManager.BattleMode.DEFENCE);
 		} else {
 			this.changeBattleMode();
@@ -518,7 +522,9 @@ public class BattleOrder {
 				this.arbiterStatisFieldAttack(arbiter);
 				if (arbiter.getUnit().getEnergy() < 150) {
 					frontDragoon = BattleManager.changeReader(frontDragoon, frontDragoonGroup);
-					CommandUtil.patrolMove(arbiter.getUnit(), frontDragoon.getUnit().getPosition());
+					if (frontDragoon != null) {
+						CommandUtil.patrolMove(arbiter.getUnit(), frontDragoon.getUnit().getPosition());
+					}
 				}
 				if (iterator.hasNext()) {
 					arbiter = arbiterGroup.battleUnits.get(iterator.next());
@@ -526,7 +532,9 @@ public class BattleOrder {
 					this.arbiterStatisFieldAttack(arbiter);
 					if (arbiter.getUnit().getEnergy() < 150) {
 						subDragoon = BattleManager.changeReader(subDragoon, subDragoonGroup);
-						CommandUtil.patrolMove(arbiter.getUnit(), subDragoon.getUnit().getPosition());
+						if (subDragoon != null) {
+							CommandUtil.patrolMove(arbiter.getUnit(), subDragoon.getUnit().getPosition());
+						}
 					}
 				}
 			}
@@ -620,7 +628,7 @@ public class BattleOrder {
 						BattleUnit highTemplarLeader = BattleManager.changeReader(highTemplarGroup.getLeader(), highTemplarGroup);
 						if (highTemplar.getUnitId() == highTemplarLeader.getUnitId()) {
 							BaseLocation firstExpansionLocation = InformationManager.Instance().getFirstExpansionLocation(MyBotModule.Broodwar.self());
-							CommandUtil.move(highTemplarLeader.getUnit(), firstExpansionLocation.getPosition());
+							CommandUtil.move(highTemplarLeader.getUnit(), firstExpansionLocation.getRegion().getCenter().getPoint());
 						} else {
 							this.unitFollow(highTemplar, leader);
 						}

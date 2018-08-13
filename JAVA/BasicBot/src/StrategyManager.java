@@ -24,7 +24,7 @@ public class StrategyManager {
 		buildOrderSet = BuildOrderSetManager.instance().getBuildOrderSet(this.chooseStrategy());
 	}
 	
-	private StrategyType chooseStrategy() {
+	public StrategyType chooseStrategy() {
 //		required to choose strategy
 		if (MyBotModule.Broodwar.enemy().getRace() == Race.Zerg) {
 			return StrategyType.ZERG_BASIC;

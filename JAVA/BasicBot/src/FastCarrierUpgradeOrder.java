@@ -30,18 +30,44 @@ public class FastCarrierUpgradeOrder extends UpgradeOrder {
 				return isTraining;
 			}
 		});
-		
-		super.order(UnitType.Protoss_Citadel_of_Adun, UpgradeType.Leg_Enhancements, new OrderCondition() {
-			@Override
-			public boolean isActive() {
-				// TODO Auto-generated method stub
-				if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier).getUnitCount() > 2 &&
-						MyBotModule.Broodwar.self().minerals() >= 150 && MyBotModule.Broodwar.self().gas() >= 150) {
+		if (BattleManager.instance().getTerranType() == BattleManager.TerranType.BIONIC) {
+			super.order(UnitType.Protoss_Citadel_of_Adun, UpgradeType.Leg_Enhancements, new OrderCondition() {
+				@Override
+				public boolean isActive() {
+					// TODO Auto-generated method stub
+					if (MyBotModule.Broodwar.self().minerals() >= 150 && MyBotModule.Broodwar.self().gas() >= 150) {
+						return true;
+					}
+					return false;
+				}
+			});
+			super.order(UnitType.Protoss_Arbiter_Tribunal, TechType.Stasis_Field, new OrderCondition() {
+				@Override
+				public boolean isActive() {
+					// TODO Auto-generated method stub
 					return true;
 				}
-				return false;
-			}
-		});
+			});
+			super.order(UnitType.Protoss_Arbiter_Tribunal, TechType.Recall, new OrderCondition() {
+				@Override
+				public boolean isActive() {
+					// TODO Auto-generated method stub
+					return true;
+				}
+			});	
+		} else {
+			super.order(UnitType.Protoss_Citadel_of_Adun, UpgradeType.Leg_Enhancements, new OrderCondition() {
+				@Override
+				public boolean isActive() {
+					// TODO Auto-generated method stub
+					if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier).getUnitCount() > 2 &&
+							MyBotModule.Broodwar.self().minerals() >= 150 && MyBotModule.Broodwar.self().gas() >= 150) {
+						return true;
+					}
+					return false;
+				}
+			});
+		}
 		
 		super.order(UnitType.Protoss_Forge, UpgradeType.Protoss_Ground_Weapons, new OrderCondition() {
 			@Override
@@ -70,7 +96,7 @@ public class FastCarrierUpgradeOrder extends UpgradeOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_High_Templar).getUnitCount() > 0 &&
+				if (BattleManager.createdDarkTemplarCount > 4 && 
 						MyBotModule.Broodwar.self().minerals() >= 200 && MyBotModule.Broodwar.self().gas() >= 200) {
 					return true;
 				}

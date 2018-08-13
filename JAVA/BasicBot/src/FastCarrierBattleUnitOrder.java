@@ -1,3 +1,4 @@
+import bwapi.TechType;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
@@ -84,6 +85,7 @@ public class FastCarrierBattleUnitOrder extends BattleUnitOrder {
 						}
 					}
 					if ((attackUnitCount > 7 && (highTemplarCount == 0 || attackUnitCount >= highTemplarCount * 8)) &&
+							templarArchives.isTechCompleted(TechType.Psionic_Storm) &&
 							MyBotModule.Broodwar.self().minerals() >= 50 && MyBotModule.Broodwar.self().gas() >= 150) {
 						return true;
 					}
@@ -97,11 +99,11 @@ public class FastCarrierBattleUnitOrder extends BattleUnitOrder {
 			public boolean isActive() {
 				// TODO Auto-generated method stub
 				if (BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.DEFENCE_GROUP.getValue()).getUnitCount() == 0 ||
-						(BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 3 && 
-						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 6 &&
-						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun) != null &&
+						(BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun) != null &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Citadel_of_Adun).isUpgradeCompleted(UpgradeType.Leg_Enhancements) &&
-						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 4) &&
+						BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) >= 3 &&
+						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() >= 5 &&
+						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 3) &&
 						MyBotModule.Broodwar.self().minerals() >= 100) {
 					return true;
 				}
@@ -129,7 +131,7 @@ public class FastCarrierBattleUnitOrder extends BattleUnitOrder {
 						MyBotModule.Broodwar.self().minerals() >= 500 && MyBotModule.Broodwar.self().gas() >= 350) ||
 						(BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier).getUnitCount() == 0 &&
 						!isTraining &&
-						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 6 &&
+						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 12 &&
 						MyBotModule.Broodwar.self().minerals() >= 125 && MyBotModule.Broodwar.self().gas() >= 50) ||
 						(BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier).getUnitCount() == 0 &&
 						isTraining &&
@@ -149,6 +151,20 @@ public class FastCarrierBattleUnitOrder extends BattleUnitOrder {
 				if (roboticsFacility != null && roboticsFacility.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
 						BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Shuttle).getUnitCount() < 1 &&
 						MyBotModule.Broodwar.self().minerals() >= 200) {
+					return true;
+				}
+				return false;
+			}
+		});
+		
+		super.bulkOrder(UnitType.Protoss_Stargate, UnitType.Protoss_Arbiter, new OrderCondition() {
+			@Override
+			public boolean isActive() {
+				// TODO Auto-generated method stub
+				BuildingUnit arbiterTribunal = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Arbiter_Tribunal); 
+				if (arbiterTribunal != null && arbiterTribunal.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
+						BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Arbiter).getUnitCount() < 2 &&
+						MyBotModule.Broodwar.self().minerals() >= 100 && MyBotModule.Broodwar.self().gas() >= 350) {
 					return true;
 				}
 				return false;

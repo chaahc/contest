@@ -135,7 +135,8 @@ public class WorkerManager {
 			// if worker's job is idle 
 			if (workerData.getWorkerJob(worker) == WorkerData.WorkerJob.Idle || workerData.getWorkerJob(worker) == WorkerData.WorkerJob.Default )
 			{
-				if (WorkerManager.Instance().initialProbe != null && WorkerManager.Instance().initialProbe.getID() == worker.getID()) {
+				if (WorkerManager.Instance().initialProbe != null && WorkerManager.Instance().initialProbe.getID() == worker.getID() &&
+						StrategyManager.Instance().chooseStrategy() != StrategyType.FAST_CARRIER) {
 					continue;
 				} else {
 					// send it to the nearest mineral patch
