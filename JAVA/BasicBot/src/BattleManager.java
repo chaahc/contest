@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -11,7 +10,6 @@ import bwapi.Region;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwta.BaseLocation;
-import bwta.Chokepoint;
 
 public class BattleManager {
 	private static final int UNIT_GAP = 80;
@@ -25,22 +23,22 @@ public class BattleManager {
 	public static Map<UnitType, Integer> unitScore = new HashMap<UnitType, Integer>();
 	
 	static {
-		unitScore.put(UnitType.Protoss_Zealot, 2);
+		unitScore.put(UnitType.Protoss_Zealot, 3);
 		unitScore.put(UnitType.Protoss_Dragoon, 4);
 		unitScore.put(UnitType.Protoss_High_Templar, 3);
 		unitScore.put(UnitType.Protoss_Dark_Templar, 3);
 		unitScore.put(UnitType.Protoss_Archon, 6);
 		unitScore.put(UnitType.Protoss_Reaver, 6);
 		unitScore.put(UnitType.Protoss_Photon_Cannon, 4);
-		unitScore.put(UnitType.Terran_Marine, 1);
-		unitScore.put(UnitType.Terran_Firebat, 2);
-		unitScore.put(UnitType.Terran_Medic, 2);
-		unitScore.put(UnitType.Terran_Vulture, 2);
-		unitScore.put(UnitType.Terran_Siege_Tank_Tank_Mode, 3);
-		unitScore.put(UnitType.Terran_Siege_Tank_Siege_Mode, 1);
-		unitScore.put(UnitType.Terran_Goliath, 3);
-		unitScore.put(UnitType.Terran_Wraith, 2);
-		unitScore.put(UnitType.Terran_Bunker, 6);
+//		unitScore.put(UnitType.Terran_Marine, 1);
+//		unitScore.put(UnitType.Terran_Firebat, 2);
+//		unitScore.put(UnitType.Terran_Medic, 1);
+//		unitScore.put(UnitType.Terran_Vulture, 2);
+//		unitScore.put(UnitType.Terran_Siege_Tank_Tank_Mode, 3);
+//		unitScore.put(UnitType.Terran_Siege_Tank_Siege_Mode, 1);
+//		unitScore.put(UnitType.Terran_Goliath, 3);
+//		unitScore.put(UnitType.Terran_Wraith, 2);
+//		unitScore.put(UnitType.Terran_Bunker, 6);
 		unitScore.put(UnitType.Zerg_Zergling, 1);
 		unitScore.put(UnitType.Zerg_Hydralisk, 2);
 		unitScore.put(UnitType.Zerg_Mutalisk, 4);
@@ -69,8 +67,9 @@ public class BattleManager {
 				if (battleUnit.getUnit().getDistance(selfMainBaseLocation.getPosition())< 50) {
 					CommandUtil.attackMove(battleUnit.getUnit(), enemyUnit.getPosition());
 				} else {
-					if (battleUnit.getUnit().isUnderAttack() && battleUnit.getUnit().getShields() + battleUnit.getUnit().getHitPoints() < 100) {
-						battleUnit.getUnit().rightClick(selfMainBaseLocation.getPosition());
+					int hp = battleUnit.getUnit().getShields() + battleUnit.getUnit().getHitPoints();
+					if (battleUnit.getUnit().isUnderAttack() &&  (hp > 50 && hp< 100)) {
+						CommandUtil.rightClick(battleUnit.getUnit(), selfMainBaseLocation.getPosition());
 					} else {
 						CommandUtil.patrolMove(battleUnit.getUnit(), enemyUnit.getPosition());
 					}
@@ -97,19 +96,15 @@ public class BattleManager {
 					leader.getUnit().getDistance(selfMainBaseLocation.getPosition())< 50) {
 				CommandUtil.attackMove(leader.getUnit(), position);
 			} else {
-				if (leader.getUnit().isUnderAttack() && leader.getUnit().getShields() + leader.getUnit().getHitPoints() < 100) {
-					leader.getUnit().rightClick(selfMainBaseLocation.getPosition());
+				if (shouldRetreat(leader.getUnit())) {
+					CommandUtil.rightClick(leader.getUnit(), selfMainBaseLocation.getPosition());
 				} else {
-					if (unitType == UnitType.Protoss_Zealot) {
-						CommandUtil.attackMove(leader.getUnit(), position);
-					} else if (unitType == UnitType.Protoss_Dragoon) {
-//						battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(battleGroupType.getValue());
-//						BattleUnit zealotLeader = battleUnitGroup.getLeader();
-//						if (zealotLeader != null && zealotLeader.getUnit().exists() && ((zealotLeader.getUnit().isUnderAttack() && zealotLeader.getUnit().isAttacking()) || zealotLeader.getUnit().getDistance(leader.getUnit()) > 10)) {
-//							commandUtil.attackMove(leader.getUnit(), zealotLeader.getUnit().getRegion().getCenter());
-//						} else {
-							CommandUtil.attackMove(leader.getUnit(), position);
-//						}
+					int hp = leader.getUnit().getShields() + leader.getUnit().getHitPoints();
+					if (leader.getUnit().isUnderAttack() && (hp > 50 && hp < 100)) {
+						CommandUtil.rightClick(leader.getUnit(), selfMainBaseLocation.getPosition());
+					} else {
+						CommandUtil.patrolMove(leader.getUnit(), new Position(position.getX()+10, position.getY()+10));
+						CommandUtil.patrolMove(leader.getUnit(), position);
 					}
 				}
 			}
@@ -124,7 +119,8 @@ public class BattleManager {
 		List<Unit> targetUnits = battleUnit.getUnitsInRadius(UnitType.Protoss_Dragoon.groundWeapon().maxRange());
 		for (Unit unit : targetUnits) {
 			if (unit.getType() == UnitType.Protoss_Dark_Templar || 
-					unit.getType() == UnitType.Zerg_Lurker) {
+					unit.getType() == UnitType.Zerg_Lurker ||
+					unit.getType() == UnitType.Terran_Vulture_Spider_Mine) {
 				if (unit.isDetected()) {
 					isEnemyUnitInvisible = false;
 				} else {
@@ -251,24 +247,12 @@ public class BattleManager {
 			if (shouldRetreat(battleUnit.getUnit())) {
 				CommandUtil.rightClick(battleUnit.getUnit(), selfMainBaseLocation.getPosition());
 			} else {
-				if (battleUnit.getUnit().isUnderAttack() && battleUnit.getUnit().getShields() + battleUnit.getUnit().getHitPoints() < 100) {
-					battleUnit.getUnit().rightClick(selfMainBaseLocation.getPosition());
+				int hp = battleUnit.getUnit().getShields() + battleUnit.getUnit().getHitPoints();
+				if (battleUnit.getUnit().isUnderAttack() && (hp > 50 && hp < 100)) {
+					CommandUtil.rightClick(battleUnit.getUnit(), selfMainBaseLocation.getPosition());
 				} else {
-					Unit primaryAttackTarget = null;
-					for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(battleUnit.getUnit().getPosition(), CommandUtil.UNIT_RADIUS)) {
-						if (unit.getPlayer() == MyBotModule.Broodwar.enemy() &&
-								(unit.getType() == UnitType.Terran_Siege_Tank_Tank_Mode ||
-								unit.getType() == UnitType.Protoss_Carrier)) {
-							primaryAttackTarget = unit;
-							break;
-						}
-					}
-					if (primaryAttackTarget != null) {
-						System.out.println("primary attack target detected : " + primaryAttackTarget.getType());
-						CommandUtil.attackUnit(battleUnit.getUnit(), primaryAttackTarget);
-					} else {
-						CommandUtil.patrolMove(battleUnit.getUnit(), position);
-					}
+					CommandUtil.patrolMove(battleUnit.getUnit(), new Position(position.getX()+10, position.getY()+10));
+					CommandUtil.patrolMove(battleUnit.getUnit(), position);
 				}
 			}
 		}

@@ -192,7 +192,7 @@ public class ScoutManager {
 								currentScoutUnit.canRightClick()) {
 							currentScoutUnit.rightClick(currentScoutTargetPosition);
 						}
-					} else {
+					} else if (MyBotModule.Broodwar.getFrameCount() > 8640) {
 						if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
 							if (currentScoutUnit.getDistance(InformationManager.Instance().getSecondChokePoint(MyBotModule.Broodwar.self())) < 50) {
 								BaseLocation selfMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
@@ -211,29 +211,35 @@ public class ScoutManager {
 	
 	public void eleminateMove(UnitType unitType, BattleGroupType battleGroupType) {
 		BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(battleGroupType.getValue());
-		BattleUnit leader = battleUnitGroup.getLeader();
-		if (leader != null) {
-			if (battleGroupType == BattleGroupType.FRONT_GROUP) {
-				for (Region region : InformationManager.Instance().getOccupiedRegions(MyBotModule.Broodwar.enemy())) {
-					if (region != null) {
-						if (!leader.getUnit().isAttacking() && !leader.getUnit().isAttackFrame()) {
-							leader.getUnit().attack(region.getCenter(), true);
+		if (battleGroupType == BattleGroupType.FRONT_GROUP) {
+			for (int unitId : battleUnitGroup.battleUnits.keySet()) {
+				BattleUnit battleUnit = battleUnitGroup.battleUnits.get(unitId);
+				if (battleUnit != null) {
+					for (Region region : InformationManager.Instance().getOccupiedRegions(MyBotModule.Broodwar.enemy())) {
+						if (region != null) {
+							if (!battleUnit.getUnit().isAttacking() && !battleUnit.getUnit().isAttackFrame()) {
+								battleUnit.getUnit().attack(region.getCenter(), true);
+							}
 						}
 					}
 				}
-				
 			}
-			for (BaseLocation baseLocation : BWTA.getBaseLocations()) {
-				if (baseLocation.getTilePosition().equals(MyBotModule.Broodwar.self().getStartLocation())) {
-					continue;					
-				}
-				if (battleGroupType == BattleGroupType.SUB_GROUP) {
-					if (!leader.getUnit().isAttacking() && !leader.getUnit().isAttackFrame()) {
-						leader.getUnit().attack(baseLocation.getPosition(), true);
+		} else {
+			for (int unitId : battleUnitGroup.battleUnits.keySet()) {
+				BattleUnit battleUnit = battleUnitGroup.battleUnits.get(unitId);
+				if (battleUnit != null) {
+					for (BaseLocation baseLocation : BWTA.getBaseLocations()) {
+						if (baseLocation.getTilePosition().equals(MyBotModule.Broodwar.self().getStartLocation())) {
+							continue;					
+						}
+						if (battleGroupType == BattleGroupType.SUB_GROUP) {
+							if (!battleUnit.getUnit().isAttacking() && !battleUnit.getUnit().isAttackFrame()) {
+								battleUnit.getUnit().attack(baseLocation.getPosition(), true);
+							}
+						}
 					}
 				}
 			}
-			BattleManager.instance().makeFormation(unitType, battleGroupType);
 		}
 	}
 	

@@ -39,8 +39,8 @@ public class FastCarrierBattleOrder extends BattleOrder {
 	protected void changeBattleMode() {
 		int marineUnitCount = InformationManager.Instance().getNumUnits(UnitType.Terran_Marine, MyBotModule.Broodwar.enemy());
 		int medicUnitCount = InformationManager.Instance().getNumUnits(UnitType.Terran_Medic, MyBotModule.Broodwar.enemy());
-		int barracksCount = InformationManager.Instance().getNumUnits(UnitType.Terran_Barracks, MyBotModule.Broodwar.enemy());
-		if (barracksCount > 1 || marineUnitCount > 4 || medicUnitCount > 0) {
+		int vultureUnitCount = InformationManager.Instance().getNumUnits(UnitType.Terran_Vulture, MyBotModule.Broodwar.enemy());
+		if (marineUnitCount > 4 || medicUnitCount > 0 || vultureUnitCount == 0) {
 			BattleManager.instance().setTerranType(BattleManager.TerranType.BIONIC);
 		} else {
 			BattleManager.instance().setTerranType(BattleManager.TerranType.MECHANIC);
@@ -112,38 +112,6 @@ public class FastCarrierBattleOrder extends BattleOrder {
 					}
 				}
 			}
-		}
-	}
-	
-	@Override
-	protected boolean detectEnemyAttack(Position target) {
-		boolean isEnemyAttack = false;
-		List<Unit> list = MyBotModule.Broodwar.getUnitsInRadius(target, BASE_RADIUS);
-		Position enemyPosition = null;
-		for (Unit unit : list) {
-			if (unit.getPlayer() == InformationManager.Instance().enemyPlayer &&
-				!unit.getType().isWorker()) {
-				isEnemyAttack = true;
-				enemyPosition = unit.getPosition();
-				break;
-			} 
-		}
-		if (isEnemyAttack) {
-			BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, enemyPosition, BattleGroupType.DEFENCE_GROUP);
-			BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, enemyPosition, BattleGroupType.DEFENCE_GROUP);
-			BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, enemyPosition, BattleGroupType.SUB_GROUP);
-			BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, enemyPosition, BattleGroupType.SUB_GROUP);
-			BattleManager.instance().leaderAttack(UnitType.Protoss_Zealot, enemyPosition, BattleGroupType.FRONT_GROUP);
-			BattleManager.instance().leaderAttack(UnitType.Protoss_Dragoon, enemyPosition, BattleGroupType.FRONT_GROUP);
-			BattleManager.instance().closestAttack(UnitType.Protoss_Zealot, BattleGroupType.DEFENCE_GROUP);
-			BattleManager.instance().closestAttack(UnitType.Protoss_Dragoon, BattleGroupType.DEFENCE_GROUP);
-			BattleManager.instance().closestAttack(UnitType.Protoss_Zealot, BattleGroupType.SUB_GROUP);
-			BattleManager.instance().closestAttack(UnitType.Protoss_Dragoon, BattleGroupType.SUB_GROUP);
-			BattleManager.instance().closestAttack(UnitType.Protoss_Zealot, BattleGroupType.FRONT_GROUP);
-			BattleManager.instance().closestAttack(UnitType.Protoss_Dragoon, BattleGroupType.FRONT_GROUP);
-			return true;
-		} else {
-			return false;
 		}
 	}
 	

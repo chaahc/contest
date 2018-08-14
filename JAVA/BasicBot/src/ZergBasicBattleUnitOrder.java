@@ -68,9 +68,9 @@ public class ZergBasicBattleUnitOrder extends BattleUnitOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 4 ||
+				if (BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 3 ||
 						(BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 5 && 
-						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 12) &&
+						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 6) &&
 						MyBotModule.Broodwar.self().minerals() >= 100) {
 					return true;
 				}
@@ -98,60 +98,5 @@ public class ZergBasicBattleUnitOrder extends BattleUnitOrder {
 				return false;
 			}
 		});
-		
-//		super.bulkOrder(UnitType.Protoss_Stargate, UnitType.Protoss_Corsair, new OrderCondition() {
-//			@Override
-//			public boolean isActive() {
-//				// TODO Auto-generated method stub
-//				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Stargate) > 0 &&
-//						BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Corsair).getUnitCount() < 6 &&
-//						MyBotModule.Broodwar.self().minerals() >= 150 && MyBotModule.Broodwar.self().gas() >= 100) {
-//					return true;
-//				}
-//				return false;
-//			}
-//		});
-		
-//		super.bulkOrder(UnitType.Protoss_Stargate, UnitType.Protoss_Arbiter, new OrderCondition() {
-//			@Override
-//			public boolean isActive() {
-//				// TODO Auto-generated method stub
-//				BuildingUnit arbiterTribunal = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Arbiter_Tribunal); 
-//				if (arbiterTribunal != null && arbiterTribunal.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
-//						BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Arbiter).getUnitCount() < 2 &&
-//						MyBotModule.Broodwar.self().minerals() >= 100 && MyBotModule.Broodwar.self().gas() >= 350) {
-//					return true;
-//				}
-//				return false;
-//			}
-//		});
-		
-//		super.order(UnitType.Protoss_Robotics_Facility, UnitType.Protoss_Reaver, new OrderCondition() {
-//			@Override
-//			public boolean isActive() {
-//				// TODO Auto-generated method stub
-//				BuildingUnit roboticsSupportBay = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Robotics_Support_Bay);
-//				if (roboticsSupportBay != null && roboticsSupportBay.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
-//						BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Reaver).getUnitCount() < 1 &&
-//						MyBotModule.Broodwar.self().minerals() >= 200 && MyBotModule.Broodwar.self().gas() >= 100) {
-//					return true;
-//				}
-//				return false;
-//			}
-//		});
-		
-//		super.bulkOrder(UnitType.Protoss_Stargate, UnitType.Protoss_Carrier, new OrderCondition() {
-//			@Override
-//			public boolean isActive() {
-//				// TODO Auto-generated method stub
-//				BuildingUnit fleetBeacon = BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Fleet_Beacon);
-//				if (fleetBeacon != null && fleetBeacon.getBuildingStatus() == BuildingUnit.BuildingStatus.COMPLETED &&
-//				        BattleUnitGroupManager.instance().getBattleUnitGroup(UnitType.Protoss_Carrier).getUnitCount() < 2 &&
-//						MyBotModule.Broodwar.self().minerals() >= 350 && MyBotModule.Broodwar.self().gas() >= 250) {
-//					return true;
-//				}
-//				return false;
-//			}
-//		});
 	}
 }

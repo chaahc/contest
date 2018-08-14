@@ -10,27 +10,13 @@ public class ZergBasicUpgradeOrder extends UpgradeOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Nexus) >= 2) {
+				if (BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Nexus) >= 2) {
 					return true;
 				}
 				return false;
 			}
 		});
 		super.order(UnitType.Protoss_Citadel_of_Adun, UpgradeType.Leg_Enhancements, new OrderCondition() {
-			@Override
-			public boolean isActive() {
-				// TODO Auto-generated method stub
-				return true;
-			}
-		});
-		super.order(UnitType.Protoss_Observatory, UpgradeType.Sensor_Array, new OrderCondition() {
-			@Override
-			public boolean isActive() {
-				// TODO Auto-generated method stub
-				return true;
-			}
-		});
-		super.order(UnitType.Protoss_Observatory, UpgradeType.Gravitic_Boosters, new OrderCondition() {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub

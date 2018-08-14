@@ -46,7 +46,7 @@ public class BuildOrderSetManager {
 		
 		UpgradeOrder upgradeOrder = new ProtossBasicUpgradeOrder();
 		
-		BattleOrder battleOrder = new BattleOrder();
+		BattleOrder battleOrder = new ProtossDragoonBattleOrder();
 		
 		BuildOrderSet buildOrderSet = new BuildOrderSet(StrategyType.PROTOSS_BASIC, initialBuildOrder, buildUnitOrder, battleUnitOrder, upgradeOrder, battleOrder);
 		this.buildOrderSets.put(StrategyType.PROTOSS_BASIC, buildOrderSet);
