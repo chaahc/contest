@@ -361,7 +361,8 @@ public abstract class BattleOrder {
 					boolean isDetector = false;
 					for (Unit unit : darkTemplar.getUnit().getUnitsInRadius(CommandUtil.UNIT_RADIUS)) {
 						if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
-							if (unit.getType() == UnitType.Protoss_Robotics_Facility ||
+							if (unit.getType() == UnitType.Protoss_Nexus ||
+								unit.getType() == UnitType.Protoss_Robotics_Facility ||
 								unit.getType() == UnitType.Protoss_Observatory ||
 								unit.getType() == UnitType.Protoss_Probe ||
 								unit.getType() == UnitType.Terran_Missile_Turret ||

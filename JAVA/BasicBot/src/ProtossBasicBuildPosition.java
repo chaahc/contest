@@ -139,8 +139,9 @@ public class ProtossBasicBuildPosition {
 			
 			forgePosXX = new int[]{22,89,104,33};
 			forgePosYY = new int[]{38,17,91,108};
-			gatewayPosXX = new int[]{22,91,104,35};
-			gatewayPosYY = new int[]{35,19,88,105};
+			
+			gatewayPosXX = new int[]{22,90,104,35};
+			gatewayPosYY = new int[]{35,19,88,106};
 			firstPhotonPosXX = new int[]{20,92,107,36};
 			firstPhotonPosYY = new int[]{40,17,89,108};
 			secondPhotonPosXX = new int[]{20,94,107,38};

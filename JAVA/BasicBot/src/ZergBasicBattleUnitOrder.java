@@ -67,13 +67,13 @@ public class ZergBasicBattleUnitOrder extends BattleUnitOrder {
 		super.bulkOrder(UnitType.Protoss_Gateway, UnitType.Protoss_Zealot, new OrderCondition() {
 			@Override
 			public boolean isActive() {
-				// TODO Auto-generated method stub
 				if (BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 3 ||
 						(BuildingUnitManager.instance().getCompletedBuildingUnitCount(UnitType.Protoss_Gateway) > 5 && 
 						BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue()).getUnitCount() <= 6) &&
 						MyBotModule.Broodwar.self().minerals() >= 100) {
 					return true;
 				}
+				
 				return false;
 			}
 		});

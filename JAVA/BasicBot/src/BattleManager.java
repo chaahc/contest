@@ -237,6 +237,25 @@ public class BattleManager {
 		return leader;
 	}
 	
+	public static BattleUnit changeReaderForce(BattleUnit leader, BattleUnitGroup battleUnitGroup) {
+		if (leader != null) {
+			int closestDistance = Integer.MAX_VALUE;
+			BattleUnit newLeader = null;
+			for (int unitId : battleUnitGroup.battleUnits.keySet()) {
+				BattleUnit battleUnit = battleUnitGroup.battleUnits.get(unitId);
+				if (battleUnit.getUnit().exists() &&
+						battleUnit.getUnitId() != leader.getUnitId()) {
+					int distance = leader.getUnit().getDistance(battleUnit.getUnit());
+					if (newLeader == null || closestDistance > distance) {
+						newLeader = battleUnit;
+					}
+				}
+			}
+			battleUnitGroup.setLeader(newLeader);
+		}
+		return leader;
+	}
+	
 	private void formationMove(int unitId, BattleUnit leader, BattleUnitGroup battleUnitGroup, Position position) {
 		if (leader.getUnitId() == unitId) {
 			return;

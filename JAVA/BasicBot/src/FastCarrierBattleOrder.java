@@ -40,7 +40,7 @@ public class FastCarrierBattleOrder extends BattleOrder {
 		int marineUnitCount = InformationManager.Instance().getNumUnits(UnitType.Terran_Marine, MyBotModule.Broodwar.enemy());
 		int medicUnitCount = InformationManager.Instance().getNumUnits(UnitType.Terran_Medic, MyBotModule.Broodwar.enemy());
 		int vultureUnitCount = InformationManager.Instance().getNumUnits(UnitType.Terran_Vulture, MyBotModule.Broodwar.enemy());
-		if (marineUnitCount > 4 || medicUnitCount > 0 || vultureUnitCount == 0) {
+		if ((marineUnitCount > 4 || medicUnitCount > 0 ) && vultureUnitCount == 0) {
 			BattleManager.instance().setTerranType(BattleManager.TerranType.BIONIC);
 		} else {
 			BattleManager.instance().setTerranType(BattleManager.TerranType.MECHANIC);
@@ -120,10 +120,6 @@ public class FastCarrierBattleOrder extends BattleOrder {
 		if (battleUnitGroup.getUnitCount() > 0) {
 			for (int unitId : battleUnitGroup.battleUnits.keySet()) {
 				BattleUnit battleUnit = battleUnitGroup.battleUnits.get(unitId);
-				BattleUnit leader = battleUnitGroup.getLeader();
-				if (leader != null) {
-					leader = BattleManager.changeReader(leader, battleUnitGroup);
-				}
 				battleUnit.setLastTargetPosition(leaderTargetPosition);
 				battleUnit.setBattleUnitStatus(BattleUnitStatus.ATTACK);
 				
@@ -387,21 +383,31 @@ public class FastCarrierBattleOrder extends BattleOrder {
 						if (battleUnit.getUnit().getTilePosition().getDistance(enemyMineralPosition) < 5 &&
 								BattleManager.instance().getBattleMode() != BattleManager.BattleMode.TOTAL_ATTACK) {
 							boolean isMainBaseAlive = false;
+							Unit primary = null;
 							for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(battleUnit.getUnit().getPosition(), CommandUtil.UNIT_RADIUS)) {
-								if (unit.getPlayer() == MyBotModule.Broodwar.enemy() && 
-										(unit.getType() == UnitType.Terran_SCV ||
-										unit.getType() == UnitType.Terran_Command_Center) &&
-										unit.exists()) {
+								if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
 									System.out.println(unitId + "main base alive");
 									isMainBaseAlive = true;
-									break;
+									if ((unit.getType() == UnitType.Terran_Siege_Tank_Siege_Mode ||
+										unit.getType() == UnitType.Terran_Siege_Tank_Tank_Mode ||
+										unit.getType() == UnitType.Terran_Goliath ||
+										unit.getType() == UnitType.Terran_Marine) &&
+										unit.exists()) {
+										primary = unit;
+										break;
+									}
 								}
 							}
 							
 							if (isMainBaseAlive) {
-								System.out.println(unitId + "hold");
-								if (!battleUnit.getUnit().isHoldingPosition()) {
-									battleUnit.getUnit().holdPosition();			
+								if (primary != null) {
+									System.out.println("primary target : " + primary.getType());
+									CommandUtil.patrolMove(battleUnit.getUnit(), primary.getPosition());
+								} else {									
+									System.out.println(unitId + "hold");
+									if (!battleUnit.getUnit().isHoldingPosition()) {
+										battleUnit.getUnit().holdPosition();			
+									}
 								}
 							} else {
 								System.out.println(unitId + "total attack");
@@ -420,6 +426,9 @@ public class FastCarrierBattleOrder extends BattleOrder {
 											if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
 												if (unit.getType() == UnitType.Terran_Siege_Tank_Siege_Mode ||
 														unit.getType() == UnitType.Terran_Siege_Tank_Tank_Mode ||
+														unit.getType() == UnitType.Terran_Goliath ||
+														unit.getType() == UnitType.Terran_Missile_Turret ||
+														unit.getType() == UnitType.Terran_Armory ||
 														unit.getType() == UnitType.Terran_SCV) {
 													enemy = unit;
 													break;
@@ -428,7 +437,7 @@ public class FastCarrierBattleOrder extends BattleOrder {
 										}
 										if (enemy != null) {
 											if (battleUnitGroup.getUnitCount() > 3 && battleUnit.getUnit().getInterceptorCount() > 4) {
-												CommandUtil.attackUnit(battleUnit.getUnit(), enemy);
+												CommandUtil.patrolMove(battleUnit.getUnit(), enemy.getPosition());
 											}
 										} else {
 											if (battleUnitGroup.getUnitCount() > 3 && battleUnit.getUnit().getInterceptorCount() > 4) {
@@ -436,7 +445,7 @@ public class FastCarrierBattleOrder extends BattleOrder {
 												BattleUnitGroup dragoonGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue());
 												BattleUnit leader = dragoonGroup.getLeader();
 												if (leader != null) {
-													battleUnit.getUnit().attack(leader.getUnit().getPosition());
+													CommandUtil.patrolMove(battleUnit.getUnit(), leader.getUnit().getPosition());
 												}
 											}
 										}
@@ -453,11 +462,33 @@ public class FastCarrierBattleOrder extends BattleOrder {
 									}
 								}
 							} else {
-								System.out.println(unitId + "attack following dragoon");
-								BattleUnitGroup dragoonGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue());
-								BattleUnit leader = dragoonGroup.getLeader();
-								if (leader != null) {
-									battleUnit.getUnit().attack(leader.getUnit().getPosition());
+								System.out.println(unitId + "attack mode");
+								BattleUnit dragoonLeader = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue()).getLeader();
+								if (dragoonLeader != null) {
+									CommandUtil.patrolMove(battleUnit.getUnit(), dragoonLeader.getUnit().getPosition());
+								} else {
+									Unit enemy = null;
+									Unit primary = null;
+									for (Unit unit : MyBotModule.Broodwar.getUnitsInRadius(battleUnit.getUnit().getPosition(), CommandUtil.UNIT_RADIUS)) {
+										if (unit.getPlayer() == MyBotModule.Broodwar.enemy()) {
+											System.out.println(unitId + "main base alive");
+											if ((unit.getType() == UnitType.Terran_Siege_Tank_Siege_Mode ||
+												unit.getType() == UnitType.Terran_Siege_Tank_Tank_Mode ||
+												unit.getType() == UnitType.Terran_Goliath ||
+												unit.getType() == UnitType.Terran_Marine) &&
+												unit.exists()) {
+												primary = unit;
+												break;
+											} else {
+												enemy = unit;
+											}
+										}
+									}
+									if (primary != null) {
+										CommandUtil.patrolMove(battleUnit.getUnit(), primary.getPosition());
+									} else if (enemy != null) {
+										CommandUtil.patrolMove(battleUnit.getUnit(), enemy.getPosition());
+									}
 								}
 							}
 						}

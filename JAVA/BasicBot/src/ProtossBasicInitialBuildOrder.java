@@ -51,6 +51,8 @@ public class ProtossBasicInitialBuildOrder extends InitialBuildOrder {
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Zealot);
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Photon_Cannon,
 				firstPhotoPos, true);
+		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Photon_Cannon,
+				secondPhotoPos, true);
 		//14
 		BuildManager.Instance().buildQueue.queueAsLowestPriority(UnitType.Protoss_Probe,
 				BuildOrderItem.SeedPositionStrategy.MainBaseLocation, true);

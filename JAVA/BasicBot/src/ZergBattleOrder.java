@@ -59,6 +59,17 @@ public class ZergBattleOrder extends BattleOrder {
 				}
 			}
 		}
+		
+		if (MyBotModule.Broodwar.getFrameCount() % 720 != 0) {
+			BattleUnitGroup zealotFrontGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue());
+			BattleManager.changeReaderForce(zealotFrontGroup.getLeader(), zealotFrontGroup);
+			BattleUnitGroup zealotSubGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.SUB_GROUP.getValue());
+			BattleManager.changeReaderForce(zealotSubGroup.getLeader(), zealotSubGroup);
+			BattleUnitGroup dragoonFrontGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue());
+			BattleManager.changeReaderForce(dragoonFrontGroup.getLeader(), dragoonFrontGroup);
+			BattleUnitGroup dragoonSubGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.SUB_GROUP.getValue());
+			BattleManager.changeReaderForce(dragoonSubGroup.getLeader(), dragoonSubGroup);
+		}
 	}
 	
 //	@Override
