@@ -63,6 +63,9 @@ public class ProtossBasicBuildPosition {
 	public static int secondPhotonPosX = 0;
 	public static int secondPhotonPosY = 0;
 	
+	public static int thirdPhotonPosX = 0;
+	public static int thirdPhotonPosY = 0;
+	
 	private static int[] firstPylonPosXX = null;
 	private static int[] firstPylonPosYY = null;
 	
@@ -81,6 +84,9 @@ public class ProtossBasicBuildPosition {
 	private static int[] secondPhotonPosXX = null;
 	private static int[] secondPhotonPosYY = null;
 	
+	private static int[] thirdPhotonPosXX = null;
+	private static int[] thirdPhotonPosYY = null;
+	
 	private static ProtossBasicBuildPosition instance = new ProtossBasicBuildPosition();
 	
 	public static ProtossBasicBuildPosition Instance() {
@@ -96,7 +102,6 @@ public class ProtossBasicBuildPosition {
 		
 		//서킷브레이커
 		if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.CircuitBreaker) {
-			System.out.println("1");
 			firstPylonPosXX = new int[]{17,108,108,18};
 			firstPylonPosYY = new int[]{37,37,96,96};
 			secondPylonPosXX = new int[]{11,114,114,13};
@@ -110,6 +115,8 @@ public class ProtossBasicBuildPosition {
 			firstPhotonPosYY = new int[]{33,35,96,94};
 			secondPhotonPosXX = new int[]{15,110,110,16};
 			secondPhotonPosYY = new int[]{35,37,94,96};
+			thirdPhotonPosXX = new int[]{19,106,106,20};
+			thirdPhotonPosYY = new int[]{37,37,96,96};
 			
 			mapInfo.put(BASE11, new TilePosition(7, 9));
 			mapInfo.put(BASE12, new TilePosition(63, 2));
@@ -146,6 +153,8 @@ public class ProtossBasicBuildPosition {
 			firstPhotonPosYY = new int[]{40,17,89,108};
 			secondPhotonPosXX = new int[]{20,94,107,38};
 			secondPhotonPosYY = new int[]{38,17,91,108};
+			thirdPhotonPosXX = new int[]{24,94,103,38};
+			thirdPhotonPosYY = new int[]{40,21,93,104};
 			
 			//required repositioning
 			mapInfo.put(BASE11, new TilePosition(7, 6));
@@ -179,7 +188,6 @@ public class ProtossBasicBuildPosition {
 		
 		//서킷브레이커
 		if (InformationManager.Instance().getMapSpecificInformation().getMap() == MAP.CircuitBreaker) {
-			System.out.println("2");
 			if(startingX == 7 && startingY ==9) {			
 //				return new TilePosition(secondPylonPosXX[0], secondPylonPosYY[0]);
 				firstPylonPosX = firstPylonPosXX[0];
@@ -195,6 +203,8 @@ public class ProtossBasicBuildPosition {
 				firstPhotonPosY = firstPhotonPosYY[0];
 				secondPhotonPosX = secondPhotonPosXX[0];
 				secondPhotonPosY = secondPhotonPosYY[0];
+				thirdPhotonPosX = thirdPhotonPosXX[0];
+				thirdPhotonPosY = thirdPhotonPosYY[0];
 				
 				START_BASE = BASE11;
 			}
@@ -213,6 +223,8 @@ public class ProtossBasicBuildPosition {
 				firstPhotonPosY = firstPhotonPosYY[1];
 				secondPhotonPosX = secondPhotonPosXX[1];
 				secondPhotonPosY = secondPhotonPosYY[1];
+				thirdPhotonPosX = thirdPhotonPosXX[1];
+				thirdPhotonPosY = thirdPhotonPosYY[1];
 				
 				START_BASE = BASE1;
 			}
@@ -231,6 +243,8 @@ public class ProtossBasicBuildPosition {
 				firstPhotonPosY = firstPhotonPosYY[2];
 				secondPhotonPosX = secondPhotonPosXX[2];
 				secondPhotonPosY = secondPhotonPosYY[2];
+				thirdPhotonPosX = thirdPhotonPosXX[2];
+				thirdPhotonPosY = thirdPhotonPosYY[2];
 				
 				START_BASE = BASE5;
 			}
@@ -249,6 +263,8 @@ public class ProtossBasicBuildPosition {
 				firstPhotonPosY = firstPhotonPosYY[3];
 				secondPhotonPosX = secondPhotonPosXX[3];
 				secondPhotonPosY = secondPhotonPosYY[3];
+				thirdPhotonPosX = thirdPhotonPosXX[3];
+				thirdPhotonPosY = thirdPhotonPosYY[3];
 				
 				START_BASE = BASE7;
 			}
@@ -270,6 +286,8 @@ public class ProtossBasicBuildPosition {
 				firstPhotonPosY = firstPhotonPosYY[0];
 				secondPhotonPosX = secondPhotonPosXX[0];
 				secondPhotonPosY = secondPhotonPosYY[0];
+				thirdPhotonPosX = thirdPhotonPosXX[0];
+				thirdPhotonPosY = thirdPhotonPosYY[0];
 				
 				START_BASE = BASE11;
 			}
@@ -288,6 +306,8 @@ public class ProtossBasicBuildPosition {
 				firstPhotonPosY = firstPhotonPosYY[1];
 				secondPhotonPosX = secondPhotonPosXX[1];
 				secondPhotonPosY = secondPhotonPosYY[1];
+				thirdPhotonPosX = thirdPhotonPosXX[1];
+				thirdPhotonPosY = thirdPhotonPosYY[1];
 				
 				START_BASE = BASE1;
 			}
@@ -306,6 +326,8 @@ public class ProtossBasicBuildPosition {
 				firstPhotonPosY = firstPhotonPosYY[2];
 				secondPhotonPosX = secondPhotonPosXX[2];
 				secondPhotonPosY = secondPhotonPosYY[2];
+				thirdPhotonPosX = thirdPhotonPosXX[2];
+				thirdPhotonPosY = thirdPhotonPosYY[2];
 				
 				START_BASE = BASE5;
 			}
@@ -324,6 +346,8 @@ public class ProtossBasicBuildPosition {
 				firstPhotonPosY = firstPhotonPosYY[3];
 				secondPhotonPosX = secondPhotonPosXX[3];
 				secondPhotonPosY = secondPhotonPosYY[3];
+				thirdPhotonPosX = thirdPhotonPosXX[3];
+				thirdPhotonPosY = thirdPhotonPosYY[3];
 				
 				START_BASE = BASE7;
 			}
