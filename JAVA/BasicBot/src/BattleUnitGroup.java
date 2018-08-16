@@ -31,7 +31,7 @@ public class BattleUnitGroup {
 				this.unitCount--;
 			}
 			if (unitId == this.leader.getUnitId()) {
-				this.leader = BattleManager.changeReader(this.leader, this);
+				this.leader = BattleManager.changeLeader(this.leader, this);
 			}
 		}
 	}

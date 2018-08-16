@@ -55,7 +55,7 @@ public class ZergBasicBattleUnitOrder extends BattleUnitOrder {
 							}
 						}
 					}
-					if ((attackUnitCount > 7 && (highTemplarCount == 0 || attackUnitCount >= highTemplarCount * 8)) &&
+					if ((attackUnitCount > 6 && (highTemplarCount == 0 || attackUnitCount >= highTemplarCount * 8)) &&
 							MyBotModule.Broodwar.self().minerals() >= 50 && MyBotModule.Broodwar.self().gas() >= 150) {
 						return true;
 					}

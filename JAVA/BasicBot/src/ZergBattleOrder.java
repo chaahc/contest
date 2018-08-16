@@ -11,6 +11,7 @@ public class ZergBattleOrder extends BattleOrder {
 		if (MyBotModule.Broodwar.getFrameCount() % 24 != 0) {
 			System.out.println("battle mode : " + BattleManager.instance().getBattleMode());
 		}
+		super.changeLeaderPeriodically();
 		super.moveStuckDragoon();
 		super.observing();
 		super.formationAttack();
@@ -45,11 +46,12 @@ public class ZergBattleOrder extends BattleOrder {
 						enemyCount++;
 					}
 				}
-				int gap = (selfZealotCount + selfDragoonCount) - (enemyHydraliskCount + enemyMutaliskCount + enemyZerglingCount);
+				int selfUnitCount = selfZealotCount + selfDragoonCount;
+				int gap = selfUnitCount - (enemyHydraliskCount + enemyMutaliskCount + enemyZerglingCount);
 				if (gap > 0 || enemyCount > 0) {
 					if (InformationManager.Instance().selfPlayer.supplyUsed() > 300) { 
 						BattleManager.instance().setBattleMode(BattleManager.BattleMode.ONEWAY_ATTACK);
-					} else if (InformationManager.Instance().selfPlayer.supplyUsed() > 200) {
+					} else if (InformationManager.Instance().selfPlayer.supplyUsed() > 200 || selfUnitCount > 15) {
 						BattleManager.instance().setBattleMode(BattleManager.BattleMode.TOTAL_ATTACK);
 					} else {
 						BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
@@ -58,17 +60,6 @@ public class ZergBattleOrder extends BattleOrder {
 					BattleManager.instance().setBattleMode(BattleManager.BattleMode.WAIT);
 				}
 			}
-		}
-		
-		if (MyBotModule.Broodwar.getFrameCount() % 720 != 0) {
-			BattleUnitGroup zealotFrontGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.FRONT_GROUP.getValue());
-			BattleManager.changeReaderForce(zealotFrontGroup.getLeader(), zealotFrontGroup);
-			BattleUnitGroup zealotSubGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Zealot).get(BattleGroupType.SUB_GROUP.getValue());
-			BattleManager.changeReaderForce(zealotSubGroup.getLeader(), zealotSubGroup);
-			BattleUnitGroup dragoonFrontGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.FRONT_GROUP.getValue());
-			BattleManager.changeReaderForce(dragoonFrontGroup.getLeader(), dragoonFrontGroup);
-			BattleUnitGroup dragoonSubGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(UnitType.Protoss_Dragoon).get(BattleGroupType.SUB_GROUP.getValue());
-			BattleManager.changeReaderForce(dragoonSubGroup.getLeader(), dragoonSubGroup);
 		}
 	}
 	

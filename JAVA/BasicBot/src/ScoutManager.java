@@ -191,17 +191,24 @@ public class ScoutManager {
 						if (currentScoutTargetPosition != null && currentScoutTargetPosition.isValid() &&
 								currentScoutUnit.canRightClick()) {
 							currentScoutUnit.rightClick(currentScoutTargetPosition);
-						}
-					} else if (MyBotModule.Broodwar.getFrameCount() > 8640) {
-						if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
-							if (currentScoutUnit.getDistance(InformationManager.Instance().getSecondChokePoint(MyBotModule.Broodwar.self())) < 50) {
+						} else {
+							if (currentScoutUnit.getType() == UnitType.Protoss_Probe) {
+								WorkerManager.Instance().setIdleWorker(currentScoutUnit);
+							} else {
 								BaseLocation selfMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
 								currentScoutUnit.rightClick(selfMainBaseLocation.getPosition());
-							} else {
-								this.scout(true);
 							}
+						}
+					} else if ( MyBotModule.Broodwar.self().minerals() > 1000 && MyBotModule.Broodwar.getFrameCount() > 8640) {
+						if (currentScoutUnit.isUnderAttack() || BattleManager.shouldRetreat(currentScoutUnit)) {
+							BaseLocation selfMainBaseLocation = InformationManager.Instance().getMainBaseLocation(MyBotModule.Broodwar.self());
+							currentScoutUnit.rightClick(selfMainBaseLocation.getPosition());
 						} else {
-							this.scout(false);
+							if (currentScoutUnit.getType() == UnitType.Protoss_Probe) {
+								this.scout(true);
+							} else {
+								this.scout(false);
+							}
 						}
 					}
 				}
@@ -251,7 +258,7 @@ public class ScoutManager {
 				if (tilePosition.equals(enemyBaseLocation.getTilePosition())) {
 					continue;
 				}
-				if (currentScoutUnit.getDistance(tilePosition.toPosition()) > 50 && !currentScoutUnit.isMoving()) {
+				if (currentScoutUnit.getDistance(tilePosition.toPosition()) > 5 && !currentScoutUnit.isMoving()) {
 					if (isRunAway) {
 						currentScoutUnit.rightClick(tilePosition.toPosition(), true);
 					} else {

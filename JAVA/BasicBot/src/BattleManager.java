@@ -150,9 +150,8 @@ public class BattleManager {
 		BattleUnitGroup battleUnitGroup = BattleUnitGroupManager.instance().getBattleUnitGroups(unitType).get(groupType.getValue());
 		BattleUnit leader = battleUnitGroup.getLeader();
 		if (leader != null) {
-			leader = changeReader(leader, battleUnitGroup);
+			leader = changeLeader(leader, battleUnitGroup);
 			Iterator<Integer> unitIds = battleUnitGroup.battleUnits.keySet().iterator();
-			Region leaderRegion = leader.getUnit().getRegion();
 			Position leftTop = null;
 			Position rightTop = null;
 			Position leftBottom = null;
@@ -218,42 +217,36 @@ public class BattleManager {
 		}
 	}
 	
-	public static BattleUnit changeReader(BattleUnit leader, BattleUnitGroup battleUnitGroup) {
+	public static BattleUnit changeLeader(BattleUnit leader, BattleUnitGroup battleUnitGroup) {
 		if (leader != null && !leader.getUnit().exists()) {
-			int closestDistance = Integer.MAX_VALUE;
-			BattleUnit newLeader = null;
-			for (int unitId : battleUnitGroup.battleUnits.keySet()) {
-				BattleUnit battleUnit = battleUnitGroup.battleUnits.get(unitId);
-				if (battleUnit.getUnit().exists() &&
-						battleUnit.getUnitId() != leader.getUnitId()) {
-					int distance = leader.getUnit().getDistance(battleUnit.getUnit());
-					if (newLeader == null || closestDistance > distance) {
-						newLeader = battleUnit;
-					}
-				}
-			}
-			battleUnitGroup.setLeader(newLeader);
+			changeLeaderToClosestOne(leader, battleUnitGroup);
 		}
 		return leader;
 	}
 	
-	public static BattleUnit changeReaderForce(BattleUnit leader, BattleUnitGroup battleUnitGroup) {
+	public static BattleUnit changeLeaderForce(BattleUnit leader, BattleUnitGroup battleUnitGroup) {
 		if (leader != null) {
-			int closestDistance = Integer.MAX_VALUE;
-			BattleUnit newLeader = null;
-			for (int unitId : battleUnitGroup.battleUnits.keySet()) {
-				BattleUnit battleUnit = battleUnitGroup.battleUnits.get(unitId);
-				if (battleUnit.getUnit().exists() &&
-						battleUnit.getUnitId() != leader.getUnitId()) {
-					int distance = leader.getUnit().getDistance(battleUnit.getUnit());
-					if (newLeader == null || closestDistance > distance) {
-						newLeader = battleUnit;
-					}
-				}
-			}
-			battleUnitGroup.setLeader(newLeader);
+			changeLeaderToClosestOne(leader, battleUnitGroup);
 		}
 		return leader;
+	}
+	
+	private static void changeLeaderToClosestOne(BattleUnit leader, BattleUnitGroup battleUnitGroup) {
+		int closestDistance = Integer.MAX_VALUE;
+		BattleUnit newLeader = null;
+		for (int unitId : battleUnitGroup.battleUnits.keySet()) {
+			BattleUnit battleUnit = battleUnitGroup.battleUnits.get(unitId);
+			if (battleUnit.getUnit().exists() &&
+					battleUnit.getUnitId() != leader.getUnitId()) {
+				int distance = leader.getUnit().getDistance(battleUnit.getUnit());
+				if (newLeader == null || closestDistance > distance) {
+					newLeader = battleUnit;
+				}
+			}
+		}
+		if (newLeader != null && newLeader.getUnit().exists()) {
+			battleUnitGroup.setLeader(newLeader);
+		}
 	}
 	
 	private void formationMove(int unitId, BattleUnit leader, BattleUnitGroup battleUnitGroup, Position position) {
