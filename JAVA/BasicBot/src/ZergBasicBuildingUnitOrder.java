@@ -66,7 +66,7 @@ public class ZergBasicBuildingUnitOrder extends BuildingUnitOrder {
 			@Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
-				if (BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Pylon) > 2 &&
+				if (BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Pylon) > 1 &&
 						BuildingUnitManager.instance().getBuildingUnit(UnitType.Protoss_Cybernetics_Core) == null &&
 						MyBotModule.Broodwar.self().minerals() >= 200) {
 					return true;

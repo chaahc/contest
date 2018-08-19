@@ -194,7 +194,7 @@ public class ConstructionManager {
 
 				// reserve this building's space
 				if (b.getType() == UnitType.Protoss_Gateway && BuildingUnitManager.instance().getBuildingUnitCount(UnitType.Protoss_Gateway) > 1) {
-					ConstructionPlaceFinder.Instance().reserveTiles(testLocation, b.getType().tileWidth()+1, b.getType().tileHeight()+1);
+					ConstructionPlaceFinder.Instance().reserveTiles(testLocation, b.getType().tileWidth()+2, b.getType().tileHeight()+2);
 				} else {
 					ConstructionPlaceFinder.Instance().reserveTiles(testLocation, b.getType().tileWidth(), b.getType().tileHeight());
 				}
